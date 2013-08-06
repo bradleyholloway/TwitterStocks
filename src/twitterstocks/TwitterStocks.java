@@ -15,133 +15,105 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 public class TwitterStocks {
-    
+
     public final static int DOLLAR_SIGN = 28129870;
 
-    public static void main(String args[]) throws AWTException, InterruptedException, FileNotFoundException, UnsupportedFlavorException, IOException
-	{
-            final int ITERATIONS = 1;
-            
-            
-            
-                ArrayList<String> positive = new ArrayList<>();
-                ArrayList<String> negative = new ArrayList<>();
-                ArrayList<String> tickers = new ArrayList<>();
-                Scanner positiveIn = new Scanner(new File("positive.txt"));
-                Scanner negativeIn = new Scanner(new File("negative.txt"));
-                Scanner tickersIn = new Scanner(new File("tickers.txt"));
-                while(positiveIn.hasNext())
-                {
-                    positive.add(positiveIn.nextLine());
-                }
-                positiveIn.close();
-                while(negativeIn.hasNext())
-                {
-                    negative.add(negativeIn.nextLine());
-                }
-                negativeIn.close();
-                while(tickersIn.hasNext())
-                {
-                    tickers.add(tickersIn.nextLine());
-                }
-                tickersIn.close();
-                
-                
-                HashMap<String, RollingAverage> values = new HashMap<>();
-                for (String ticker : tickers)
-                {
-                    values.put(ticker, new RollingAverage(10));
-                }
-                
-                HashMap<String, PriceLog> prices = new HashMap<>();
-                for (String ticker : tickers)
-                {
-                    prices.put(ticker, new PriceLog());
-                }
-                
-                //System.out.println(positive);
-                //System.out.println(negative);
-                //System.out.println(tickers);
+    public static void main(String args[]) throws AWTException, InterruptedException, FileNotFoundException, UnsupportedFlavorException, IOException {
+        final int ITERATIONS = 1;
 
-		Robot r = new Robot();
-                //Change to internet window
-		r.keyPress(KeyEvent.VK_ALT);
-                r.delay(500);
-		r.keyPress(KeyEvent.VK_TAB);
-                r.delay(500);
-		r.keyRelease(KeyEvent.VK_ALT);
-		r.keyRelease(KeyEvent.VK_TAB);
-                r.delay(500);
-                
-                checkStocks(r, tickers, prices);
-                
-                r.delay(1000);
-                
-                checkTwitter(r, ITERATIONS, tickers, positive, negative, values, prices);
-                
-                display(tickers, prices, values);
-                
-                r.delay(1000);
-                
-                checkStocks(r, tickers, prices);
-                
-                display(tickers, prices, values);
-                
-	}
-    private static void display(ArrayList<String> tickers, HashMap<String, PriceLog> prices, HashMap<String, RollingAverage> values)
-    {
-        for(String t : tickers)
-        {
+
+
+        ArrayList<String> positive = new ArrayList<>();
+        ArrayList<String> negative = new ArrayList<>();
+        ArrayList<String> tickers = new ArrayList<>();
+        loadFiles(positive, negative, tickers);
+
+
+        HashMap<String, RollingAverage> values = new HashMap<>();
+        for (String ticker : tickers) {
+            values.put(ticker, new RollingAverage(10));
+        }
+
+        HashMap<String, PriceLog> prices = new HashMap<>();
+        for (String ticker : tickers) {
+            prices.put(ticker, new PriceLog());
+        }
+
+        //System.out.println(positive);
+        //System.out.println(negative);
+        //System.out.println(tickers);
+
+        Robot r = new Robot();
+        //Change to internet window
+        r.keyPress(KeyEvent.VK_ALT);
+        r.delay(500);
+        r.keyPress(KeyEvent.VK_TAB);
+        r.delay(500);
+        r.keyRelease(KeyEvent.VK_ALT);
+        r.keyRelease(KeyEvent.VK_TAB);
+        r.delay(500);
+
+        checkStocks(r, tickers, prices);
+
+        r.delay(1000);
+
+        checkTwitter(r, ITERATIONS, tickers, positive, negative, values, prices);
+
+        display(tickers, prices, values);
+
+        r.delay(1000);
+
+        checkStocks(r, tickers, prices);
+
+        display(tickers, prices, values);
+
+    }
+
+    private static void display(ArrayList<String> tickers, HashMap<String, PriceLog> prices, HashMap<String, RollingAverage> values) {
+        for (String t : tickers) {
             System.out.println(t.toUpperCase() + ": " + prices.get(t) + " : " + values.get(t).get());
         }
         System.out.println();
     }
-    
-    
-    private static void checkStocks(Robot r, ArrayList<String> tickers, HashMap<String, PriceLog> prices) throws UnsupportedFlavorException, IOException
-    {
+
+    private static void checkStocks(Robot r, ArrayList<String> tickers, HashMap<String, PriceLog> prices) throws UnsupportedFlavorException, IOException {
         //Stock Pull
-                r.mouseMove(300, 35);
-                click(r);
-                type("finance.yahoo.com", r);
-                r.delay(3000);
-                for(String t: tickers)
-                {
-                r.mouseMove(380, 130);
-                click(r);
-                type(t, r);
-                r.mouseMove(370, 325);
-                r.delay(4000);
-                click(r);
-                click(r);
-                r.keyPress(KeyEvent.VK_CONTROL);
-                r.delay(100);
-                r.keyPress(KeyEvent.VK_C);
-                r.delay(100);
-                r.keyRelease(KeyEvent.VK_C);
-                r.keyRelease(KeyEvent.VK_CONTROL);
-                String price = "";
-                
-                price = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-                prices.get(t).put(Double.parseDouble(price));
-                
-                }//price check
+        r.mouseMove(300, 35);
+        click(r);
+        type("finance.yahoo.com", r);
+        r.delay(3000);
+        for (String t : tickers) {
+            r.mouseMove(380, 130);
+            click(r);
+            type(t, r);
+            r.mouseMove(370, 325);
+            r.delay(4000);
+            click(r);
+            click(r);
+            r.keyPress(KeyEvent.VK_CONTROL);
+            r.delay(100);
+            r.keyPress(KeyEvent.VK_C);
+            r.delay(100);
+            r.keyRelease(KeyEvent.VK_C);
+            r.keyRelease(KeyEvent.VK_CONTROL);
+            String price = "";
+
+            price = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+            prices.get(t).put(Double.parseDouble(price));
+
+        }//price check
     }
-    
-    
-    private static void checkTwitter(Robot r, int ITERATIONS, ArrayList<String> tickers, ArrayList<String> positive, ArrayList<String> negative, HashMap<String, RollingAverage> values, HashMap<String, PriceLog> prices) throws UnsupportedFlavorException, IOException
-    {
+
+    private static void checkTwitter(Robot r, int ITERATIONS, ArrayList<String> tickers, ArrayList<String> positive, ArrayList<String> negative, HashMap<String, RollingAverage> values, HashMap<String, PriceLog> prices) throws UnsupportedFlavorException, IOException {
         //Twitter Check
-                r.mouseMove(300, 35);
-                click(r);
-                type("www.twitter.com", r);
-                r.delay(4000);
-                
-                for(int iterations = 0; iterations < ITERATIONS; iterations++)
-                {
-                for(String t : tickers)
-                {
-                r.mouseMove(800,100);
+        r.mouseMove(300, 35);
+        click(r);
+        type("www.twitter.com", r);
+        r.delay(4000);
+
+        for (int iterations = 0; iterations < ITERATIONS; iterations++) {
+            for (String t : tickers) {
+                r.mouseMove(800, 100);
                 click(r);
                 r.keyPress(KeyEvent.VK_CONTROL);
                 r.delay(50);
@@ -150,11 +122,11 @@ public class TwitterStocks {
                 r.keyRelease(KeyEvent.VK_A);
                 r.delay(50);
                 r.keyRelease(KeyEvent.VK_CONTROL);
-                type("$"+t, r);
+                type("$" + t, r);
                 r.delay(3000);
-                r.mouseMove(800,150);
+                r.mouseMove(800, 150);
                 click(r);
-                
+
                 r.keyPress(KeyEvent.VK_CONTROL);
                 r.delay(50);
                 r.keyPress(KeyEvent.VK_A);
@@ -167,120 +139,160 @@ public class TwitterStocks {
                 r.delay(50);
                 r.keyRelease(KeyEvent.VK_CONTROL);
                 String data = "";
-            
+
                 data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-                
-                
+
+
                 ArrayList<String> parsed = new ArrayList<String>();
                 boolean blankLine = false;
                 int postBlankCount = 0;
-                while(data.indexOf('\n') != -1)
-                {
-                   
-                    if(blankLine)// && lineNumber%3 == 0)
+                while (data.indexOf('\n') != -1) {
+
+                    if (blankLine)// && lineNumber%3 == 0)
                     {
                         postBlankCount++;
-                        if(postBlankCount > 3 && !(data.substring(0, data.indexOf('\n')).equals("")))
-                        {
+                        if (postBlankCount > 3 && !(data.substring(0, data.indexOf('\n')).equals(""))) {
                             parsed.add(data.substring(0, data.indexOf('\n')));
                         }
                     }
-                    if(data.substring(0, data.indexOf('\n')).equals(""))
-                    {
+                    if (data.substring(0, data.indexOf('\n')).equals("")) {
                         blankLine = true;
                     }
-                    data = data.substring(data.indexOf('\n')+1);
+                    data = data.substring(data.indexOf('\n') + 1);
                 }
-                for(int i = 0; i < parsed.size(); i++)
-                {
-                    if(parsed.get(i).charAt(0)==' ' || parsed.get(i).equals("Expand"))
-                    {
+                for (int i = 0; i < parsed.size(); i++) {
+                    if (parsed.get(i).charAt(0) == ' ' || parsed.get(i).equals("Expand")) {
                         parsed.remove(i);
                         i--;
                     }
                 }
-                
+
                 //System.out.println(parsed);
-                
+
                 double score = 0.0;
-                for(String p : parsed)
-                {
-                    while(p.indexOf(' ') != -1)
-                    {
+                for (String p : parsed) {
+                    while (p.indexOf(' ') != -1) {
                         String word = p.substring(0, p.indexOf(' '));
-                        for(String positiveW: positive)
-                        {
-                            if(word.toLowerCase().equals(positiveW))
-                            {
+                        for (String positiveW : positive) {
+                            if (word.toLowerCase().equals(positiveW)) {
                                 score += .1;
                             }
                         }
-                        for(String negativeW: negative)
-                        {
-                            if(word.toLowerCase().equals(negativeW))
-                            {
+                        for (String negativeW : negative) {
+                            if (word.toLowerCase().equals(negativeW)) {
                                 score -= .1;
                             }
                         }
-                        p = p.substring(p.indexOf(' ')+1);
+                        p = p.substring(p.indexOf(' ') + 1);
                     }
                 }
-                
+
                 values.get(t).update(score);
-                
-                }
-                System.out.println();
-                }
-                //Twitter Check end
+
+            }
+            System.out.println();
+        }
+        //Twitter Check end
     }
-    
-    
-    private static void type(String text, Robot r)
-    {
-        int i = 0; char c; int k = 0;
+
+    private static void type(String text, Robot r) {
+        int i = 0;
+        char c;
+        int k = 0;
         text = text.toLowerCase();
-        while(i < text.length())
-        {
+        while (i < text.length()) {
             c = text.charAt(i);
-            switch (c)
-            {
-                case 'a': k = KeyEvent.VK_A; break;
-                case 'b': k = KeyEvent.VK_B; break;
-                case 'c': k = KeyEvent.VK_C; break;
-                case 'd': k = KeyEvent.VK_D; break;
-                case 'e': k = KeyEvent.VK_E; break;
-                case 'f': k = KeyEvent.VK_F; break;
-                case 'g': k = KeyEvent.VK_G; break;
-                case 'h': k = KeyEvent.VK_H; break;
-                case 'i': k = KeyEvent.VK_I; break;
-                case 'j': k = KeyEvent.VK_J; break;
-                case 'k': k = KeyEvent.VK_K; break;
-                case 'l': k = KeyEvent.VK_L; break;
-                case 'm': k = KeyEvent.VK_M; break;
-                case 'n': k = KeyEvent.VK_N; break;
-                case 'o': k = KeyEvent.VK_O; break;
-                case 'p': k = KeyEvent.VK_P; break;
-                case 'q': k = KeyEvent.VK_Q; break;
-                case 'r': k = KeyEvent.VK_R; break;
-                case 's': k = KeyEvent.VK_S; break;
-                case 't': k = KeyEvent.VK_T; break;
-                case 'u': k = KeyEvent.VK_U; break;
-                case 'v': k = KeyEvent.VK_V; break;
-                case 'w': k = KeyEvent.VK_W; break;
-                case 'x': k = KeyEvent.VK_X; break;
-                case 'y': k = KeyEvent.VK_Y; break;
-                case 'z': k = KeyEvent.VK_Z; break;
-                case '.': k = KeyEvent.VK_DECIMAL; break;
-                case '$': k = DOLLAR_SIGN; break;
+            switch (c) {
+                case 'a':
+                    k = KeyEvent.VK_A;
+                    break;
+                case 'b':
+                    k = KeyEvent.VK_B;
+                    break;
+                case 'c':
+                    k = KeyEvent.VK_C;
+                    break;
+                case 'd':
+                    k = KeyEvent.VK_D;
+                    break;
+                case 'e':
+                    k = KeyEvent.VK_E;
+                    break;
+                case 'f':
+                    k = KeyEvent.VK_F;
+                    break;
+                case 'g':
+                    k = KeyEvent.VK_G;
+                    break;
+                case 'h':
+                    k = KeyEvent.VK_H;
+                    break;
+                case 'i':
+                    k = KeyEvent.VK_I;
+                    break;
+                case 'j':
+                    k = KeyEvent.VK_J;
+                    break;
+                case 'k':
+                    k = KeyEvent.VK_K;
+                    break;
+                case 'l':
+                    k = KeyEvent.VK_L;
+                    break;
+                case 'm':
+                    k = KeyEvent.VK_M;
+                    break;
+                case 'n':
+                    k = KeyEvent.VK_N;
+                    break;
+                case 'o':
+                    k = KeyEvent.VK_O;
+                    break;
+                case 'p':
+                    k = KeyEvent.VK_P;
+                    break;
+                case 'q':
+                    k = KeyEvent.VK_Q;
+                    break;
+                case 'r':
+                    k = KeyEvent.VK_R;
+                    break;
+                case 's':
+                    k = KeyEvent.VK_S;
+                    break;
+                case 't':
+                    k = KeyEvent.VK_T;
+                    break;
+                case 'u':
+                    k = KeyEvent.VK_U;
+                    break;
+                case 'v':
+                    k = KeyEvent.VK_V;
+                    break;
+                case 'w':
+                    k = KeyEvent.VK_W;
+                    break;
+                case 'x':
+                    k = KeyEvent.VK_X;
+                    break;
+                case 'y':
+                    k = KeyEvent.VK_Y;
+                    break;
+                case 'z':
+                    k = KeyEvent.VK_Z;
+                    break;
+                case '.':
+                    k = KeyEvent.VK_DECIMAL;
+                    break;
+                case '$':
+                    k = DOLLAR_SIGN;
+                    break;
             }
-            if(k != DOLLAR_SIGN)
-            {
-            r.keyPress(k);
-            r.delay(10);
-            r.keyRelease(k);
-            }
-            else
-            {
+            if (k != DOLLAR_SIGN) {
+                r.keyPress(k);
+                r.delay(10);
+                r.keyRelease(k);
+            } else {
                 r.keyPress(KeyEvent.VK_SHIFT);
                 r.delay(30);
                 r.keyPress(KeyEvent.VK_4);
@@ -296,13 +308,30 @@ public class TwitterStocks {
         r.keyRelease(KeyEvent.VK_ENTER);
         r.delay(300);
     }
-    private static void click(Robot r)
-    {
+
+    private static void click(Robot r) {
         r.mousePress(MouseEvent.BUTTON1_MASK);
         r.delay(10);
         r.mouseRelease(MouseEvent.BUTTON1_MASK);
         r.delay(10);
     }
+    
+    private static void loadFiles(ArrayList<String> positive, ArrayList<String> negative, ArrayList<String> tickers) throws FileNotFoundException
+    {
+        Scanner positiveIn = new Scanner(new File("positive.txt"));
+        Scanner negativeIn = new Scanner(new File("negative.txt"));
+        Scanner tickersIn = new Scanner(new File("tickers.txt"));
+        while (positiveIn.hasNext()) {
+            positive.add(positiveIn.nextLine());
+        }
+        positiveIn.close();
+        while (negativeIn.hasNext()) {
+            negative.add(negativeIn.nextLine());
+        }
+        negativeIn.close();
+        while (tickersIn.hasNext()) {
+            tickers.add(tickersIn.nextLine());
+        }
+        tickersIn.close();
+    }
 }
-
-
