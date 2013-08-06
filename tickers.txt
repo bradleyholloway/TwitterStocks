@@ -1,4 +1,2 @@
 goog
-aig
 key
-kog

@@ -11,6 +11,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.Scanner;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -21,9 +22,9 @@ public class TwitterStocks {
 
     public static void main(String args[]) throws AWTException, InterruptedException, FileNotFoundException
 	{
-                ArrayList<String> positive = new ArrayList<String>();
-                ArrayList<String> negative = new ArrayList<String>();
-                ArrayList<String> tickers = new ArrayList<String>();
+                ArrayList<String> positive = new ArrayList<>();
+                ArrayList<String> negative = new ArrayList<>();
+                ArrayList<String> tickers = new ArrayList<>();
                 Scanner positiveIn = new Scanner(new File("positive.txt"));
                 Scanner negativeIn = new Scanner(new File("negative.txt"));
                 Scanner tickersIn = new Scanner(new File("tickers.txt"));
@@ -31,14 +32,27 @@ public class TwitterStocks {
                 {
                     positive.add(positiveIn.nextLine());
                 }
+                positiveIn.close();
                 while(negativeIn.hasNext())
                 {
                     negative.add(negativeIn.nextLine());
                 }
+                negativeIn.close();
                 while(tickersIn.hasNext())
                 {
                     tickers.add(tickersIn.nextLine());
                 }
+                tickersIn.close();
+                
+                
+                HashMap<String, RollingAverage> values = new HashMap<>();
+                for (String ticker : tickers)
+                {
+                    values.put(ticker, new RollingAverage(10));
+                }
+                
+                HashMap<String, Double> prices = new HashMap<>();
+                
                 
                 //System.out.println(positive);
                 //System.out.println(negative);
@@ -54,9 +68,45 @@ public class TwitterStocks {
                 r.delay(500);
                 r.mouseMove(300, 35);
                 click(r);
+                type("finance.yahoo.com", r);
+                r.delay(3000);
+                for(String t: tickers)
+                {
+                r.mouseMove(380, 130);
+                click(r);
+                type(t, r);
+                r.mouseMove(380, 325);
+                r.delay(5000);
+                click(r);
+                click(r);
+                r.keyPress(KeyEvent.VK_CONTROL);
+                r.delay(100);
+                r.keyPress(KeyEvent.VK_C);
+                r.delay(100);
+                r.keyRelease(KeyEvent.VK_C);
+                r.keyRelease(KeyEvent.VK_CONTROL);
+                String price = "";
+                
+                try {
+            price = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+        } catch (UnsupportedFlavorException ex) {
+            Logger.getLogger(TwitterStocks.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(TwitterStocks.class.getName()).log(Level.SEVERE, null, ex);
+        }
+                prices.put(t, Double.parseDouble(price));
+                
+                }//price check
+                
+                r.delay(1000);
+                
+                r.mouseMove(300, 35);
+                click(r);
                 type("www.twitter.com", r);
                 r.delay(4000);
                 
+                for(int iterations = 0; iterations < 1; iterations++)
+                {
                 for(String t : tickers)
                 {
                 r.mouseMove(800,100);
@@ -123,7 +173,7 @@ public class TwitterStocks {
                     }
                 }
                 
-                System.out.println(parsed);
+                //System.out.println(parsed);
                 
                 double score = 0.0;
                 for(String p : parsed)
@@ -148,7 +198,11 @@ public class TwitterStocks {
                         p = p.substring(p.indexOf(' ')+1);
                     }
                 }
-                System.out.println(score);
+                
+                values.get(t).update(score);
+                System.out.println(t.toUpperCase() + ": " + prices.get(t) + " : " + values.get(t).get());
+                }
+                System.out.println();
                 }
 	}
     
@@ -207,9 +261,11 @@ public class TwitterStocks {
             }
             i++;
         }
+        r.delay(500);
         r.keyPress(KeyEvent.VK_ENTER);
-        r.delay(30);
+        r.delay(100);
         r.keyRelease(KeyEvent.VK_ENTER);
+        r.delay(300);
     }
     private static void click(Robot r)
     {
