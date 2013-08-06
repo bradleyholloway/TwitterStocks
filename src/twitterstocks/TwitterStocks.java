@@ -13,8 +13,6 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 public class TwitterStocks {
     
@@ -55,14 +53,18 @@ public class TwitterStocks {
                     values.put(ticker, new RollingAverage(10));
                 }
                 
-                HashMap<String, Double> prices = new HashMap<>();
-                
+                HashMap<String, PriceLog> prices = new HashMap<>();
+                for (String ticker : tickers)
+                {
+                    prices.put(ticker, new PriceLog());
+                }
                 
                 //System.out.println(positive);
                 //System.out.println(negative);
                 //System.out.println(tickers);
 
 		Robot r = new Robot();
+                //Change to internet window
 		r.keyPress(KeyEvent.VK_ALT);
                 r.delay(500);
 		r.keyPress(KeyEvent.VK_TAB);
@@ -70,6 +72,35 @@ public class TwitterStocks {
 		r.keyRelease(KeyEvent.VK_ALT);
 		r.keyRelease(KeyEvent.VK_TAB);
                 r.delay(500);
+                
+                checkStocks(r, tickers, prices);
+                
+                r.delay(1000);
+                
+                checkTwitter(r, ITERATIONS, tickers, positive, negative, values, prices);
+                
+                display(tickers, prices, values);
+                
+                r.delay(1000);
+                
+                checkStocks(r, tickers, prices);
+                
+                display(tickers, prices, values);
+                
+	}
+    private static void display(ArrayList<String> tickers, HashMap<String, PriceLog> prices, HashMap<String, RollingAverage> values)
+    {
+        for(String t : tickers)
+        {
+            System.out.println(t.toUpperCase() + ": " + prices.get(t) + " : " + values.get(t).get());
+        }
+        System.out.println();
+    }
+    
+    
+    private static void checkStocks(Robot r, ArrayList<String> tickers, HashMap<String, PriceLog> prices) throws UnsupportedFlavorException, IOException
+    {
+        //Stock Pull
                 r.mouseMove(300, 35);
                 click(r);
                 type("finance.yahoo.com", r);
@@ -80,7 +111,7 @@ public class TwitterStocks {
                 click(r);
                 type(t, r);
                 r.mouseMove(370, 325);
-                r.delay(5000);
+                r.delay(4000);
                 click(r);
                 click(r);
                 r.keyPress(KeyEvent.VK_CONTROL);
@@ -91,19 +122,16 @@ public class TwitterStocks {
                 r.keyRelease(KeyEvent.VK_CONTROL);
                 String price = "";
                 
-                try {
-            price = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-        } catch (UnsupportedFlavorException ex) {
-            Logger.getLogger(TwitterStocks.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(TwitterStocks.class.getName()).log(Level.SEVERE, null, ex);
-        }
-                prices.put(t, Double.parseDouble(price));
+                price = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+                prices.get(t).put(Double.parseDouble(price));
                 
                 }//price check
-                
-                r.delay(1000);
-                
+    }
+    
+    
+    private static void checkTwitter(Robot r, int ITERATIONS, ArrayList<String> tickers, ArrayList<String> positive, ArrayList<String> negative, HashMap<String, RollingAverage> values, HashMap<String, PriceLog> prices) throws UnsupportedFlavorException, IOException
+    {
+        //Twitter Check
                 r.mouseMove(300, 35);
                 click(r);
                 type("www.twitter.com", r);
@@ -199,11 +227,13 @@ public class TwitterStocks {
                 }
                 
                 values.get(t).update(score);
-                System.out.println(t.toUpperCase() + ": " + prices.get(t) + " : " + values.get(t).get());
+                
                 }
                 System.out.println();
                 }
-	}
+                //Twitter Check end
+    }
+    
     
     private static void type(String text, Robot r)
     {
