@@ -19,31 +19,22 @@ public class TwitterStocks {
     public final static int DOLLAR_SIGN = 28129870;
 
     public static void main(String args[]) throws AWTException, InterruptedException, FileNotFoundException, UnsupportedFlavorException, IOException {
+
         final int ITERATIONS = 1;
-
-
-
+        Robot r = new Robot();
         ArrayList<String> positive = new ArrayList<>();
         ArrayList<String> negative = new ArrayList<>();
         ArrayList<String> tickers = new ArrayList<>();
         loadFiles(positive, negative, tickers);
-
-
         HashMap<String, RollingAverage> values = new HashMap<>();
         for (String ticker : tickers) {
             values.put(ticker, new RollingAverage(10));
         }
-
         HashMap<String, PriceLog> prices = new HashMap<>();
         for (String ticker : tickers) {
             prices.put(ticker, new PriceLog());
         }
-
-        //System.out.println(positive);
-        //System.out.println(negative);
-        //System.out.println(tickers);
-
-        Robot r = new Robot();
+        
         //Change to internet window
         r.keyPress(KeyEvent.VK_ALT);
         r.delay(500);
@@ -52,6 +43,8 @@ public class TwitterStocks {
         r.keyRelease(KeyEvent.VK_ALT);
         r.keyRelease(KeyEvent.VK_TAB);
         r.delay(500);
+        
+        //Begin Stock Algorithems
 
         checkStocks(r, tickers, prices);
 
