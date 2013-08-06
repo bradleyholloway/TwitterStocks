@@ -35,14 +35,8 @@ public class TwitterStocks {
             prices.put(ticker, new PriceLog());
         }
         
-        //Change to internet window
-        r.keyPress(KeyEvent.VK_ALT);
-        r.delay(500);
-        r.keyPress(KeyEvent.VK_TAB);
-        r.delay(500);
-        r.keyRelease(KeyEvent.VK_ALT);
-        r.keyRelease(KeyEvent.VK_TAB);
-        r.delay(500);
+        switchWindows(r);
+        
         
         //Begin Stock Algorithems
 
@@ -57,6 +51,8 @@ public class TwitterStocks {
         r.delay(1000);
 
         checkStocks(r, tickers, prices);
+        
+        switchWindows(r);
 
         display(tickers, prices, values);
 
@@ -307,6 +303,16 @@ public class TwitterStocks {
         r.delay(10);
         r.mouseRelease(MouseEvent.BUTTON1_MASK);
         r.delay(10);
+    }
+    public static void switchWindows(Robot r)
+    {
+        r.keyPress(KeyEvent.VK_ALT);
+        r.delay(500);
+        r.keyPress(KeyEvent.VK_TAB);
+        r.delay(500);
+        r.keyRelease(KeyEvent.VK_ALT);
+        r.keyRelease(KeyEvent.VK_TAB);
+        r.delay(500);
     }
     
     private static void loadFiles(ArrayList<String> positive, ArrayList<String> negative, ArrayList<String> tickers) throws FileNotFoundException
