@@ -31,6 +31,7 @@ public class RollingAverage
     
     public void update(double value)
     {
+        round(value, 3);
         values[currentIndex] = value;
         currentIndex++;
         if (currentIndex == size)
@@ -38,5 +39,13 @@ public class RollingAverage
             currentIndex = 0;
             firstPass = false;
         }
+    }
+    
+    private double round(double value, int places)
+    {
+        value = value * (Math.pow(10, places));
+        value = Math.round(value);
+        value = value / (Math.pow(10, places));
+        return value;
     }
 }

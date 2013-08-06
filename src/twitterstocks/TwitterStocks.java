@@ -20,8 +20,12 @@ public class TwitterStocks {
     
     public final static int DOLLAR_SIGN = 28129870;
 
-    public static void main(String args[]) throws AWTException, InterruptedException, FileNotFoundException
+    public static void main(String args[]) throws AWTException, InterruptedException, FileNotFoundException, UnsupportedFlavorException, IOException
 	{
+            final int ITERATIONS = 1;
+            
+            
+            
                 ArrayList<String> positive = new ArrayList<>();
                 ArrayList<String> negative = new ArrayList<>();
                 ArrayList<String> tickers = new ArrayList<>();
@@ -75,7 +79,7 @@ public class TwitterStocks {
                 r.mouseMove(380, 130);
                 click(r);
                 type(t, r);
-                r.mouseMove(380, 325);
+                r.mouseMove(370, 325);
                 r.delay(5000);
                 click(r);
                 click(r);
@@ -105,7 +109,7 @@ public class TwitterStocks {
                 type("www.twitter.com", r);
                 r.delay(4000);
                 
-                for(int iterations = 0; iterations < 1; iterations++)
+                for(int iterations = 0; iterations < ITERATIONS; iterations++)
                 {
                 for(String t : tickers)
                 {
@@ -135,13 +139,8 @@ public class TwitterStocks {
                 r.delay(50);
                 r.keyRelease(KeyEvent.VK_CONTROL);
                 String data = "";
-        try {
-            data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-        } catch (UnsupportedFlavorException ex) {
-            Logger.getLogger(TwitterStocks.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(TwitterStocks.class.getName()).log(Level.SEVERE, null, ex);
-        }
+            
+                data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
                 
                 
                 ArrayList<String> parsed = new ArrayList<String>();
