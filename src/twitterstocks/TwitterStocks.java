@@ -68,14 +68,15 @@ public class TwitterStocks {
     private static void checkStocks(Robot r, ArrayList<String> tickers, HashMap<String, PriceLog> prices) throws UnsupportedFlavorException, IOException {
         //Stock Pull
         r.mouseMove(300, 35);
+        
         click(r);
         type("finance.yahoo.com", r);
         r.delay(3000);
         for (String t : tickers) {
-            r.mouseMove(380, 130);
+            r.mouseMove(680, 115);
             click(r);
             type(t, r);
-            r.mouseMove(370, 325);
+            r.mouseMove(645, 325);
             r.delay(4000);
             click(r);
             click(r);
@@ -102,7 +103,7 @@ public class TwitterStocks {
 
         for (int iterations = 0; iterations < ITERATIONS; iterations++) {
             for (String t : tickers) {
-                r.mouseMove(800, 100);
+                r.mouseMove(1100, 88);
                 click(r);
                 r.keyPress(KeyEvent.VK_CONTROL);
                 r.delay(50);
@@ -113,7 +114,7 @@ public class TwitterStocks {
                 r.keyRelease(KeyEvent.VK_CONTROL);
                 type("$" + t, r);
                 r.delay(3000);
-                r.mouseMove(800, 150);
+                r.mouseMove(1100, 150);
                 click(r);
 
                 r.keyPress(KeyEvent.VK_CONTROL);
