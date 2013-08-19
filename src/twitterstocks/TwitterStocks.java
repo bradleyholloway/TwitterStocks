@@ -4,6 +4,7 @@ import java.awt.AWTException;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -72,6 +73,10 @@ public class TwitterStocks {
         type("finance.yahoo.com", r);
         r.delay(3000);
         for (String t : tickers) {
+            
+            String price = "";
+            Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(""), null);
+            do {
             r.mouseMove(380, 130);
             click(r);
             type(t, r);
@@ -85,9 +90,11 @@ public class TwitterStocks {
             r.delay(100);
             r.keyRelease(KeyEvent.VK_C);
             r.keyRelease(KeyEvent.VK_CONTROL);
-            String price = "";
+            
 
             price = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+            } while (price.equals(""));
+            
             prices.get(t).put(Double.parseDouble(price));
 
         }//price check
