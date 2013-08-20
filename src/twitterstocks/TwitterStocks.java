@@ -18,6 +18,8 @@ import java.util.Scanner;
 public class TwitterStocks {
 
     public final static int DOLLAR_SIGN = 28129870;
+    public final static int GOOGLE_FINANCE_TABS = 13;
+    public final static int TWITTER_TABS = 5;
 
     public static void main(String args[]) throws AWTException, InterruptedException, FileNotFoundException, UnsupportedFlavorException, IOException {
 
@@ -35,15 +37,13 @@ public class TwitterStocks {
         for (String ticker : tickers) {
             prices.put(ticker, new PriceLog());
         }
-        
+
         switchWindows(r);
-        
-        
+
+
         //Begin Stock Algorithems
 
         checkStocks(r, tickers, prices);
-
-        r.delay(1000);
 
         checkTwitter(r, ITERATIONS, tickers, positive, negative, values, prices);
 
@@ -52,7 +52,7 @@ public class TwitterStocks {
         r.delay(1000);
 
         checkStocks(r, tickers, prices);
-        
+
         switchWindows(r);
 
         display(tickers, prices, values);
@@ -68,76 +68,65 @@ public class TwitterStocks {
 
     private static void checkStocks(Robot r, ArrayList<String> tickers, HashMap<String, PriceLog> prices) throws UnsupportedFlavorException, IOException {
         //Stock Pull
-        r.mouseMove(300, 35);
-        
-        click(r);
-        type("finance.yahoo.com", r);
+        type(KeyEvent.VK_F6, r);
+        type("finance.google.com", r);
         r.delay(3000);
         for (String t : tickers) {
             String price = "";
             Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(""), null);
             do {
-            r.mouseMove(380, 130);
-            click(r);
-            type(t, r);
-            r.mouseMove(645, 325);
-            r.delay(4000);
-            click(r);
-            click(r);
-            r.keyPress(KeyEvent.VK_CONTROL);
-            r.delay(100);
-            r.keyPress(KeyEvent.VK_C);
-            r.delay(100);
-            r.keyRelease(KeyEvent.VK_C);
-            r.keyRelease(KeyEvent.VK_CONTROL);
-            
+                //r.mouseMove(380, 130);
+                //click(r);
 
-            price = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+                select(GOOGLE_FINANCE_TABS, r);
+
+                type(t, r);
+
+                r.delay(4000);
+
+                selectAll(r);
+
+                price = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
             } while (price.equals(""));
             
-            prices.get(t).put(Double.parseDouble(price));
+            price = price.substring(price.indexOf('\t')+1);
+            
+            prices.get(t).put(Double.parseDouble(price.substring(0, price.indexOf('\t'))));
 
         }//price check
     }
 
     private static void checkTwitter(Robot r, int ITERATIONS, ArrayList<String> tickers, ArrayList<String> positive, ArrayList<String> negative, HashMap<String, RollingAverage> values, HashMap<String, PriceLog> prices) throws UnsupportedFlavorException, IOException {
         //Twitter Check
-        r.mouseMove(300, 35);
-        click(r);
+        type(KeyEvent.VK_F6,r);
         type("www.twitter.com", r);
         r.delay(4000);
 
         for (int iterations = 0; iterations < ITERATIONS; iterations++) {
             for (String t : tickers) {
-                r.mouseMove(1100, 88);
-                click(r);
-                r.keyPress(KeyEvent.VK_CONTROL);
+                String data = "";
+                Toolkit.getDefaultToolkit().getSystemClipboard().setContents(new StringSelection(""), null);
+                do {
+                select(TWITTER_TABS, r);
+                //r.mouseMove(1100, 88);
+                //click(r);
+                /*r.keyPress(KeyEvent.VK_CONTROL);
                 r.delay(50);
                 r.keyPress(KeyEvent.VK_A);
                 r.delay(200);
                 r.keyRelease(KeyEvent.VK_A);
                 r.delay(50);
-                r.keyRelease(KeyEvent.VK_CONTROL);
+                r.keyRelease(KeyEvent.VK_CONTROL);*/
                 type("$" + t, r);
                 r.delay(3000);
-                r.mouseMove(1100, 150);
-                click(r);
+                //r.mouseMove(1100, 150);
+                //click(r);
 
-                r.keyPress(KeyEvent.VK_CONTROL);
-                r.delay(50);
-                r.keyPress(KeyEvent.VK_A);
-                r.delay(50);
-                r.keyRelease(KeyEvent.VK_A);
-                r.delay(500);
-                r.keyPress(KeyEvent.VK_C);
-                r.delay(50);
-                r.keyRelease(KeyEvent.VK_C);
-                r.delay(50);
-                r.keyRelease(KeyEvent.VK_CONTROL);
-                String data = "";
-
+                selectAll(r);
+                
                 data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-
+                
+                } while (data.equals(""));
 
                 ArrayList<String> parsed = new ArrayList<String>();
                 boolean blankLine = false;
@@ -189,6 +178,13 @@ public class TwitterStocks {
             System.out.println();
         }
         //Twitter Check end
+    }
+
+    private static void type(int k, Robot r) {
+        r.keyPress(k);
+        r.delay(30);
+        r.keyRelease(k);
+        r.delay(30);
     }
 
     private static void type(String text, Robot r) {
@@ -311,8 +307,15 @@ public class TwitterStocks {
         r.mouseRelease(MouseEvent.BUTTON1_MASK);
         r.delay(10);
     }
-    public static void switchWindows(Robot r)
-    {
+
+    private static void select(int tabs, Robot r) {
+        //type(KeyEvent.VK_F6, r);
+        for (int t = 0; t < tabs; t++) {
+            type(KeyEvent.VK_TAB, r);
+        }
+    }
+
+    public static void switchWindows(Robot r) {
         r.keyPress(KeyEvent.VK_ALT);
         r.delay(500);
         r.keyPress(KeyEvent.VK_TAB);
@@ -321,9 +324,23 @@ public class TwitterStocks {
         r.keyRelease(KeyEvent.VK_TAB);
         r.delay(500);
     }
-    
-    private static void loadFiles(ArrayList<String> positive, ArrayList<String> negative, ArrayList<String> tickers) throws FileNotFoundException
-    {
+
+    private static void selectAll(Robot r) {
+        r.keyPress(KeyEvent.VK_CONTROL);
+        r.delay(50);
+        r.keyPress(KeyEvent.VK_A);
+        r.delay(50);
+        r.keyRelease(KeyEvent.VK_A);
+        r.delay(500);
+        r.keyPress(KeyEvent.VK_C);
+        r.delay(50);
+        r.keyRelease(KeyEvent.VK_C);
+        r.delay(50);
+        r.keyRelease(KeyEvent.VK_CONTROL);
+        r.delay(400);
+    }
+
+    private static void loadFiles(ArrayList<String> positive, ArrayList<String> negative, ArrayList<String> tickers) throws FileNotFoundException {
         Scanner positiveIn = new Scanner(new File("positive.txt"));
         Scanner negativeIn = new Scanner(new File("negative.txt"));
         Scanner tickersIn = new Scanner(new File("tickers.txt"));
