@@ -21,12 +21,13 @@ class Indicator {
         }
     }
     
-    public void addPoint(double x, double y)
+    public void addPoint(double x, double y) throws FileNotFoundException
     {
         double[] point = new double[2];
         point[0] = x;
         point[1] = y;
         points.add(point);
+        write();
     }
     
     public String getName()
@@ -34,7 +35,7 @@ class Indicator {
         return name;
     }
     
-    public void write() throws FileNotFoundException
+    private void write() throws FileNotFoundException
     {
         try (PrintWriter out = new PrintWriter("indicators\\"+ name + ".txt")) {
             for (double[] p : points)

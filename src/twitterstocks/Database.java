@@ -96,7 +96,7 @@ class Database {
             add(new Article(f));
         }
     }
-    public static boolean updateIndicator(String name, double x, double y)
+    public static boolean updateIndicator(String name, double x, double y) throws FileNotFoundException
     {
         for (Indicator i : indicators)
         {
