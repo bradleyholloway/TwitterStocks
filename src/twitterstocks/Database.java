@@ -12,6 +12,7 @@ class Database {
     public static HashMap<Integer, ArrayList<Article>> articles = new HashMap<>();
     public static ArrayList<Integer> files = new ArrayList<>();
     public static ArrayList<Integer> dates = new ArrayList<>();
+    public static ArrayList<Indicator> indicators = new ArrayList<>();
     
     public static void add(Article a) throws FileNotFoundException
     {
@@ -35,6 +36,20 @@ class Database {
         Collections.sort(dates);
         Collections.sort(files);
     }
+    public static void add(Indicator i) throws FileNotFoundException
+    {
+        indicators.add(i);
+        String names;
+        File file = new File("Indicators.txt");
+        try (Scanner fileIn = new Scanner(file)) {
+            names = fileIn.nextLine();
+            
+        }
+        try (PrintWriter out = new PrintWriter("Indicators.txt")) {
+            out.print(names);
+            out.print(i.getName()+",");
+        }
+    }
     public static void load() throws FileNotFoundException
     {
         String content;
@@ -49,7 +64,7 @@ class Database {
         
         while(content.length() > 0)
         {
-            content = parse(content);
+            content = parseArticles(content);
         }
         int max = -1;
         for( Integer temp : files)
@@ -73,10 +88,27 @@ class Database {
             add(new Article(f));
         }
     }
+    public static boolean updateIndicator(String name, double x, double y)
+    {
+        for (Indicator i : indicators)
+        {
+            if(i.getName().equals(name))
+            {
+                i.addPoint(x, y);
+                return true;
+            }
+        }
+        return false;
+    }
        
-    private static String parse(String content)
+    private static String parseArticles(String content)
     {
         files.add(Integer.parseInt(content.substring(0,content.indexOf(','))));
+        return content.substring(content.indexOf(',')+1);
+    }
+    private static String parseIndicators(String content) throws FileNotFoundException
+    {
+        indicators.add(new Indicator(content.substring(0,content.indexOf(','))));
         return content.substring(content.indexOf(',')+1);
     }
     
