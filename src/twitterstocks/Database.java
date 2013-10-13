@@ -53,14 +53,22 @@ class Database {
     public static void load() throws FileNotFoundException
     {
         String content;
-        File file = new File("Articles.txt");
+        File file = new File("Indicators.txt");
+        try (Scanner fileIn = new Scanner(file)) {
+            content = fileIn.nextLine();
+        }
+        while(content.length() > 0)
+        {
+            content = parseIndicators(content);
+        }
+        
+        file = new File("Articles.txt");
         try (Scanner fileIn = new Scanner(file)) {
             content = fileIn.nextLine();
         }
         try (PrintWriter out = new PrintWriter("Articles.txt")) {
             out.println();
         }
-        
         
         while(content.length() > 0)
         {
