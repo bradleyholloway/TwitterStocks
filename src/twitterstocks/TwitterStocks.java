@@ -12,6 +12,7 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Scanner;
 
@@ -22,7 +23,8 @@ public class TwitterStocks {
     public final static int TWITTER_TABS = 5;
 
     public static void main(String args[]) throws AWTException, InterruptedException, FileNotFoundException, UnsupportedFlavorException, IOException {
-
+        Scanner sn = new Scanner(System.in);
+        sn.nextLine();
         final int ITERATIONS = 1;
         Robot r = new Robot();
         ArrayList<String> positive = new ArrayList<>();
@@ -56,7 +58,10 @@ public class TwitterStocks {
         switchWindows(r);
 
         display(tickers, prices, values);
-
+        
+        //Database.load();
+        //Database.add(new Article((String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor)));
+        
     }
 
     private static void display(ArrayList<String> tickers, HashMap<String, PriceLog> prices, HashMap<String, RollingAverage> values) {
