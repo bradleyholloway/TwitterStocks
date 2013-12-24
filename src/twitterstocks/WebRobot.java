@@ -37,7 +37,7 @@ public class WebRobot {
     public void launchChrome() {
         launchRun();
         type("chrome", true);
-        waitTillDone();
+        waitTillDone(2,1);
     }
     
     public void typeURL(String URL) {
@@ -46,14 +46,17 @@ public class WebRobot {
         waitTillDone();
         
     }
-    
-    public void mineNYTimes(int day, int month, int year)
+    public void mineNYTimes(int day, int month, int year, int results)
     {
-        DecimalFormat dayMonth = new DecimalFormat("00");
+        
+    
+    DecimalFormat dayMonth = new DecimalFormat("00");
         DecimalFormat yearFormat = new DecimalFormat("0000");
         String date = "" + yearFormat.format(year) + dayMonth.format(month) + dayMonth.format(day);
+        for(int result = 0; result < results; result++)
+        {
         typeURL("http://query.nytimes.com/search/sitesearch/#/a/from"+date+"to"+date+"/allresults/1/allauthors/oldest/");
-        select(12);
+        select(12+result);
         enter();
         waitTillDone();
         selectAll();
@@ -62,6 +65,13 @@ public class WebRobot {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
         }
+        }
+    
+    }
+    
+    public void mineNYTimes(int day, int month, int year)
+    {
+        mineNYTimes(day, month, year, 1);
     }
     
     private void type(int k) {
@@ -341,6 +351,22 @@ public class WebRobot {
                 waiting = false;
             } else {
                 first = second;
+            }
+        }
+    }
+    private void waitTillDone(int firstWait, int afterWait) {
+        boolean waiting = true;
+        int waitTime = firstWait;
+        BufferedImage first = robot.createScreenCapture(new Rectangle(0, 0, java.awt.Toolkit.getDefaultToolkit().getScreenSize().width, 100));
+        BufferedImage second;
+        while (waiting) {
+            robot.delay(waitTime * 1000);
+            second = robot.createScreenCapture(new Rectangle(0, 0, java.awt.Toolkit.getDefaultToolkit().getScreenSize().width, 100));
+            if (equal(first, second)) {
+                waiting = false;
+            } else {
+                first = second;
+                waitTime = afterWait;
             }
         }
     }
