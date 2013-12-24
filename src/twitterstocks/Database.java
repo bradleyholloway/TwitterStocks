@@ -157,4 +157,55 @@ class Database {
         }
         return graphPoints;
     }
+    public static double[][] getIndicatorGraph(String name)
+    {
+        Indicator i = null;
+        for (Indicator temp : indicators)
+        {
+            if(temp.getName().equals(name)) {
+                i = temp;
+            }
+        }
+        if(i == null) {
+            return null;
+        }
+        return i.getGraphData();
+    }
+    
+    public static double[][] getIndicatorGraph(String name, int start, int end)
+    {
+        Indicator i = null;
+        for (Indicator temp : indicators)
+        {
+            if(temp.getName().equals(name)) {
+                i = temp;
+            }
+        }
+        if(i == null) {
+            return null;
+        }
+        double[][] full = i.getGraphData();
+        int begin = 0;
+        while(begin < full.length && full[begin][0] < start)
+        {
+            begin ++;
+        }
+        int stop = full.length-1;
+        while(stop >= begin && full[stop][0] > end)
+        {
+            stop --;
+        }
+        if(stop <= begin) {
+            return null;
+        }
+        
+        double[][] filtered = new double[stop - begin+1][2];
+        for(int a = begin; a <= stop; a++)
+        {
+            filtered[a - begin][0] = full[a][0];
+            filtered[a - begin][1] = full[a][1];
+        }
+        return filtered;
+    }
+    
 }

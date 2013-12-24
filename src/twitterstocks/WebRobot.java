@@ -382,7 +382,7 @@ public class WebRobot {
         return true;
     }
     
-    private String getClipboard()
+    public String getClipboard()
     {
         String data = "";
         int tries = 25;

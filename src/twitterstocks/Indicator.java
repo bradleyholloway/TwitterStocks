@@ -4,7 +4,9 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Scanner;
+import sun.misc.Sort;
 
 class Indicator {
     private ArrayList<double[]> points;
@@ -26,8 +28,29 @@ class Indicator {
         double[] point = new double[2];
         point[0] = x;
         point[1] = y;
-        points.add(point);
+        points.add(insertPoint(x), point);
         write();
+    }
+    private int insertPoint(double d)
+    {
+        int a = 0;
+        while(a < points.size() && d > points.get(a)[0])
+        {
+            a++;
+        }
+        return a;
+    }
+    
+    public double[][] getGraphData()
+    {
+        
+        double[][] returns = new double[points.size()][2];
+        for(int a = 0; a < points.size(); a++)
+        {
+            returns[a][0] = points.get(a)[0];
+            returns[a][1] = points.get(a)[1];
+        }
+        return returns;
     }
     
     public String getName()
