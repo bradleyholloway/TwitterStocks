@@ -28,6 +28,12 @@ public class WebRobotTestDriver {
             Logger.getLogger(WebRobotTestDriver.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        for (int[] point : Database.getCountOfWordGraph("test"))
+        {
+            System.out.println(point[0]+" "+point[1]);
+            
+        }
+        
             //tester.launchChrome();
             //tester.mineNYTimes(27, 11, 1996,3);
             //tester.mineNYTimes(25, 11, 1996);
