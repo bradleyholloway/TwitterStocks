@@ -16,6 +16,7 @@ import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DecimalFormat;
+import java.util.concurrent.DelayQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -35,6 +36,9 @@ public class WebRobot {
     }
     
     public void launchChrome() {
+        System.out.println("Warning: Make sure that Chrome is not running!");
+        System.out.println("You have 10 Seconds before it could cause problems.");
+        robot.delay(10000);
         launchRun();
         type("chrome", true);
         waitTillDone(2,1);
@@ -402,6 +406,9 @@ public class WebRobot {
     
     private String findNYTimesArticle(String data)
     {
-        return data.substring(data.indexOf("REPRINTS")+9, data.indexOf("FACEBOOK", data.indexOf("REPRINTS")));
+        if(data.indexOf("REPRINTS") != -1  && data.indexOf("FACEBOOK", data.indexOf("REPRINTS")) != -1) {
+            return data.substring(data.indexOf("REPRINTS")+9, data.indexOf("FACEBOOK", data.indexOf("REPRINTS")));
+        }
+        return "";
     }
 }
