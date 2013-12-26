@@ -27,9 +27,10 @@ public class NewYorkTimesMiner {
         }
         robot.launchChrome(); //Make sure chrome is closed.
         
-        int month, articles = 1; //Articles per day to look up, Remember perday, so compound by 365 per year, so keep fairly small
-        for(int year = 1981; year < 2013; year++)
-        {
+        int year = 1981;
+        int month, articles = 5; //Articles per day to look up, Remember perday, so compound by 365 per year, so keep fairly small
+        //for(int year = 1981; year < 2013; year++)
+        //{
             month = 1;
             for(int day = 1; day <= 31; day++) //January
             {
@@ -79,7 +80,7 @@ public class NewYorkTimesMiner {
             {
                 robot.mineNYTimes(day, month, year, articles);
             }            
-        }
+        //}
         
         
         
