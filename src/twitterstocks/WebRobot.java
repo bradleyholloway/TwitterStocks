@@ -9,6 +9,7 @@ import java.awt.Rectangle;
 import java.awt.Robot;
 import java.awt.Toolkit;
 import java.awt.datatransfer.DataFlavor;
+import java.awt.datatransfer.StringSelection;
 import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -45,9 +46,13 @@ public class WebRobot {
     }
     
     public void typeURL(String URL) {
+        setClipboard(URL);
         type(KeyEvent.VK_F6);
         waitTillDone();
-        type(URL, true);
+        
+        paste();
+        enter();
+        
         waitTillDone();
         
     }
@@ -333,6 +338,11 @@ public class WebRobot {
         robot.keyRelease(KeyEvent.VK_CONTROL);
         robot.delay(400);
     }
+    private void setClipboard(String text)
+    {
+        StringSelection sText = new StringSelection(text);
+        Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sText, null);
+    }
     
     private void launchRun() {
         robot.keyPress(KeyEvent.VK_WINDOWS);
@@ -342,6 +352,17 @@ public class WebRobot {
         robot.keyRelease(KeyEvent.VK_R);
         robot.keyRelease(KeyEvent.VK_WINDOWS);
         robot.delay(200);
+    }
+    
+    private void paste()
+    {
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.delay(40);
+        robot.keyPress(KeyEvent.VK_V);
+        robot.delay(40);
+        robot.keyRelease(KeyEvent.VK_V);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+        robot.delay(30);
     }
     
     private void waitTillDone() {

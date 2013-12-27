@@ -7,6 +7,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
+import javax.imageio.stream.FileCacheImageInputStream;
 
 class Database {
     public static HashMap<Integer, ArrayList<Article>> articles = new HashMap<>();
@@ -25,14 +26,21 @@ class Database {
         files.add(a.getNum());
         String content;
         File file = new File("Articles.txt");
-        try (Scanner fileIn = new Scanner(file)) {
+        Scanner fileIn = new Scanner(file);
+        try  {
             content = fileIn.nextLine();
-            
+        } finally {
+            fileIn.close();
         }
-        try (PrintWriter out = new PrintWriter("Articles.txt")) {
+        
+        PrintWriter out = new PrintWriter(file);
+        try {
             out.print(content);
             out.print(a.getNum()+",");
+        } finally {
+            out.close();
         }
+        
         Collections.sort(dates);
         Collections.sort(files);
     }
@@ -41,13 +49,20 @@ class Database {
         indicators.add(i);
         String names;
         File file = new File("Indicators.txt");
-        try (Scanner fileIn = new Scanner(file)) {
+        Scanner fileIn = new Scanner(file);
+        try  {
             names = fileIn.nextLine();
             
+        } finally {
+            fileIn.close();
         }
-        try (PrintWriter out = new PrintWriter("Indicators.txt")) {
+        PrintWriter out = new PrintWriter(file);
+        try {
             out.print(names);
             out.print(i.getName()+",");
+        }
+        finally {
+            out.close();
         }
     }
     public static void load() throws FileNotFoundException
@@ -55,8 +70,12 @@ class Database {
         System.out.print("Database Loading...\t");
         String content;
         File file = new File("Indicators.txt");
-        try (Scanner fileIn = new Scanner(file)) {
+        Scanner fileIn = new Scanner(file);
+        try {
             content = fileIn.nextLine();
+        }
+        finally {
+            fileIn.close();
         }
         while(content.length() > 0)
         {
@@ -64,11 +83,18 @@ class Database {
         }
         
         file = new File("Articles.txt");
-        try (Scanner fileIn = new Scanner(file)) {
+        fileIn = new Scanner(file);
+        try {
             content = fileIn.nextLine();
+        } finally {
+            fileIn.close();
         }
-        try (PrintWriter out = new PrintWriter("Articles.txt")) {
+        PrintWriter out = new PrintWriter(file);
+        try {
             out.println();
+        }
+        finally {
+            out.close();
         }
         
         while(content.length() > 0)
