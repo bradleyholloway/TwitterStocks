@@ -52,6 +52,7 @@ class Database {
     }
     public static void load() throws FileNotFoundException
     {
+        System.out.print("Database Loading...\t");
         String content;
         File file = new File("Indicators.txt");
         try (Scanner fileIn = new Scanner(file)) {
@@ -95,6 +96,7 @@ class Database {
         {
             add(new Article(f));
         }
+        System.out.println("Done.");
     }
     public static boolean updateIndicator(String name, double x, double y) throws FileNotFoundException
     {

@@ -41,11 +41,12 @@ public class WebRobot {
         robot.delay(10000);
         launchRun();
         type("chrome", true);
-        waitTillDone(2,1);
+        waitTillDone(20,1);
     }
     
     public void typeURL(String URL) {
         type(KeyEvent.VK_F6);
+        waitTillDone();
         type(URL, true);
         waitTillDone();
         
