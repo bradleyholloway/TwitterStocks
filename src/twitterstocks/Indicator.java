@@ -15,7 +15,7 @@ class Indicator {
     public Indicator(String name) throws FileNotFoundException
     {
         this.name = name;
-        points = new ArrayList<>();
+        points = new ArrayList<double[]>();
         File f = new File("indicators\\"+ name + ".txt");
         if(f.exists())
         {
@@ -60,18 +60,20 @@ class Indicator {
     
     private void write() throws FileNotFoundException
     {
-        try (PrintWriter out = new PrintWriter("indicators\\"+ name + ".txt")) {
+        PrintWriter out = new PrintWriter("indicators\\"+ name + ".txt");
+        try {
             for (double[] p : points)
             {
                 out.println(p[0] +","+p[1]);
             }
-        }
+        } finally { out.close();}
     }
     
     private void read() throws FileNotFoundException
     {
         File file = new File("indicators\\"+ name + ".txt");
-        try (Scanner fileIn = new Scanner(file)) {
+        Scanner fileIn = new Scanner(file);
+        try {
             while (fileIn.hasNextLine()) {
                 String p = fileIn.nextLine();
                 double x = Double.parseDouble(p.substring(0, p.indexOf(',')));
@@ -79,6 +81,7 @@ class Indicator {
                 addPoint(x, y);
             }
         }
+        finally {fileIn.close();}
     }
     
 }

@@ -7,13 +7,12 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
-import javax.imageio.stream.FileCacheImageInputStream;
 
 class Database {
-    public static HashMap<Integer, ArrayList<Article>> articles = new HashMap<>();
-    public static ArrayList<Integer> files = new ArrayList<>();
-    public static ArrayList<Integer> dates = new ArrayList<>();
-    public static ArrayList<Indicator> indicators = new ArrayList<>();
+    public static HashMap<Integer, ArrayList<Article>> articles = new HashMap<Integer, ArrayList<Article>>();
+    public static ArrayList<Integer> files = new ArrayList<Integer>();
+    public static ArrayList<Integer> dates = new ArrayList<Integer>();
+    public static ArrayList<Indicator> indicators = new ArrayList<Indicator>();
     
     public static void add(Article a) throws FileNotFoundException
     {
@@ -111,7 +110,7 @@ class Database {
         }
         Article.numFiles = max + 1;
         
-        ArrayList<Integer> tempFiles = new ArrayList<>();
+        ArrayList<Integer> tempFiles = new ArrayList<Integer>();
         
         for( int f : files)
         {
@@ -169,7 +168,7 @@ class Database {
     }
     public static int[][] getCountOfWordGraph(String word, int start, int end)
     {
-        ArrayList<Integer> datesInRange = new ArrayList<>();
+        ArrayList<Integer> datesInRange = new ArrayList<Integer>();
         for (int date : dates)
         {
             if(date >= start && date <= end)

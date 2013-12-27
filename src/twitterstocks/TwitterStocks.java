@@ -27,15 +27,15 @@ public class TwitterStocks {
         sn.nextLine();
         final int ITERATIONS = 1;
         Robot r = new Robot();
-        ArrayList<String> positive = new ArrayList<>();
-        ArrayList<String> negative = new ArrayList<>();
-        ArrayList<String> tickers = new ArrayList<>();
+        ArrayList<String> positive = new ArrayList<String>();
+        ArrayList<String> negative = new ArrayList<String>();
+        ArrayList<String> tickers = new ArrayList<String>();
         loadFiles(positive, negative, tickers);
-        HashMap<String, RollingAverage> values = new HashMap<>();
+        HashMap<String, RollingAverage> values = new HashMap<String, RollingAverage>();
         for (String ticker : tickers) {
             values.put(ticker, new RollingAverage(10));
         }
-        HashMap<String, PriceLog> prices = new HashMap<>();
+        HashMap<String, PriceLog> prices = new HashMap<String, PriceLog>();
         for (String ticker : tickers) {
             prices.put(ticker, new PriceLog());
         }

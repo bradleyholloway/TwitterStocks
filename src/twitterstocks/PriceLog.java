@@ -9,7 +9,7 @@ public class PriceLog {
 
     public PriceLog() {
         index = -1;
-        prices = new ArrayList<>();
+        prices = new ArrayList<Double>();
     }
 
     public void put(double price) {

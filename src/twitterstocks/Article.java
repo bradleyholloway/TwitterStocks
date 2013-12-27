@@ -52,20 +52,26 @@ class Article {
 
     private void readFromFile(String fileName) throws FileNotFoundException {
         File file = new File(fileName+".txt");
-        try (Scanner fileIn = new Scanner(file)) {
+        Scanner fileIn = new Scanner(file);
+        try {
             String d = fileIn.nextLine();
             this.date = Integer.parseInt(d);
             while (fileIn.hasNextLine()) {
                 this.content = fileIn.nextLine();
             }
         }
+        finally {
+            fileIn.close();
+        }
     }
 
     private void writeToFile() throws FileNotFoundException {
-        try (PrintWriter out = new PrintWriter(fileName + ".txt")) {
+        PrintWriter out = new PrintWriter(fileName + ".txt");
+        try {
             out.println(date);
             out.println(content);
         }
+        finally { out.close();}
     }
     
     private String replace(String original, char find, String replacement)

@@ -7,7 +7,7 @@ public class WeightTable {
     
     public WeightTable()
     {
-        data = new HashMap<>();
+        data = new HashMap<String, Double>();
     }
     
     public void add(String word)
