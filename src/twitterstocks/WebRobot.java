@@ -17,14 +17,12 @@ import java.awt.image.BufferedImage;
 import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.text.DecimalFormat;
-import java.util.concurrent.DelayQueue;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WebRobot {
     
     Robot robot;
-    private static int DOLLAR_SIGN = 1928364982;
     
     public WebRobot() {
         while (robot == null) {
