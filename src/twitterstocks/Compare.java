@@ -12,7 +12,7 @@ class Compare {
         
         return r;
     }
-    public static double covariance(double[][] indicator, double[][] word)
+    public static double covariance(double[][] indicator, int[][] word)
     {
         double xMean = mean(indicator);
         double yMean = mean(word, indicator.length);
@@ -36,20 +36,20 @@ class Compare {
         }
         return sum/count;
     }
-    private static double mean(double[][] data, double count)
+    
+    private static double mean(int[][] data, double count)
     {
         double sum = 0;
-        for (double[] point : data)
+        for (int[] point : data)
         {
             sum += point[1];
-            count++;
         }
         return sum/count;
     }
-    private static double sum(double[][] word, double timeIn, double timeOut)
+    private static double sum(int[][] word, double timeIn, double timeOut)
     {
         double sum = 0;
-        for (double[] wordCount : word)
+        for (int[] wordCount : word)
         {
             if(wordCount[0] >= timeIn && wordCount[0] < timeOut)
             {
