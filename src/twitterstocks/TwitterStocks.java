@@ -18,12 +18,12 @@ import java.util.Scanner;
 
 public class TwitterStocks {
 
-    public final static int DOLLAR_SIGN = 28129870;
-    public final static int GOOGLE_FINANCE_TABS = 13;
-    public final static int TWITTER_TABS = 5;
+    //public final static int DOLLAR_SIGN = 28129870;
+    //public final static int GOOGLE_FINANCE_TABS = 13;
+    //public final static int TWITTER_TABS = 5;
 
     public static void main(String args[]) throws AWTException, InterruptedException, FileNotFoundException, UnsupportedFlavorException, IOException {
-        Scanner sn = new Scanner(System.in);
+    /*    Scanner sn = new Scanner(System.in);
         sn.nextLine();
         final int ITERATIONS = 1;
         Robot r = new Robot();
@@ -122,7 +122,7 @@ public class TwitterStocks {
                 r.keyRelease(KeyEvent.VK_A);
                 r.delay(50);
                 r.keyRelease(KeyEvent.VK_CONTROL);*/
-                type("$" + t, r);
+      /*          type("$" + t, r);
                 r.delay(3000);
                 //r.mouseMove(1100, 150);
                 //click(r);
@@ -361,5 +361,9 @@ public class TwitterStocks {
             tickers.add(tickersIn.nextLine());
         }
         tickersIn.close();
+    }
+}
+*/
+        Database.load();
     }
 }

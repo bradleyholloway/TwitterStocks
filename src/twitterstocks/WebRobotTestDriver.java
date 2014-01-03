@@ -21,18 +21,18 @@ public class WebRobotTestDriver {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        WebRobot tester = new WebRobot();
+        //WebRobot tester = new WebRobot();
         try {
             Database.load();
         } catch (FileNotFoundException ex) {
             Logger.getLogger(WebRobotTestDriver.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        for (int[] point : Database.getCountOfWordGraph("test"))
-        {
-            System.out.println(point[0]+" "+point[1]);
-            
-        }
+        //for (int[] point : Database.getCountOfWordGraph("test"))
+        //{
+        //    System.out.println(point[0]+" "+point[1]);
+        //    
+        //}
         
             //tester.launchChrome();
             //tester.mineNYTimes(27, 11, 1996,3);
