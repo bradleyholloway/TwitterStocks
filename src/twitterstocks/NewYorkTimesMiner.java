@@ -29,12 +29,12 @@ public class NewYorkTimesMiner {
         
         int year = 1981;
         int month, articles = 5; //Articles per day to look up, Remember perday, so compound by 365 per year, so keep fairly small
-        //for(int year = 1981; year < 2013; year++)
-        //{
+        for(year = 1981; year < 2013; year++)
+        {
             month = 1;
             for(int day = 17; day <= 17; day++) //January
             {
-                robot.mineNYTimes(day, month, year, articles);
+                //robot.mineNYTimes(day, month, year, articles);
             } month++;
             for(int day =17; day <=17; day++) //February
             {
@@ -42,11 +42,11 @@ public class NewYorkTimesMiner {
             } month++;
             for(int day = 17; day <= 17; day++) //March
             {
-                robot.mineNYTimes(day, month, year, articles);
+                //robot.mineNYTimes(day, month, year, articles);
             } month++;
             for(int day = 17; day <= 17; day++) //April
             {
-                robot.mineNYTimes(day, month, year, articles);
+                //robot.mineNYTimes(day, month, year, articles);
             } month++;
             for(int day = 17; day <= 17; day++) //May
             {
@@ -54,11 +54,11 @@ public class NewYorkTimesMiner {
             } month++;
             for(int day = 17; day <= 17; day++) //June
             {
-                robot.mineNYTimes(day, month, year, articles);
+                //robot.mineNYTimes(day, month, year, articles);
             } month++;
             for(int day = 17; day <= 17; day++) //July
             {
-                robot.mineNYTimes(day, month, year, articles);
+                //robot.mineNYTimes(day, month, year, articles);
             } month++;
             for(int day = 17; day <= 17; day++) //August
             {
@@ -66,11 +66,11 @@ public class NewYorkTimesMiner {
             } month++;
             for(int day = 17; day <= 17; day++) //September
             {
-                robot.mineNYTimes(day, month, year, articles);
+                //robot.mineNYTimes(day, month, year, articles);
             } month++;
             for(int day = 17; day <= 17; day++) //October
             {
-                robot.mineNYTimes(day, month, year, articles);
+                //robot.mineNYTimes(day, month, year, articles);
             } month++;
             for(int day = 17; day <= 17; day++) //November
             {
@@ -78,9 +78,9 @@ public class NewYorkTimesMiner {
             } month++;
             for(int day = 17; day <= 17; day++) //December
             {
-                robot.mineNYTimes(day, month, year, articles);
+                //robot.mineNYTimes(day, month, year, articles);
             }            
-        //}
+        }
         
         
         
