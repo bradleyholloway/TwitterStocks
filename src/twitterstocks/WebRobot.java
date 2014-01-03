@@ -42,7 +42,7 @@ public class WebRobot {
         robot.delay(10000);
         launchRun();
         type("chrome", true);
-        waitTillDone(20,1);
+        waitTillDone(10,1);
     }
     
     public void typeURL(String URL) {
