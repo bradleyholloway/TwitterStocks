@@ -13,6 +13,7 @@ class Database {
     public static ArrayList<Integer> files = new ArrayList<Integer>();
     public static ArrayList<Integer> dates = new ArrayList<Integer>();
     public static ArrayList<Indicator> indicators = new ArrayList<Indicator>();
+    public static ArrayList<String> words = new ArrayList<String>();
     
     public static void add(Article a) throws FileNotFoundException
     {
@@ -80,6 +81,18 @@ class Database {
         {
             content = parseIndicators(content);
         }
+        file = new File("10000_words.txt");
+        fileIn = new Scanner(file);
+        try {
+            content = fileIn.nextLine();
+        }
+        finally {
+            fileIn.close();
+        }
+        while(content.length() > 0)
+        {
+            content = parseWords(content);
+        }
         
         file = new File("Articles.txt");
         fileIn = new Scanner(file);
@@ -88,6 +101,7 @@ class Database {
         } finally {
             fileIn.close();
         }
+        
         PrintWriter out = new PrintWriter(file);
         try {
             out.println();
@@ -144,6 +158,11 @@ class Database {
     private static String parseIndicators(String content) throws FileNotFoundException
     {
         indicators.add(new Indicator(content.substring(0,content.indexOf(','))));
+        return content.substring(content.indexOf(',')+1);
+    }
+    private static String parseWords(String content) throws FileNotFoundException
+    {
+        words.add((content.substring(0,content.indexOf(','))));
         return content.substring(content.indexOf(',')+1);
     }
     
