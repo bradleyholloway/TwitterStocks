@@ -90,13 +90,13 @@ public class WebRobot {
         DecimalFormat yearFormat = new DecimalFormat("0000");
         for(int result = 0; result < results; result++)
         {
-        typeURL("http://pqasb.pqarchiver.com/djreprints/results.html?st=advanced&QryTxt=*&type=current&sortby=RELEVANCE&datetype=6&frommonth="+dayMonth.format(month)+"&fromday="+dayMonth.format(day)+"&fromyear="+ yearFormat.format(year) +"&tomonth="+dayMonth.format(month)+"&today="+dayMonth.format(day)+"&toyear="+ yearFormat.format(year) +"&By=&Title=");
+        typeURL("http://pqasb.pqarchiver.com/djreprints/results.html?st=advanced&QryTxt=*&type=current&sortby=RELEVANCE&datetype=6&frommonth="+dayMonth.format(month)+"&fromday="+dayMonth.format(day)+"&fromyear="+ yearFormat.format(year) +"&tomonth="+dayMonth.format(month)+"&today="+dayMonth.format(day+10)+"&toyear="+ yearFormat.format(year) +"&By=&Title=");
         select(23+result*2);
         enter();
         waitTillDone();
         selectAll();
         try {
-            Database.add(new Article(findNYTimesArticle(getClipboard()), year*10000+month*100+day));
+            Database.add(new Article(findWSJArticle(getClipboard()), year*10000+month*100+day));
         } catch (FileNotFoundException ex) {
             Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -455,6 +455,14 @@ public class WebRobot {
     {
         if(data.indexOf("REPRINTS") != -1  && data.indexOf("FACEBOOK", data.indexOf("REPRINTS")) != -1) {
             return data.substring(data.indexOf("REPRINTS")+9, data.indexOf("FACEBOOK", data.indexOf("REPRINTS")));
+        }
+        return "";
+    }
+    
+    private String findWSJArticle(String data)
+    {
+        if(data.indexOf("ProQuest") != -1  && data.indexOf("Reproduced", data.indexOf("ProQuest")) != -1) {
+            return data.substring(data.indexOf("ProQuest")+9, data.indexOf("Reproduced", data.indexOf("ProQuest")));
         }
         return "";
     }
