@@ -28,9 +28,9 @@ public class Covariance_output {
             Logger.getLogger(Covariance_output.class.getName()).log(Level.SEVERE, null, ex);
         }
         ArrayList<String> words = Database.words;
-        for(String word : words)
+        for(int x = 0; x <10; x++)
         {
-            System.out.println(Compare.covariance(Database.getIndicatorGraph("gdp by quarter"), Database.getCountOfWordGraph(word)));
+            System.out.println(words.get(x)+ " R: " +Compare.covariance(Database.getIndicatorGraph("gdp by quarter"), Database.getCountOfWordGraph(words.get(x))));
         }
     }
 }

@@ -176,7 +176,10 @@ class Database {
         int count = 0;
         for(Article a : getByDate(date))
         {
-            count += a.getCount(word);
+            // unadjusted wordcount count += a.getCount(word);
+            
+            count += a.getCount(word)*10000/a.getWordCount();
+            //returns word count adjusted for document length
         }
         return count;
     }

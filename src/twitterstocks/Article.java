@@ -41,6 +41,19 @@ class Article {
         return count;
     }
     
+    public int getWordCount()
+    {
+        String space = " ";
+        int count = 0;
+        String temp = this.content;
+        while(temp.indexOf(space)!=-1) {
+            count++;
+            temp = temp.substring(0,temp.indexOf(space)) + temp.substring(temp.indexOf(space) + space.length());
+        }
+        
+        return count;
+    }
+    
     public int getNum()
     {
         return Integer.parseInt(fileName.substring(16));
