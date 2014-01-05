@@ -82,6 +82,33 @@ public class WebRobot {
         mineNYTimes(day, month, year, 1);
     }
     
+    public void mineWSJ(int day, int month, int year, int results)
+    {
+        
+    
+    DecimalFormat dayMonth = new DecimalFormat("00");
+        DecimalFormat yearFormat = new DecimalFormat("0000");
+        for(int result = 0; result < results; result++)
+        {
+        typeURL("http://pqasb.pqarchiver.com/djreprints/results.html?st=advanced&QryTxt=*&type=current&sortby=RELEVANCE&datetype=6&frommonth="+dayMonth.format(month)+"&fromday="+dayMonth.format(day)+"&fromyear="+ yearFormat.format(year) +"&tomonth="+dayMonth.format(month)+"&today="+dayMonth.format(day)+"&toyear="+ yearFormat.format(year) +"&By=&Title=");
+        select(23+result*2);
+        enter();
+        waitTillDone();
+        selectAll();
+        try {
+            Database.add(new Article(findNYTimesArticle(getClipboard()), year*10000+month*100+day));
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        }
+    
+    }
+    
+    public void mineWSJ(int day, int month, int year)
+    {
+        mineWSJ(day, month, year, 1);
+    }
+    
     private void type(int k) {
         robot.keyPress(k);
         robot.delay(30);
