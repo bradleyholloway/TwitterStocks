@@ -34,51 +34,51 @@ public class WallStreetJournalMiner {
             month = 1;
             for(int day = 15; day <= 18; day++) //January
             {
-                //robot.mineNYTimes(day, month, year, articles);
+                //robot.WSJ(day, month, year, articles);
             } month++;
             for(int day =15; day <=18; day++) //February
             {
-                robot.mineNYTimes(day, month, year, articles);
+                robot.mineWSJ(day, month, year, articles);
             } month++;
             for(int day = 15; day <= 18; day++) //March
             {
-                //robot.mineNYTimes(day, month, year, articles);
+                //robot.mmineWSJ(day, month, year, articles);
             } month++;
             for(int day = 15; day <= 18; day++) //April
             {
-                //robot.mineNYTimes(day, month, year, articles);
+                //robot.mineWSJ(day, month, year, articles);
             } month++;
             for(int day = 15; day <= 18; day++) //May
             {
-                robot.mineNYTimes(day, month, year, articles);
+                robot.mineWSJ(day, month, year, articles);
             } month++;
             for(int day = 15; day <= 18; day++) //June
             {
-                //robot.mineNYTimes(day, month, year, articles);
+                //robot.mineWSJ(day, month, year, articles);
             } month++;
             for(int day = 15; day <= 18; day++) //July
             {
-                //robot.mineNYTimes(day, month, year, articles);
+                //robot.mineWSJ(day, month, year, articles);
             } month++;
             for(int day = 15; day <= 18; day++) //August
             {
-                robot.mineNYTimes(day, month, year, articles);
+                robot.mineWSJ(day, month, year, articles);
             } month++;
             for(int day = 15; day <= 18; day++) //September
             {
-                //robot.mineNYTimes(day, month, year, articles);
+                //robot.mineWSJ(day, month, year, articles);
             } month++;
             for(int day = 15; day <= 18; day++) //October
             {
-                //robot.mineNYTimes(day, month, year, articles);
+                //robot.mineWSJ(day, month, year, articles);
             } month++;
             for(int day = 15; day <= 18; day++) //November
             {
-                robot.mineNYTimes(day, month, year, articles);
+                robot.mineWSJ(day, month, year, articles);
             } month++;
             for(int day = 15; day <= 18; day++) //December
             {
-                //robot.mineNYTimes(day, month, year, articles);
+                //robot.mineWSJ(day, month, year, articles);
             }            
         }
     }//main
