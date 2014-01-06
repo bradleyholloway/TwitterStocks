@@ -1,0 +1,2 @@
+20030114
+ Microsoft to Let Governments See Code   By By David Bank, The Wall Street Journal,  Jan 15, 2003  Microsoft acknowledges government agencies are increasingly interested in gaining access to software source code. Last year, the supersecret National Security Agency developed a secure version of Linux and posted it on the agency's Web site for anyone to download. In a statement, Microsoft cited a Russian official who said that the unavailability of source code and other technical information limited that government's willingness to use Microsoft's products.   

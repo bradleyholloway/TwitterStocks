@@ -28,57 +28,57 @@ public class WallStreetJournalMiner {
         robot.launchChrome();
         
         int year = 1985;
-        int month, articles = 5; //Articles per day to look up, Remember perday, so compound by 365 per year, so keep fairly small
+        int month, articles = 10; //Articles per day to look up, Remember perday, so compound by 365 per year, so keep fairly small
         for(year = 1985; year < 2013; year++)
         {
             month = 1;
-            for(int day = 15; day <= 15; day++) //January
-            {
-                //robot.WSJ(day, month, year, articles);
-            } month++;
-            for(int day =15; day <=15; day++) //February
+            for(int day = 13; day <= 15; day++) //January
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 15; day <= 15; day++) //March
-            {
-                //robot.mmineWSJ(day, month, year, articles);
-            } month++;
-            for(int day = 15; day <= 15; day++) //April
-            {
-                //robot.mineWSJ(day, month, year, articles);
-            } month++;
-            for(int day = 15; day <= 15; day++) //May
+            for(int day =13; day <=13; day++) //February
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 15; day <= 15; day++) //June
-            {
-                //robot.mineWSJ(day, month, year, articles);
-            } month++;
-            for(int day = 15; day <= 15; day++) //July
-            {
-                //robot.mineWSJ(day, month, year, articles);
-            } month++;
-            for(int day = 15; day <= 15; day++) //August
+            for(int day = 13; day <= 13; day++) //March
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 15; day <= 15; day++) //September
-            {
-                //robot.mineWSJ(day, month, year, articles);
-            } month++;
-            for(int day = 15; day <= 15; day++) //October
-            {
-                //robot.mineWSJ(day, month, year, articles);
-            } month++;
-            for(int day = 15; day <= 15; day++) //November
+            for(int day = 13; day <= 13; day++) //April
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 15; day <= 15; day++) //December
+            for(int day = 13; day <= 13; day++) //May
             {
-                //robot.mineWSJ(day, month, year, articles);
+                robot.mineWSJ(day, month, year, articles);
+            } month++;
+            for(int day = 13; day <= 13; day++) //June
+            {
+                robot.mineWSJ(day, month, year, articles);
+            } month++;
+            for(int day = 13; day <= 13; day++) //July
+            {
+                robot.mineWSJ(day, month, year, articles);
+            } month++;
+            for(int day = 13; day <= 13; day++) //August
+            {
+                robot.mineWSJ(day, month, year, articles);
+            } month++;
+            for(int day = 13; day <= 13; day++) //September
+            {
+                robot.mineWSJ(day, month, year, articles);
+            } month++;
+            for(int day = 13; day <= 13; day++) //October
+            {
+                robot.mineWSJ(day, month, year, articles);
+            } month++;
+            for(int day = 13; day <= 13; day++) //November
+            {
+                robot.mineWSJ(day, month, year, articles);
+            } month++;
+            for(int day = 13; day <= 13; day++) //December
+            {
+                robot.mineWSJ(day, month, year, articles);
             }            
         }
     }//main

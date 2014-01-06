@@ -1,0 +1,2 @@
+20000613
+ Nasdaq Unveils Plan For 3 ECNs to Join Its Trading Network   The Wall Street Journal,  Jun 14, 2000  Members of the NASD, which include all ECNs, have long been permitted to trade NYSE stocks in the Third Market, renamed the Nasdaq Intermarket. However, some rules under which NASD members could join ITS effectively excluded ECNs, which electronically match buyers and sellers without an intermediary. The ECNs will now have the ability to post stock quotes and execute trades in the Intermarket.   
