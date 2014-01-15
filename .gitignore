@@ -1,3 +1,9 @@
+build.xml
+build-impl.xml
+genfiles.properties
+project.properties
+project.xml
+
 #################
 ## Eclipse
 #################
