@@ -178,7 +178,7 @@ class Database {
         {
             // unadjusted wordcount count += a.getCount(word);
             
-            count += a.getCount(word)*10000/a.getWordCount();
+            count += a.getCount(word)*10000/(a.getWordCount()+1);
             //returns word count adjusted for document length
         }
         return count;
@@ -188,6 +188,34 @@ class Database {
     {
         return getCountOfWordGraph(word, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
+    
+    public static void ArticleFrequency ()
+    {
+        ArrayList<Integer> datesInRange = new ArrayList<Integer>();
+        for (int date : dates)
+        {
+            if(date >= Integer.MIN_VALUE && date <= Integer.MAX_VALUE)
+            {
+                datesInRange.add(date);
+            }
+        }
+        int ticker = 1;
+        for(int index = 1; index < datesInRange.size(); index ++)
+        {
+            if((datesInRange.get(index)/10000)==(datesInRange.get(index-1)/10000))
+            ticker+=articles.get(datesInRange.get(index)).size();
+            else
+            {
+            System.out.print(datesInRange.get(index-1) + ": ");
+            for(int l = 0; l< ticker; l++)
+                System.out.print("l");
+            
+            System.out.println("");
+            ticker=1;
+            }
+        }      
+    }
+    
     public static int[][] getCountOfWordGraph(String word, int start, int end)
     {
         ArrayList<Integer> datesInRange = new ArrayList<Integer>();
