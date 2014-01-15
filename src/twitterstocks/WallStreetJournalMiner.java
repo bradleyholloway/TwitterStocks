@@ -29,54 +29,54 @@ public class WallStreetJournalMiner {
         
         int year = 1985;
         int month, articles = 10; //Articles per day to look up, Remember perday, so compound by 365 per year, so keep fairly small
-        for(year = 2008; year < 2013; year++)
+        for(year = 2005; year < 2006; year++)
         {
             month = 1;
-            for(int day = 11; day <= 11; day++) //January
+            for(int day = 20; day <= 20; day++) //January
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day =11; day <=11; day++) //February
+            for(int day =20; day <=20; day++) //February
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 11; day <= 11; day++) //March
+            for(int day = 20; day <= 20; day++) //March
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 11; day <= 11; day++) //April
+            for(int day = 20; day <= 20; day++) //April
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 11; day <= 11; day++) //May
+            for(int day = 20; day <= 20; day++) //May
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 11; day <= 11; day++) //June
+            for(int day = 20; day <= 20; day++) //June
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 11; day <= 11; day++) //July
+            for(int day = 20; day <= 20; day++) //July
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 11; day <= 11; day++) //August
+            for(int day = 20; day <= 20; day++) //August
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 11; day <= 11; day++) //September
+            for(int day = 20; day <= 20; day++) //September
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 11; day <= 11; day++) //October
+            for(int day = 20; day <= 20; day++) //October
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 11; day <= 11; day++) //November
+            for(int day = 20; day <= 20; day++) //November
             {
                 robot.mineWSJ(day, month, year, articles);
             } month++;
-            for(int day = 11; day <= 11; day++) //December
+            for(int day = 20; day <= 20; day++) //December
             {
                 robot.mineWSJ(day, month, year, articles);
             }            
