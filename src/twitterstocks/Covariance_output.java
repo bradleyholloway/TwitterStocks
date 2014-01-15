@@ -30,7 +30,17 @@ public class Covariance_output {
         ArrayList<String> words = Database.words;
         for(int x = 0; x <10; x++)
         {
-            System.out.println(words.get(x)+ " R: " +Compare.covariance(Database.getIndicatorGraph("gdp by quarter"), Database.getCountOfWordGraph(words.get(x))));
+           // System.out.println(words.get(x)+ " R: " +Compare.covariance(Database.getIndicatorGraph("gdp by quarter"), Database.getCountOfWordGraph(words.get(x))));
         }
+        /*for(int x = 0; x <400; x++)
+        {
+            int count = (Database.getCountOfWordGraph("money") [x][1]+Database.getCountOfWordGraph("stock") [x][1]+Database.getCountOfWordGraph("investment") [x][1]+Database.getCountOfWordGraph("growth") [x][1]+Database.getCountOfWordGraph("buisness") [x][1])/10;
+            System.out.println("");
+            for(int y =0; y<count;y++)
+            System.out.print("I");
+        }*/
+        
+        Database.ArticleFrequency();
+        
     }
 }
