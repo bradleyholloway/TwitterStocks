@@ -3,10 +3,9 @@ package twitterstocks;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.text.DecimalFormat;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
-import sun.misc.Sort;
 
 class Indicator {
     private ArrayList<double[]> points;
@@ -60,11 +59,12 @@ class Indicator {
     
     private void write() throws FileNotFoundException
     {
+        DecimalFormat df = new DecimalFormat("00000000");
         PrintWriter out = new PrintWriter("indicators\\"+ name + ".txt");
         try {
             for (double[] p : points)
             {
-                out.println(p[0] +","+p[1]);
+                out.println(df.format(p[0]) +","+p[1]);
             }
         } finally { out.close();}
     }
