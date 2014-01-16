@@ -37,7 +37,7 @@ public class Covariance_output {
             int count = (Database.getCountOfWordGraph("money") [x][1]+Database.getCountOfWordGraph("stock") [x][1]+Database.getCountOfWordGraph("investment") [x][1]+Database.getCountOfWordGraph("growth") [x][1]+Database.getCountOfWordGraph("buisness") [x][1])/10;
             System.out.println("");
             for(int y =0; y<count;y++)
-            System.out.print("I");
+            System.out.print("I");git 
         }*/
         
         Database.ArticleFrequency();

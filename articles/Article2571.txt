@@ -1,2 +1,2 @@
-19990413
- Now Playing: `The Russians Are Coming -- Maybe' --- By Rachel Zimmerman   The Wall Street Journal,  Apr 14, 1999  Computer-system monitors in Olympia really thought the Russians were coming when they discovered that a very persistent hacker using a Russian Federal University address had tried -- 138,000 times in four hours -- to drop by for a visit.  The monitors, who pay attention to such things, were alarmed by the volume of attempted hits on the department's system, the electronic custodian of everything fiscal regarding Washington -- which happens to be physically closer than any other state except Alaska to the former USSR.   
+19940220
+
