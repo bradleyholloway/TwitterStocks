@@ -41,6 +41,7 @@ public class Covariance_output {
         }*/
         
         Database.ArticleFrequency();
+        //test cause everthyings skrewed up
         
     }
 }
