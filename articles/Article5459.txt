@@ -1,0 +1,2 @@
+19970309
+ Advertising: Classifiers work as Madison Avenue's eyes   By Brownlee, Lisa, The Wall Street Journal,  Mar 10, 1997  An intricate commercial-tracking system created by Competitive Media Reporting supplies the ad industry with one of its life-blood data services. Virtually every major agency in the business buys information from the CMR MediaWatch to see which ads are running in which markets. To gather the data, CMR runs a complex network of computers that literally watch TV. Then classifiers pore over digital video clips and classify the commercials.   
