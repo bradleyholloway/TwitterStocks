@@ -27,19 +27,32 @@ public class Covariance_output {
         } catch (FileNotFoundException ex) {
             Logger.getLogger(Covariance_output.class.getName()).log(Level.SEVERE, null, ex);
         }
-        ArrayList<String> words = Database.words;
-        Double [] correlations = new Double [words.size()];
-        String [] matchWord = new String [words.size()];
         
-        for(int x = 0; x <words.size(); x++)
+        int numtests = 1000;// number of tests with random word combinations
+        int numwords = 20;//number of words in a combination
+        ArrayList<String> words = Database.words;
+        Double [] correlations = new Double [numtests];
+        String [] matchWord = new String [numtests];
+        
+        for(int x = 0; x <numtests; x++)
         {
-            matchWord [x] = words.get(x);
-            correlations [x] = (Compare.covariance(Database.getIndicatorGraph("gdp by quarter"), Database.getCountOfWordGraph(words.get(x))));
+            ArrayList<int [] []>countlists = new ArrayList <int [] []>() ;
+            String countedWords = "";
+            for(int y = 0; y<=numwords;y++)
+            {
+                String temp = words.get((int)(Math.random()*words.size()));
+                countedWords = countedWords + " + " + temp;
+                
+                countlists.add(Database.getCountOfWordGraph(temp));
+            }
+            matchWord [x] = countedWords;
+            correlations [x] = (Compare.covariance(Database.getIndicatorGraph("GDPdx"), Database.combineCounts(countlists)));
         }
         
-        for(int outer = 0; outer < words.size();outer++)
+        
+        for(int outer = 0; outer < numtests;outer++)
         {
-            for(int inner = outer+1; inner <words.size(); inner++)
+            for(int inner = outer+1; inner <numtests; inner++)
             {
                 if(correlations [outer] < correlations[inner])
                 {
@@ -60,6 +73,7 @@ public class Covariance_output {
             System.out.println(matchWord[display]+ " R: " + correlations[display]);   
         }
        
+       
         /*
         int index = 0;
         for(Integer date : Database.dates)
@@ -68,10 +82,11 @@ public class Covariance_output {
             System.out.println(count); 
             index++;
         }
+        */
         
-        Database.ArticleFrequency();
-        
-        double [][] test = Database.getIndicatorGraph("gdp by quarter");
+        //Database.ArticleFrequency();
+        /* 
+        double [][] test = Database.getIndicatorGraph("GDPdx");
         
         for(int t = 0; t<test.length; t++)
         {

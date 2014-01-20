@@ -286,7 +286,7 @@ class Database {
         return filtered;
     }
     
-    public int [] [] combineCounts(ArrayList <int [][] > wordcounts)
+    public static int [] [] combineCounts(ArrayList <int [][] > wordcounts)
     {
         int [] [] combined = new int [wordcounts.get(0).length] [2];
         for(int index = 0; index <wordcounts.get(0).length;index++)
@@ -296,6 +296,10 @@ class Database {
             
             combined[index][0] = wordcounts.get(0)[index] [0];
         }
+        
+        //for(int [] point :combined)
+        //    System.out.println(point [1]);
+            
         return combined;
     }
 }
