@@ -14,22 +14,92 @@ class Compare {
     }
     public static double covariance(double[][] indicator, int[][] word)
     {
-        double xMean = mean(indicator);
-        double yMean = mean(word, indicator.length);
-        double coV = 0;
-        for (int a = 0; a < indicator.length; a++)
+        int init=0;
+        while (indicator [init][0]+298< word [0][0])
         {
-            double[] indicatorPoint = indicator[a];
-            double timeOut = (a != indicator.length - 1) ? indicator[a+1][0] : Double.MAX_VALUE;
-            coV += (indicatorPoint[1]-xMean)*(sum(word, indicatorPoint[0], timeOut)-yMean);
+            init++;
         }
-        coV /= indicator.length;
+        
+        int end = indicator.length-1;
+        while (indicator [end][0]+298> word[word.length-1][0])
+        {
+            end--;
+        }
+        
+        double [] [] adjIndicator = new double [(end+1)-init][2];
+        int [] [] adjWord = new int [(end+1)-init] [2];
+        for(int index = 0; index <adjIndicator.length;index ++)
+        {
+            adjIndicator [index][0]= indicator [index+init][0];
+            adjIndicator [index][1]= indicator [index+init][1];
+            adjWord [index] [0] = (int) indicator [index+init][0];
+            adjWord [index] [1] = (int) sum(word, adjWord [index] [0]-1,adjWord [index] [0]+298);
+        }
+        
+        double xMean = mean(adjIndicator);
+        double yMean = mean(adjWord);
+        double coV = 0;
+        for (int a = 0; a < adjIndicator.length; a++)
+        {
+            double[] indicatorPoint = adjIndicator[a];
+            int[] wordPoint  = adjWord[a];
+            coV += (indicatorPoint[1]-xMean)*(wordPoint[1]-yMean);
+        }
+        coV /= adjIndicator.length;
+        coV/=(standardDev(adjIndicator)*standardDev(adjWord));
         return coV;
     }
+    
+    public static int matchIndicatorWord(double[][] indicator, int[][] word)
+    {
+        int init=0;
+        while (indicator [init][0]+298< word [0][0])
+        {
+            init++;
+        }
+        
+        int end = indicator.length-1;
+        while (indicator [end][0]+298> word[word.length-1][0])
+        {
+            end--;
+        }
+        
+        double [] [] adjIndicator = new double [(end+1)-init][2];
+        int [] [] adjWord = new int [(end+1)-init] [2];
+        for(int index = 0; index <adjIndicator.length;index ++)
+        {
+            adjIndicator [index][0]= indicator [index+init][0];
+            adjIndicator [index][1]= indicator [index+init][1];
+            adjWord [index] [0] = (int) indicator [index+init][0];
+            adjWord [index] [1] = (int) sum(word, adjWord [index] [0]-1,adjWord [index] [0]+298);
+        }
+ 
+        for(int a = 0; a < adjIndicator.length; a++)
+        {
+            System.out.print("date-in: " + adjIndicator [a] [0]);
+            System.out.print(" value: " + adjIndicator [a] [1]);
+            System.out.print("date-wd: " + adjWord [a] [0]);
+            System.out.println(" : " + adjWord [a] [1]);
+        }
+        return 1;
+    }
+    
+
     private static double mean(double[][] data)
     {
         double sum = 0, count = 0;
         for (double[] point : data)
+        {
+            sum += point[1];
+            count++;
+        }
+        return sum/count;
+    }
+    
+    private static double mean(int[][] data)
+    {
+        double sum = 0, count = 0;
+        for (int[] point : data)
         {
             sum += point[1];
             count++;
@@ -46,6 +116,7 @@ class Compare {
         }
         return sum/count;
     }
+    
     private static double sum(int[][] word, double timeIn, double timeOut)
     {
         double sum = 0;
@@ -59,4 +130,27 @@ class Compare {
         return sum;
     }
     
+    private static double standardDev(double[][] data)
+    {
+        double xMean = mean(data);
+        double var= 0;
+        for (double[] point : data)
+        {
+            var+= (point [1] - xMean)*(point [1] - xMean);
+        }
+        var/=data.length-1;
+        return Math.sqrt(var);
+    }
+    
+    private static double standardDev(int[][] data)
+    {
+        double xMean = mean(data);
+        double var= 0;
+        for (int[] point : data)
+        {
+            var+= (point [1] - xMean)*(point [1] - xMean);
+        }
+        var/=data.length-1;
+        return Math.sqrt(var);
+    }
 }

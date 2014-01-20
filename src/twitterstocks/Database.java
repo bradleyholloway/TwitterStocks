@@ -176,20 +176,15 @@ class Database {
         int count = 0;
         for(Article a : getByDate(date))
         {
-            // unadjusted wordcount count += a.getCount(word);
+            count+= a.getCount(word);
             
-            count += a.getCount(word)*10000/(a.getWordCount()+1);
+            //count += a.getCount(word)*10000/(a.getWordCount()+1);
             //returns word count adjusted for document length
         }
         return count;
     }
     
-    public static int[][] getCountOfWordGraph(String word)
-    {
-        return getCountOfWordGraph(word, Integer.MIN_VALUE, Integer.MAX_VALUE);
-    }
-    
-    public static void ArticleFrequency ()
+       public static void ArticleFrequency ()
     {
         ArrayList<Integer> datesInRange = new ArrayList<Integer>();
         for (int date : dates)
@@ -216,6 +211,12 @@ class Database {
         }      
     }
     
+    public static int[][] getCountOfWordGraph(String word)
+    {
+        return getCountOfWordGraph(word, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    
+ 
     public static int[][] getCountOfWordGraph(String word, int start, int end)
     {
         ArrayList<Integer> datesInRange = new ArrayList<Integer>();

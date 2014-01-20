@@ -28,20 +28,56 @@ public class Covariance_output {
             Logger.getLogger(Covariance_output.class.getName()).log(Level.SEVERE, null, ex);
         }
         ArrayList<String> words = Database.words;
-        for(int x = 0; x <10; x++)
+        Double [] correlations = new Double [words.size()];
+        String [] matchWord = new String [words.size()];
+        
+        for(int x = 0; x <words.size(); x++)
         {
-           // System.out.println(words.get(x)+ " R: " +Compare.covariance(Database.getIndicatorGraph("gdp by quarter"), Database.getCountOfWordGraph(words.get(x))));
+            matchWord [x] = words.get(x);
+            correlations [x] = (Compare.covariance(Database.getIndicatorGraph("gdp by quarter"), Database.getCountOfWordGraph(words.get(x))));
         }
-        /*for(int x = 0; x <400; x++)
+        
+        for(int outer = 0; outer < words.size();outer++)
         {
-            int count = (Database.getCountOfWordGraph("money") [x][1]+Database.getCountOfWordGraph("stock") [x][1]+Database.getCountOfWordGraph("investment") [x][1]+Database.getCountOfWordGraph("growth") [x][1]+Database.getCountOfWordGraph("buisness") [x][1])/10;
-            System.out.println("");
-            for(int y =0; y<count;y++)
-            System.out.print("I");git 
-        }*/
+            for(int inner = outer+1; inner <words.size(); inner++)
+            {
+                if(correlations [outer] < correlations[inner])
+                {
+                    double temp = correlations[outer];
+                    String tempS= (matchWord[outer]);
+                    correlations[outer] = correlations[inner];
+                    matchWord[outer]=(matchWord[inner]);
+                    correlations[inner]=temp;
+                    matchWord[inner]=(tempS);
+                }
+            }
+        }
+        
+        
+        
+        for(int display = 0; display < correlations.length; display ++)
+        {
+            System.out.println(matchWord[display]+ " R: " + correlations[display]);   
+        }
+       
+        /*
+        int index = 0;
+        for(Integer date : Database.dates)
+        {
+            int count = (Database.getCountOfWordGraph("money") [index][1]+Database.getCountOfWordGraph("stock") [index][1]+Database.getCountOfWordGraph("investment") [index][1]+Database.getCountOfWordGraph("growth") [index][1]+Database.getCountOfWordGraph("buisness") [index][1]);
+            System.out.println(count); 
+            index++;
+        }
         
         Database.ArticleFrequency();
-        //test cause everthyings skrewed up
         
-    }
-}
+        double [][] test = Database.getIndicatorGraph("gdp by quarter");
+        
+        for(int t = 0; t<test.length; t++)
+        {
+            System.out.print(test [t] [0] + ": ");
+            System.out.println(test [t] [1]);
+        }
+        */
+    }//main
+}//covariance output
