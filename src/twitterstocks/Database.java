@@ -286,4 +286,16 @@ class Database {
         return filtered;
     }
     
+    public int [] [] combineCounts(ArrayList <int [][] > wordcounts)
+    {
+        int [] [] combined = new int [wordcounts.get(0).length] [2];
+        for(int index = 0; index <wordcounts.get(0).length;index++)
+        {
+            for(int [] [] count : wordcounts)
+                combined[index][1] += count[index][1];
+            
+            combined[index][0] = wordcounts.get(0)[index] [0];
+        }
+        return combined;
+    }
 }
