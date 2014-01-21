@@ -81,7 +81,7 @@ class Database {
         {
             content = parseIndicators(content);
         }
-        file = new File("10000_words.txt");
+        file = new File("positiveRWords.txt");
         fileIn = new Scanner(file);
         try {
             content = fileIn.nextLine();
