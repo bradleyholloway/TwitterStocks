@@ -28,9 +28,10 @@ public class Covariance_output {
             Logger.getLogger(Covariance_output.class.getName()).log(Level.SEVERE, null, ex);
         }
         
-        int numtests = 1000;// number of tests with random word combinations
+        int numtests = 10000000;// number of tests with random word combinations
         int numwords = 20;//number of words in a combination
         ArrayList<String> words = Database.words;
+        numtests = words.size();
         Double [] correlations = new Double [numtests];
         String [] matchWord = new String [numtests];
         double maxR = 0.0;
@@ -38,23 +39,16 @@ public class Covariance_output {
         for(int x = 0; x <numtests; x++)
         {
             ArrayList<int [] []>countlists = new ArrayList <int [] []>() ;
-            String countedWords = "";
-            for(int y = 0; y<=(int)(Math.random()*numwords);y++)
+            for(int y = 0; y<1;y++)
             {
-                String temp = words.get((int)(Math.random()*words.size()));
-                countedWords = countedWords + " + " + temp;
-                
+                String temp = words.get(x);
+                matchWord[x] = temp;
                 countlists.add(Database.getCountOfWordGraph(temp));
             }
-            double currentR = (Compare.covariance(Database.getIndicatorGraph("GDPdx"), Database.combineCounts(countlists)));
-            if(currentR > maxR)
-            {
-                maxR= currentR;
-                 System.out.println("R: " + currentR + " test# " + x + countedWords);
-            }    
+            correlations [x] = (Compare.covariance(Database.getIndicatorGraph("CUR"), Database.combineCounts(countlists)));         
         }
+
         
-        /*
         for(int outer = 0; outer < numtests;outer++)
         {
             for(int inner = outer+1; inner <numtests; inner++)
@@ -76,10 +70,41 @@ public class Covariance_output {
         for(int display = 0; display < correlations.length; display ++)
         {
             System.out.println(matchWord[display]+ " R: " + correlations[display]);   
+        } 
+        
+        
+        String [] wordsRev = new String [50];
+        
+        for(int matchindex = 0; matchindex < wordsRev.length; matchindex++ )
+        {
+            wordsRev [matchindex] = matchWord[matchindex];
         }
-        * /
+        
+        numtests=50000;
+        for(int x = 0; x <numtests; x++)
+        {
+            ArrayList<int [] []>countlists = new ArrayList <int [] []>() ;
+            String countedWords = "";
+            for(int y = 0; y<=(int)(Math.random()*numwords);y++)
+            {
+                String temp = wordsRev[((int)(Math.random()*wordsRev.length))];
+                countedWords = countedWords + " + " + temp;
+                countlists.add(Database.getCountOfWordGraph(temp));
+            }
+            double currentR = (Compare.covariance(Database.getIndicatorGraph("CUR"), Database.combineCounts(countlists)));
+            
+            
+            if(Math.abs(currentR) > Math.abs(maxR))
+            {
+                maxR= currentR;
+                 System.out.println("R: " + currentR + " test# " + x + countedWords);
+            }   
+            
+            
+        }
        
-       
+        
+        
         /*
         int index = 0;
         for(Integer date : Database.dates)

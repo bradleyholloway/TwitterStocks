@@ -14,14 +14,16 @@ class Compare {
     }
     public static double covariance(double[][] indicator, int[][] word)
     {
+        int indicatorerror = 31;//used for testing Constructiondx
+        //indicatorerror = 298;//- used for testing GDPdx
         int init=0;
-        while (indicator [init][0]+298< word [0][0])
+        while (indicator [init][0]+indicatorerror< word [0][0])
         {
             init++;
         }
         
         int end = indicator.length-1;
-        while (indicator [end][0]+298> word[word.length-1][0])
+        while (indicator [end][0]+indicatorerror> word[word.length-1][0])
         {
             end--;
         }
