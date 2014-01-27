@@ -33,7 +33,7 @@ public class Covariance_output {
         {
             System.out.println(Database.indicators.get(indicator).getName());
         
-        int numtests = 10000000;// number of tests with random word combinations
+        int numtests = 10000;// number of tests with random word combinations
         int numwords = 20;//number of words in a combination
         ArrayList<String> words = Database.words;
         numtests = words.size();
