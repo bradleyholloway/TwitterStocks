@@ -28,6 +28,11 @@ public class Covariance_output {
             Logger.getLogger(Covariance_output.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        
+        for(int indicator = 0; indicator < Database.indicators.size();indicator++)
+        {
+            System.out.println(Database.indicators.get(indicator).getName());
+        
         int numtests = 10000000;// number of tests with random word combinations
         int numwords = 20;//number of words in a combination
         ArrayList<String> words = Database.words;
@@ -45,7 +50,7 @@ public class Covariance_output {
                 matchWord[x] = temp;
                 countlists.add(Database.getCountOfWordGraph(temp));
             }
-            correlations [x] = (Compare.covariance(Database.getIndicatorGraph("CUR"), Database.combineCounts(countlists)));         
+            correlations [x] = (Compare.covariance(Database.getIndicatorGraph(Database.indicators.get(indicator)), Database.combineCounts(countlists)));         
         }
 
         
@@ -69,7 +74,7 @@ public class Covariance_output {
         
         for(int display = 0; display < correlations.length; display ++)
         {
-            System.out.println(matchWord[display]+ " R: " + correlations[display]);   
+           // System.out.println(matchWord[display]+ " R: " + correlations[display]);   
         } 
         
         
@@ -80,7 +85,7 @@ public class Covariance_output {
             wordsRev [matchindex] = matchWord[matchindex];
         }
         
-        numtests=50000;
+        numtests=10000;
         for(int x = 0; x <numtests; x++)
         {
             ArrayList<int [] []>countlists = new ArrayList <int [] []>() ;
@@ -91,20 +96,16 @@ public class Covariance_output {
                 countedWords = countedWords + " + " + temp;
                 countlists.add(Database.getCountOfWordGraph(temp));
             }
-            double currentR = (Compare.covariance(Database.getIndicatorGraph("CUR"), Database.combineCounts(countlists)));
+            double currentR = (Compare.covariance(Database.getIndicatorGraph(Database.indicators.get(indicator)), Database.combineCounts(countlists)));
             
             
             if(Math.abs(currentR) > Math.abs(maxR))
             {
                 maxR= currentR;
                  System.out.println("R: " + currentR + " test# " + x + countedWords);
-            }   
-            
-            
-        }
-       
-        
-        
+            }    
+        }//numtests = 50000
+        }//indicator itorator
         /*
         int index = 0;
         for(Integer date : Database.dates)

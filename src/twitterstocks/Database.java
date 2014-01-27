@@ -286,6 +286,12 @@ class Database {
         return filtered;
     }
     
+    
+    public static double[][] getIndicatorGraph(Indicator i)
+    {
+        return getIndicatorGraph(i.getName());
+    }
+    
     public static int [] [] combineCounts(ArrayList <int [][] > wordcounts)
     {
         int [] [] combined = new int [wordcounts.get(0).length] [2];

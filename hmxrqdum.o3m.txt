@@ -1,0 +1,21 @@
+﻿changed covariance so it looks for highest correlating words then selects among those to create the word pairs
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch newBranch
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	modified:   Articles.txt
+#	modified:   Indicators.txt
+#	new file:   combinedR.txt
+#	new file:   indicators/CUR.txt
+#	new file:   indicators/Constructiondx.txt
+#	modified:   src/twitterstocks/Compare.java
+#	modified:   src/twitterstocks/Covariance_output.java
+#	modified:   src/twitterstocks/Database.java
+#
+# Untracked files:
+#   (use "git add <file>..." to include in what will be committed)
+#
+#	sb4rhgaf.mm3.txt
+
