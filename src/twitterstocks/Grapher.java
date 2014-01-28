@@ -20,7 +20,7 @@ public class Grapher {
     public static int HEIGHT = 1080;
     public static int BORDER = 200;
     
-    public static void createGraph(double[][] dataWord, double[][] dataIndicator, String fileOut)
+    public static void createGraph(int[][] dataWord, double[][] dataIndicator, String fileOut)
     {
         BufferedImage render = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics g = render.getGraphics();
@@ -84,10 +84,22 @@ public class Grapher {
     private static void drawLine(Graphics g, double[] pointA, double[] pointB, double xMin, double xMax, double yMin, double yMax)
     {
         int[] tempPointA = convertPoint(pointA, xMin, xMax, yMin, yMax);
-        int[] tempPointB = convertPoint(pointA, xMin, xMax, yMin, yMax);
+        int[] tempPointB = convertPoint(pointB, xMin, xMax, yMin, yMax);
         g.drawLine(tempPointA[0], tempPointA[1], tempPointB[0], tempPointB[1]);
     }
-    
+    private static void drawLine(Graphics g, int[] pointA, int[] pointB, double xMin, double xMax, double yMin, double yMax)
+    {
+        int[] tempPointA = convertPoint(pointA, xMin, xMax, yMin, yMax);
+        int[] tempPointB = convertPoint(pointB, xMin, xMax, yMin, yMax);
+        g.drawLine(tempPointA[0], tempPointA[1], tempPointB[0], tempPointB[1]);
+    }
+    private static int[] convertPoint(int[] point, double xMin, double xMax, double yMin, double yMax)
+    {
+        int[] ret = new int[2];
+        ret[0] = (int)((double)(point[0]-xMin)/(xMax - xMin + 1) * (WIDTH - BORDER) + BORDER);
+        ret[1] = (int)((double)(yMax - point[1])/(yMax - yMin + 1) * (HEIGHT - BORDER));
+        return new int[2];
+    }
     
     private static int[] convertPoint(double[] point, double xMin, double xMax, double yMin, double yMax)
     {
