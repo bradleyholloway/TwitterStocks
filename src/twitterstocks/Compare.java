@@ -1,5 +1,8 @@
 package twitterstocks;
 
+import java.util.ArrayList;
+import java.util.HashMap;
+
 class Compare {
     
     public static double squaredSumError(double[] data1, double[] data2)
@@ -52,7 +55,7 @@ class Compare {
         return coV;
     }
     
-    public static int matchIndicatorWord(double[][] indicator, int[][] word)
+    public static double[][] getIndicatorMatchIndicatorWord(double[][] indicator, int[][] word)
     {
         int init=0;
         while (indicator [init][0]+298< word [0][0])
@@ -76,17 +79,74 @@ class Compare {
             adjWord [index] [1] = (int) sum(word, adjWord [index] [0]-1,adjWord [index] [0]+298);
         }
  
-        for(int a = 0; a < adjIndicator.length; a++)
+        //for(int a = 0; a < adjIndicator.length; a++)
+        //{
+        //    System.out.print("date-in: " + adjIndicator [a] [0]);
+        //    System.out.print(" value: " + adjIndicator [a] [1]);
+        //    System.out.print("date-wd: " + adjWord [a] [0]);
+        //    System.out.println(" : " + adjWord [a] [1]);
+        //}
+        
+        return adjIndicator;
+    }
+    public static int[][] getWordMatchIndicatorWord(double[][] indicator, int[][] word)
+    {
+        int init=0;
+        while (indicator [init][0]+298< word [0][0])
         {
-            System.out.print("date-in: " + adjIndicator [a] [0]);
-            System.out.print(" value: " + adjIndicator [a] [1]);
-            System.out.print("date-wd: " + adjWord [a] [0]);
-            System.out.println(" : " + adjWord [a] [1]);
+            init++;
         }
-        return 1;
+        
+        int end = indicator.length-1;
+        while (indicator [end][0]+298> word[word.length-1][0])
+        {
+            end--;
+        }
+        
+        double [] [] adjIndicator = new double [(end+1)-init][2];
+        int [] [] adjWord = new int [(end+1)-init] [2];
+        for(int index = 0; index <adjIndicator.length;index ++)
+        {
+            adjIndicator [index][0]= indicator [index+init][0];
+            adjIndicator [index][1]= indicator [index+init][1];
+            adjWord [index] [0] = (int) indicator [index+init][0];
+            adjWord [index] [1] = (int) sum(word, adjWord [index] [0]-1,adjWord [index] [0]+298);
+        }
+ 
+        //for(int a = 0; a < adjIndicator.length; a++)
+        //{
+        //    System.out.print("date-in: " + adjIndicator [a] [0]);
+        //    System.out.print(" value: " + adjIndicator [a] [1]);
+        //    System.out.print("date-wd: " + adjWord [a] [0]);
+        //    System.out.println(" : " + adjWord [a] [1]);
+        //}
+        
+        return adjWord;
+    }
+    public static double[][] convertToZ(double[][] data)
+    {
+        double mean = mean(data);
+        double stDev = standardDev(data);
+        for(int a = 0; a < data.length; a++)
+        {
+            data[a][1] = (data[a][1]-mean)/stDev;
+        }
+        return data;
+    }
+
+    public static double[][] convertToZ(int[][] data)
+    {
+        double[][] tempData = new double[data.length][2];
+        double mean = mean(data);
+        double stDev = standardDev(data);
+        for(int a = 0; a < data.length; a++)
+        {
+            tempData[a][0] = data[a][0];
+            tempData[a][1] = (((double)data[a][1]-mean)/stDev);
+        }
+        return tempData;
     }
     
-
     private static double mean(double[][] data)
     {
         double sum = 0, count = 0;
