@@ -78,13 +78,6 @@ public class Grapher {
                 drawLine(g, dataWord[a - 1], dataWord[a], a - 1, dataWord.length, yMinWord, yMaxWord);
             }
 
-            System.out.println(dataWord.length);
-
-            for (int a = 0; a < dataWord.length; a++) {
-                System.out.println(dataWord[a][0] + "," + dataWord[a][1]);
-            }
-
-
             //-------------Need To Create and Draw Scales within BORDER---------------------
             int numSubdivisions = 25;
             for (int i = 0; i < numSubdivisions; i++) {
@@ -128,6 +121,11 @@ public class Grapher {
             double yMin = Math.min(yMinIndicator, yMinWord);
             double yMax = Math.max(yMaxIndicator, yMaxWord);
             //Begin Drawing
+            g.setColor(Color.black);
+            for(int i = (int)Math.floor(yMin); i<= (int)Math.ceil(yMax); i++)
+            {
+                g.drawLine(BORDER, (int)((double)(yMax-i)/(yMax-yMin)*(HEIGHT-BORDER)), WIDTH, (int)((double)(yMax-i)/(yMax-yMin)*(HEIGHT-BORDER)));
+            }
 
             g.setColor(Color.red);//Draw Indicator Line
             for (int a = 1; a < zDataIndicator.length; a++) {
@@ -169,14 +167,12 @@ public class Grapher {
     private static void drawLine(Graphics g, double[] pointA, double[] pointB, double xNum, double xMax, double yMin, double yMax) {
         int[] tempPointA = convertPoint(pointA, xNum, xMax, yMin, yMax);
         int[] tempPointB = convertPoint(pointB, xNum + 1, xMax, yMin, yMax);
-        //System.out.println("("+tempPointA[0]+","+tempPointA[1]+") ("+tempPointB[0]+","+tempPointB[1]+")");
         g.drawLine(tempPointA[0], tempPointA[1], tempPointB[0], tempPointB[1]);
     }
 
     private static void drawLine(Graphics g, int[] pointA, int[] pointB, double xNum, double xMax, double yMin, double yMax) {
         int[] tempPointA = convertPoint(pointA, xNum, xMax, yMin, yMax);
         int[] tempPointB = convertPoint(pointB, xNum + 1, xMax, yMin, yMax);
-        //System.out.println("("+tempPointA[0]+","+tempPointA[1]+") ("+tempPointB[0]+","+tempPointB[1]+")");
         g.drawLine(tempPointA[0], tempPointA[1], tempPointB[0], tempPointB[1]);
     }
 
