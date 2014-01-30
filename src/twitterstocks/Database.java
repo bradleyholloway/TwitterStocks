@@ -308,4 +308,21 @@ class Database {
             
         return combined;
     }
+    
+    
+    public static int [] [] subtractCounts(int [][] Pwords, int [] [] Nwords)
+    {
+        int [] [] combined = new int [Pwords.length] [2];
+        for(int index = 0; index <Pwords.length;index++)
+        {
+            
+            combined[index][1] = Pwords[index][1] - Nwords [index][1];
+            combined[index][0] = Pwords[index][0];
+        }
+        
+        //for(int [] point :combined)
+        //    System.out.println(point [1]);
+            
+        return combined;
+    }
 }

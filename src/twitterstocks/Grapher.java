@@ -121,8 +121,8 @@ public class Grapher {
             double yMin = Math.min(yMinIndicator, yMinWord);
             double yMax = Math.max(yMaxIndicator, yMaxWord);
             //Begin Drawing
-            g.setColor(Color.black);
-            for(int i = (int)Math.floor(yMin); i<= (int)Math.ceil(yMax); i++)
+            g.setColor(Color.darkGray);
+            for(int i = (int)Math.ceil(yMin); i<= (int)Math.floor(yMax); i++)
             {
                 g.drawLine(BORDER, (int)((double)(yMax-i)/(yMax-yMin)*(HEIGHT-BORDER)), WIDTH, (int)((double)(yMax-i)/(yMax-yMin)*(HEIGHT-BORDER)));
             }

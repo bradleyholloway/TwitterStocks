@@ -78,23 +78,32 @@ public class Covariance_output {
         } 
         
         
-        String [] wordsRev = new String [50];
+        String [] wordsPos = new String [50];
         
-        for(int matchindex = 0; matchindex < wordsRev.length; matchindex++ )
+        for(int matchindex = 0; matchindex < wordsPos.length; matchindex++ )
         {
-            wordsRev [matchindex] = matchWord[matchindex];
+            wordsPos [matchindex] = matchWord[matchindex];
         }
         
-        numtests=10000;
+        String [] wordsNeg = new String [50];
+        for(int matchindex = matchWord.length-1; matchindex > (matchWord.length-1) - (wordsNeg.length); matchindex-- )
+        {
+            wordsNeg [9999-matchindex] = matchWord[matchindex];
+        }
+        
+        
+        numtests=1000;
         for(int x = 0; x <numtests; x++)
         {
             ArrayList<int [] []>countlists = new ArrayList <int [] []>() ;
             String countedWords = "";
             for(int y = 0; y<=(int)(Math.random()*numwords);y++)
             {
-                String temp = wordsRev[((int)(Math.random()*wordsRev.length))];
-                countedWords = countedWords + " + " + temp;
-                countlists.add(Database.getCountOfWordGraph(temp));
+                String tempP = wordsPos[((int)(Math.random()*wordsPos.length))];
+                countedWords = countedWords + " + " + tempP;
+                String tempN = wordsNeg[((int)(Math.random()*wordsPos.length))];
+                countedWords = countedWords + " + " + tempN;
+                countlists.add(Database.subtractCounts(Database.getCountOfWordGraph(tempP), Database.getCountOfWordGraph(tempN)));
             }
             double currentR = (Compare.covariance(Database.getIndicatorGraph(Database.indicators.get(indicator)), Database.combineCounts(countlists)));
             
@@ -103,6 +112,7 @@ public class Covariance_output {
             {
                 maxR= currentR;
                  System.out.println("R: " + currentR + " test# " + x + countedWords);
+                 Grapher.createGraph(Database.combineCounts(countlists), Database.getIndicatorGraph(Database.indicators.get(indicator)), Database.indicators.get(indicator).getName(), true);
             }    
         }//numtests = 50000
         }//indicator itorator
