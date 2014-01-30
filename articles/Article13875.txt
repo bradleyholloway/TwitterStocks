@@ -1,0 +1,2 @@
+20110505
+ Digital Media: Digits / Insights From WSJ.com   By Anonymous, The Wall Street Journal,  May 6, 2011  According to the information displayed when a user downloads the Apple upgrade, the software update reduces the amount of location data stored on an iPhone, no longer backs the data up to iTunes, and deletes it entirely when location services are turned off.   
