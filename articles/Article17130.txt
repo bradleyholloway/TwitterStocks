@@ -1,0 +1,2 @@
+20100604
+ How to Prevent the Next 'Flash Crash'   By Greifeld, Bob, The Wall Street Journal,  Jun 5, 2010  During the trading pause, Nasdaq will maintain all current quotes and orders and will continue to accept quotes and orders in the security, as well as disseminate an electronic Order Imbalance Indicator every five seconds showing the number of shares and the prices of the shares on the buy and sell side as they converge to a price to open a stock.   

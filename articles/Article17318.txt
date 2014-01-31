@@ -1,0 +1,2 @@
+20120104
+ Mossberg's Mailbox   By Mossberg, Walter S, The Wall Street Journal,  Jan 5, 2012  Apple's Boot Camp Assistant program, which is used to set up the Windows installation on a Mac, includes a step in which you download and store the drivers on either a CD or DVD, or an external USB drive.   
