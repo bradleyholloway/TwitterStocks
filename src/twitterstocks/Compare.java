@@ -12,7 +12,7 @@ class Compare {
         
         return r;
     }
-    public static double[][] getRegression(double[][] indicator, double[][] word)
+    public static double[][] getResid(double[][] indicator, double[][] word)
     {
         double[][] difference = new double[indicator.length][2];
         for (int i = 0; i < indicator.length; i++)
@@ -22,7 +22,7 @@ class Compare {
         }
         return difference;
     }
-    public static double[][] getRegression(double[][] indicator, int[][] word)
+    public static double[][] getResid(double[][] indicator, int[][] word)
     {
         double[][] difference = new double[indicator.length][2];
         for (int i = 0; i < indicator.length; i++)
