@@ -32,7 +32,8 @@ class Article {
     public int getCount(String word)
     {
         int count = 0;
-        String temp = this.content;
+        String temp = this.content.toLowerCase();
+        word = word.toLowerCase();
         while(temp.indexOf(word)!=-1) {
             count++;
             temp = temp.substring(0,temp.indexOf(word)) + temp.substring(temp.indexOf(word) + word.length());
