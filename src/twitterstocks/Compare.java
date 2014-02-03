@@ -1,8 +1,5 @@
 package twitterstocks;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-
 class Compare {
     
     public static double squaredSumError(double[] data1, double[] data2)
@@ -14,6 +11,26 @@ class Compare {
         }
         
         return r;
+    }
+    public static double[][] getRegression(double[][] indicator, double[][] word)
+    {
+        double[][] difference = new double[indicator.length][2];
+        for (int i = 0; i < indicator.length; i++)
+        {
+            difference[i][0] = indicator[i][0];
+            difference[i][1] = indicator[i][1] - word[i][1];
+        }
+        return difference;
+    }
+    public static double[][] getRegression(double[][] indicator, int[][] word)
+    {
+        double[][] difference = new double[indicator.length][2];
+        for (int i = 0; i < indicator.length; i++)
+        {
+            difference[i][0] = indicator[i][0];
+            difference[i][1] = indicator[i][1] - word[i][1];
+        }
+        return difference;
     }
     public static double covariance(double[][] indicator, int[][] word)
     {
