@@ -169,20 +169,18 @@ class Database {
     {
         double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
         int[][] wordT = Compare.getWordMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
-        float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
+        //float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
         float[] wordZ = Compare.convertToVectorZ(wordT);
         return wordZ;
     }
-    public static float[] getIndicatorVector(double[][] indicator)
+    public static float[] getIndicatorVector(double[][] indicator, String word)
     {
-        float[] returns = new float[indicator.length];
-        for(int i = 0; i < indicator.length; i++)
-        {
-            returns[i] = (float)indicator[i][1];
-        }
-        return returns;
+        double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
+        int[][] wordT = Compare.getWordMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
+        float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
+        //float[] wordZ = Compare.convertToVectorZ(wordT);
+        return indicatorZ;
     }
-
     public static void ArticleFrequency() {
         ArrayList<Integer> datesInRange = new ArrayList<Integer>();
         for (int date : dates) {

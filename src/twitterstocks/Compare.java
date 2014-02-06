@@ -265,4 +265,40 @@ class Compare {
         var/=data.length-1;
         return Math.sqrt(var);
     }
+    
+    public static double distanceBetweenScaled(float[] indicator, float[] word)
+    {
+        double indicatorLength = length(indicator);
+        word = scalar(word, indicatorLength);
+        return distance(indicator, word);
+    }
+    public static double distance(float[] indicator, float[] word)
+    {
+        float[] difference = new float[indicator.length];
+        for(int i = 0; i < indicator.length; i++)
+        {
+            difference[i] = indicator[i] - word[i];
+        }
+        return length(difference);
+    }
+    
+    public static double length(float[] vector)
+    {
+        double length = 0.0;
+        for(float f : vector)
+        {
+            length += (f * f);
+        }
+        return Math.sqrt(length);
+    }
+    public static float[] scalar(float[] data, double endLength)
+    {
+        double length = length(data);
+        float[] newData = new float[data.length];
+        for (int i = 0; i < data.length; i++)
+        {
+            newData[i] = (float)((double)data[i] / length * endLength);
+        }
+        return newData;
+    }
 }

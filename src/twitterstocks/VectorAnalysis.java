@@ -2,6 +2,7 @@ package twitterstocks;
 
 import java.io.FileNotFoundException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -30,6 +31,29 @@ public class VectorAnalysis {
                     }    
         }//takes out all the NAN's
         System.out.println("removed null words");
+        
+        HashMap<String, float[]> wordVectors = new HashMap<String, float[]>();
+        double[][] indicatorData = Database.getIndicatorGraph(Database.indicators.get(0));
+        for(String word : RevWords)
+        {
+            wordVectors.put(word, Database.getWordVector(indicatorData, word));
+        }//Populates wordVectors with the vectors for a given indicator, using alignment tecnique.
+        /*
+         * The way to iterate though this is to use a foreach with revwords.
+         * 
+         */
+        double minimumDistance = Double.MAX_VALUE;
+        double tempDistance = 0.0;
+        String bestWord = "";
+        for (String word : RevWords)
+        {
+            tempDistance = Compare.distanceBetweenScaled(Database.getIndicatorVector(indicatorData, word), wordVectors.get(word));
+            if(tempDistance < minimumDistance)
+            {
+                minimumDistance = tempDistance;
+                bestWord = word;
+            }
+        }
         
         
     }
