@@ -209,6 +209,17 @@ class Compare {
         return sum;
     }
     
+    
+    static double sum(int[][] word)
+    {
+        double sum = 0;
+        for (int[] wordCount : word)
+        {
+                sum += wordCount[1];
+        }
+        return sum;
+    }
+    
     private static double standardDev(double[][] data)
     {
         double xMean = mean(data);

@@ -28,15 +28,27 @@ public class Covariance_output {
             Logger.getLogger(Covariance_output.class.getName()).log(Level.SEVERE, null, ex);
         }
         
+        ArrayList<String> words = Database.words;
+        ArrayList <String> RevWords = new ArrayList <String> ();
         
-        for(int indicator = 0; indicator < Database.indicators.size();indicator++)
+        for(int index = 0; index < words.size(); index ++)
+        {
+            double count = Compare.sum(Database.getCountOfWordGraph(words.get(index)));
+            System.out.println("index: " + index +" " + words.get(index) + " wordcount: " + count);
+                    if(count>10)
+                    {
+                          RevWords.add(words.get(index));
+                    }    
+        }//takes out all the NAN's
+        System.out.println("removed null words");
+        
+        for(int indicator = 1; indicator < Database.indicators.size();indicator++)
         {
             System.out.println(Database.indicators.get(indicator).getName());
         
-        int numtests = 10000;// number of tests with random word combinations
+        int numtests = 100000;// number of tests with random word combinations
         int numwords = 20;//number of words in a combination
-        ArrayList<String> words = Database.words;
-        numtests = words.size();
+        numtests = RevWords.size();
         Double [] correlations = new Double [numtests];
         String [] matchWord = new String [numtests];
         double maxR = 0.0;
@@ -46,7 +58,7 @@ public class Covariance_output {
             ArrayList<int [] []>countlists = new ArrayList <int [] []>() ;
             for(int y = 0; y<1;y++)
             {
-                String temp = words.get(x);
+                String temp = RevWords.get(x);
                 matchWord[x] = temp;
                 countlists.add(Database.getCountOfWordGraph(temp));
             }
@@ -72,10 +84,10 @@ public class Covariance_output {
         
         
         
-        for(int display = 0; display < correlations.length; display ++)
-        {
+        //for(int display = 0; display < correlations.length; display ++)
+        //{
            // System.out.println(matchWord[display]+ " R: " + correlations[display]);   
-        } 
+        //} 
         
         
         String [] wordsPos = new String [50];
@@ -88,11 +100,11 @@ public class Covariance_output {
         String [] wordsNeg = new String [50];
         for(int matchindex = matchWord.length-1; matchindex > (matchWord.length-1) - (wordsNeg.length); matchindex-- )
         {
-            wordsNeg [9999-matchindex] = matchWord[matchindex];
+            wordsNeg [RevWords.size()-1-matchindex] = matchWord[matchindex];
         }
         
         
-        numtests=1000;
+        numtests=400000;
         for(int x = 0; x <numtests; x++)
         {
             ArrayList<int [] []>countlists = new ArrayList <int [] []>() ;

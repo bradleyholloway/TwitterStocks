@@ -1,0 +1,31 @@
+		ArrayList <Double> RevCor = new ArrayList <Double> ();
+        ArrayList <String> RevWords = new ArrayList <String> ();
+        
+        for(int index = 0; index < correlations.length; index ++)
+        {
+            if(Compare.sum(Database.getCountOfWordGraph(matchWord[index]))>10)
+                    {
+                          RevWords.add(matchWord[index]);
+                          RevCor.add(correlations[index]);
+                    }    
+        }//takes out all the NAN's
+        System.out.println("done2");
+        
+        for(int display = 0; display < RevWords.size(); display ++)
+        {
+            System.out.println(RevWords.get(display)+ " R: " + RevCor.get(display));   
+        }//displays the initial 10,000 sorted with all the NAN's taken out
+        
+        
+        String [] wordsPos = new String [25];
+        
+        for(int matchindex = 0; matchindex < RevWords.size(); matchindex++ )
+        {
+            wordsPos [matchindex] = RevWords.get(matchindex);
+        }
+        
+        String [] wordsNeg = new String [25];
+        for(int matchindex = RevWords.size()-1; matchindex > (RevWords.size()-1) - (wordsNeg.length); matchindex-- )
+        {
+            wordsNeg [RevWords.size()-1-matchindex] = RevWords.get(matchindex);
+        }
