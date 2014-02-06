@@ -54,7 +54,7 @@ public class VectorAnalysis {
                 bestWord = word;
             }
         }
-        
+        System.out.println(bestWord + " : " + minimumDistance);
         
     }
 }
