@@ -12,6 +12,28 @@ class Compare {
         
         return r;
     }
+    public static float[] convertToVectorZ(double[][] data)
+    {
+        float[] returns = new float[data.length];
+        double mean = mean(data);
+        double stDev = standardDev(data);
+        for(int a = 0; a < data.length; a++)
+        {
+            returns[a] = (float)((data[a][1]-mean)/stDev);
+        }
+        return returns;
+    }
+    public static float[] convertToVectorZ(int[][] data)
+    {
+        float[] returns = new float[data.length];
+        double mean = mean(data);
+        double stDev = standardDev(data);
+        for(int a = 0; a < data.length; a++)
+        {
+            returns[a] = (float)((data[a][1]-mean)/stDev);
+        }
+        return returns;
+    }
     public static double[][] getResid(double[][] indicator, double[][] word)
     {
         double[][] difference = new double[indicator.length][2];
