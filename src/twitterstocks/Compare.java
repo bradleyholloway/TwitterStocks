@@ -56,7 +56,7 @@ class Compare {
     }
     public static double covariance(double[][] indicator, int[][] word)
     {
-        int indicatorerror = 31;//used for testing Constructiondx
+        /*//int indicatorerror = 31;//used for testing Constructiondx
         //indicatorerror = 298;//- used for testing GDPdx
         int init=0;
         while (indicator [init][0]+indicatorerror< word [0][0])
@@ -69,9 +69,11 @@ class Compare {
         {
             end--;
         }
+        */
+        double [] [] adjIndicator = getIndicatorMatchIndicatorWord(indicator, word);
+        int [] [] adjWord = getWordMatchIndicatorWord(indicator, word);
         
-        double [] [] adjIndicator = new double [(end+1)-init][2];
-        int [] [] adjWord = new int [(end+1)-init] [2];
+        /*
         for(int index = 0; index <adjIndicator.length;index ++)
         {
             adjIndicator [index][0]= indicator [index+init][0];
@@ -79,6 +81,7 @@ class Compare {
             adjWord [index] [0] = (int) indicator [index+init][0];
             adjWord [index] [1] = (int) sum(word, adjWord [index] [0]-1,adjWord [index] [0]+298);
         }
+        */
         
         double xMean = mean(adjIndicator);
         double yMean = mean(adjWord);
@@ -93,17 +96,34 @@ class Compare {
         coV/=(standardDev(adjIndicator)*standardDev(adjWord));
         return coV;
     }
+    public static double covariance(float[] indicator, float[] word)
+    {
+        double xMean = mean(indicator);
+        double yMean = mean(word);
+        double coV = 0;
+        for (int a = 0; a < indicator.length; a++)
+        {
+            float indicatorPoint = indicator[a];
+            float wordPoint  = word[a];
+            coV += (indicatorPoint-xMean)*(wordPoint-yMean);
+        }
+        coV /= indicator.length;
+        coV/=(standardDev(indicator)*standardDev(word));
+        return coV;
+    }
     
     public static double[][] getIndicatorMatchIndicatorWord(double[][] indicator, int[][] word)
     {
+        int indicatorerror = 31;//used for testing Constructiondx
+        //indicatorerror = 298;//- used for testing GDPdx
         int init=0;
-        while (indicator [init][0]+298< word [0][0])
+        while (indicator [init][0]+indicatorerror < word [0][0])
         {
             init++;
         }
         
         int end = indicator.length-1;
-        while (indicator [end][0]+298> word[word.length-1][0])
+        while (indicator [end][0]+indicatorerror > word[word.length-1][0])
         {
             end--;
         }
@@ -130,14 +150,16 @@ class Compare {
     }
     public static int[][] getWordMatchIndicatorWord(double[][] indicator, int[][] word)
     {
+        int indicatorerror = 31;//used for testing Constructiondx
+        //indicatorerror = 298;//- used for testing GDPdx
         int init=0;
-        while (indicator [init][0]+298< word [0][0])
+        while (indicator [init][0]+indicatorerror < word [0][0])
         {
             init++;
         }
         
         int end = indicator.length-1;
-        while (indicator [end][0]+298> word[word.length-1][0])
+        while (indicator [end][0]+indicatorerror > word[word.length-1][0])
         {
             end--;
         }
@@ -192,6 +214,16 @@ class Compare {
         for (double[] point : data)
         {
             sum += point[1];
+            count++;
+        }
+        return sum/count;
+    }
+    private static double mean(float[] data)
+    {
+        double sum = 0, count = 0;
+        for (int i = 0; i < data.length; i++)
+        {
+            sum += data[i];
             count++;
         }
         return sum/count;
@@ -253,6 +285,17 @@ class Compare {
         var/=data.length-1;
         return Math.sqrt(var);
     }
+    private static double standardDev(float[] data)
+    {
+        double xMean = mean(data);
+        double var= 0;
+        for (float point : data)
+        {
+            var += (point - xMean)*(point - xMean);
+        }
+        var/=data.length-1;
+        return Math.sqrt(var);
+    }
     
     private static double standardDev(int[][] data)
     {
@@ -294,11 +337,30 @@ class Compare {
     public static float[] scalar(float[] data, double endLength)
     {
         double length = length(data);
+        double scale = getScale(data, endLength);
         float[] newData = new float[data.length];
         for (int i = 0; i < data.length; i++)
         {
-            newData[i] = (float)((double)data[i] / length * endLength);
+            newData[i] = (float)((double)data[i] * scale);
         }
         return newData;
+    }
+    public static double getScale(float[] data, double endLength)
+    {
+        double length = length(data);
+        return endLength / length;
+    }
+    public static double getScale(float[] data, float[] data2)
+    {
+        return getScale(data, length(data));
+    }
+    public static float[] getDifference(float[] goal, float[] approximation)
+    {
+        float[] difference = new float[goal.length];
+        for(int i = 0; i < difference.length; i++)
+        {
+            difference[i] = goal[i] - approximation[i];
+        }
+        return difference;
     }
 }

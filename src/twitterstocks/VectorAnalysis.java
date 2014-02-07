@@ -34,27 +34,37 @@ public class VectorAnalysis {
         
         HashMap<String, float[]> wordVectors = new HashMap<String, float[]>();
         double[][] indicatorData = Database.getIndicatorGraph(Database.indicators.get(0));
+        System.out.println("Placeing Words in HashMap...\t");
         for(String word : RevWords)
         {
             wordVectors.put(word, Database.getWordVector(indicatorData, word));
-        }//Populates wordVectors with the vectors for a given indicator, using alignment tecnique.
+            System.out.println("Inserting: " + word);
+        } //System.out.println("Done.");
+        //Populates wordVectors with the vectors for a given indicator, using alignment tecnique.
         /*
          * The way to iterate though this is to use a foreach with revwords.
          * 
          */
+        float[] goal = Database.getIndicatorVector(indicatorData, "allignment");
+        for (int iteration = 0; iteration < 10; iteration++)
+        {
         double minimumDistance = Double.MAX_VALUE;
         double tempDistance = 0.0;
         String bestWord = "";
+        System.out.println("Searching for closest vector... Iteration: "+iteration);
         for (String word : RevWords)
         {
-            tempDistance = Compare.distanceBetweenScaled(Database.getIndicatorVector(indicatorData, word), wordVectors.get(word));
+            tempDistance = Compare.distanceBetweenScaled(goal, wordVectors.get(word));
             if(tempDistance < minimumDistance)
             {
                 minimumDistance = tempDistance;
                 bestWord = word;
+                System.out.println("New Best: " + bestWord);
             }
+        } //System.out.println("Done.");
+        System.out.println(bestWord + ", Weighted at: " + Compare.getScale(wordVectors.get(bestWord), goal));
+        goal = Compare.getDifference(goal, wordVectors.get(bestWord));
+        Grapher.createGraph(Compare.scalar(wordVectors.get(bestWord), Compare.length(goal)), goal, "Vector"+bestWord+"CTG");
         }
-        System.out.println(bestWord + " : " + minimumDistance);
-        
     }
 }

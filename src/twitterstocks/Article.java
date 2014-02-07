@@ -23,49 +23,46 @@ class Article {
     }
 
     public Article(int fileNum) throws FileNotFoundException {
-        readFromFile("articles\\Article"+fileNum);
-        this.fileName = "articles\\Article"+fileNum;
+        readFromFile("articles\\Article" + fileNum);
+        this.fileName = "articles\\Article" + fileNum;
         this.name = this.fileName;
-        
+
     }
-    
-    public int getCount(String word)
-    {
+
+    public int getCount(String word) {
         int count = 0;
         String temp = this.content.toLowerCase();
         word = word.toLowerCase();
-        while(temp.indexOf(word)!=-1) {
+        while (temp.indexOf(word) != -1) {
             count++;
-            temp = temp.substring(0,temp.indexOf(word)) + temp.substring(temp.indexOf(word) + word.length());
+            temp = temp.substring(0, temp.indexOf(word)) + temp.substring(temp.indexOf(word) + word.length());
         }
-        
+
         return count;
     }
-    
-    public int getWordCount()
-    {
+
+    public int getWordCount() {
         String space = " ";
         int count = 0;
         String temp = this.content;
-        while(temp.indexOf(space)!=-1) {
+        while (temp.indexOf(space) != -1) {
             count++;
-            temp = temp.substring(0,temp.indexOf(space)) + temp.substring(temp.indexOf(space) + space.length());
+            temp = temp.substring(0, temp.indexOf(space)) + temp.substring(temp.indexOf(space) + space.length());
         }
-        
+
         return count;
     }
-    
-    public int getNum()
-    {
+
+    public int getNum() {
         return Integer.parseInt(fileName.substring(16));
     }
-    public int getDate()
-    {
+
+    public int getDate() {
         return date;
     }
 
     private void readFromFile(String fileName) throws FileNotFoundException {
-        File file = new File(fileName+".txt");
+        File file = new File(fileName + ".txt");
         Scanner fileIn = new Scanner(file);
         try {
             String d = fileIn.nextLine();
@@ -73,8 +70,7 @@ class Article {
             while (fileIn.hasNextLine()) {
                 this.content = fileIn.nextLine();
             }
-        }
-        finally {
+        } finally {
             fileIn.close();
         }
     }
@@ -84,23 +80,22 @@ class Article {
         try {
             out.println(date);
             out.println(content);
+        } finally {
+            out.close();
         }
-        finally { out.close();}
     }
-    
-    private String replace(String original, char find, String replacement)
-    {
+
+    private String replace(String original, char find, String replacement) {
         String temp = original;
-        while(temp.indexOf(find)!=-1) {
-            temp = temp.substring(0,temp.indexOf(find)) + replacement + temp.substring(temp.indexOf(find)+1);
+        while (temp.indexOf(find) != -1) {
+            temp = temp.substring(0, temp.indexOf(find)) + replacement + temp.substring(temp.indexOf(find) + 1);
         }
-        
+
         return temp;
     }
-    
+
     @Override
-    public String toString()
-    {
-        return getNum()+"";
+    public String toString() {
+        return getNum() + "";
     }
 }

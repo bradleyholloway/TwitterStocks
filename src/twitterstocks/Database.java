@@ -167,20 +167,31 @@ class Database {
     }
     public static float[] getWordVector(double[][] indicator, String word)
     {
-        double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
+        //double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
         int[][] wordT = Compare.getWordMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
         //float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
         float[] wordZ = Compare.convertToVectorZ(wordT);
         return wordZ;
     }
+    public static float[] getScaledWordVector(double[][] indicator, String word, double scale)
+    {
+        float[] returns = getWordVector(indicator, word);
+        for(int i = 0; i < returns.length; i++)
+        {
+            returns[i] = returns[i] * (float)scale;
+        }
+        return returns;
+    }
     public static float[] getIndicatorVector(double[][] indicator, String word)
     {
         double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
-        int[][] wordT = Compare.getWordMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
+        //int[][] wordT = Compare.getWordMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
         float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
         //float[] wordZ = Compare.convertToVectorZ(wordT);
         return indicatorZ;
     }
+    
+    
     public static void ArticleFrequency() {
         ArrayList<Integer> datesInRange = new ArrayList<Integer>();
         for (int date : dates) {

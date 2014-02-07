@@ -122,9 +122,8 @@ public class Grapher {
             double yMax = Math.max(yMaxIndicator, yMaxWord);
             //Begin Drawing
             g.setColor(Color.darkGray);
-            for(int i = (int)Math.ceil(yMin); i<= (int)Math.floor(yMax); i++)
-            {
-                g.drawLine(BORDER, (int)((double)(yMax-i)/(yMax-yMin)*(HEIGHT-BORDER)), WIDTH, (int)((double)(yMax-i)/(yMax-yMin)*(HEIGHT-BORDER)));
+            for (int i = (int) Math.ceil(yMin); i <= (int) Math.floor(yMax); i++) {
+                g.drawLine(BORDER, (int) ((double) (yMax - i) / (yMax - yMin) * (HEIGHT - BORDER)), WIDTH, (int) ((double) (yMax - i) / (yMax - yMin) * (HEIGHT - BORDER)));
             }
 
             g.setColor(Color.red);//Draw Indicator Line
@@ -153,7 +152,78 @@ public class Grapher {
 
         }
         g.setColor(Color.black);
-        g.drawString(Compare.covariance(dataIndicator, dataWord)+"", BORDER+50, 50);
+        g.drawString(Compare.covariance(dataIndicator, dataWord) + "", BORDER + 50, 50);
+
+        try {
+            File outputfile = new File(fileOut + ".png");
+            ImageIO.write(render, "png", outputfile);
+        } catch (IOException e) {
+            System.err.print(e.getMessage());
+        }
+
+    }
+
+    public static void createGraph(float[] dataWordz, float[] dataIndicatorz, String fileOut) {
+        BufferedImage render = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        Graphics g = render.getGraphics();
+        g.setColor(Color.white);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        g.setColor(Color.black);
+        g.drawRect(BORDER, 0, WIDTH - BORDER, HEIGHT - BORDER);
+        g.setColor(Color.lightGray);
+        g.fillRect(BORDER + 1, 1, WIDTH - BORDER - 2, HEIGHT - BORDER - 2);
+
+        //Get basic scale.
+        double yMinWord, yMaxWord;
+        yMinWord = yMaxWord = dataWordz[0];
+        for (int a = 1; a < dataWordz.length; a++) {
+            if (dataWordz[a] < yMinWord) {
+                yMinWord = dataWordz[a];
+            } else if (dataWordz[a] > yMaxWord) {
+                yMaxWord = dataWordz[a];
+            }
+        }
+        double yMinIndicator, yMaxIndicator;
+        yMinIndicator = yMaxIndicator = dataIndicatorz[0];
+        for (int a = 1; a < dataIndicatorz.length; a++) {
+            if (dataIndicatorz[a] < yMinIndicator) {
+                yMinIndicator = dataIndicatorz[a];
+            } else if (dataIndicatorz[a] > yMaxIndicator) {
+                yMaxIndicator = dataIndicatorz[a];
+            }
+        }
+        //Begin Drawing
+
+
+        g.setColor(Color.red);//Draw Indicator Line
+
+
+        for (int a = 1; a < dataIndicatorz.length; a++) {
+            drawLine(g, dataIndicatorz[a - 1], dataIndicatorz[a], a - 1, dataIndicatorz.length, yMinIndicator, yMaxIndicator);
+        }
+
+        g.setColor(Color.blue);//Draw WordCount Line
+        for (int a = 1; a < dataWordz.length; a++) {
+            drawLine(g, dataWordz[a - 1], dataWordz[a], a - 1, dataWordz.length, yMinWord, yMaxWord);
+        }
+
+        //-------------Need To Create and Draw Scales within BORDER---------------------
+        int numSubdivisions = 25;
+        for (int i = 0; i < numSubdivisions; i++) {
+            g.setColor(Color.blue);
+            g.drawString("" + ((double) Math.round((((double) (numSubdivisions - i) / numSubdivisions * (yMaxWord - yMinWord) + yMinWord) * 100) / 100)), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+            g.setColor(Color.red);
+            g.drawString("" + ((double) Math.round((((double) (numSubdivisions - i) / numSubdivisions * (yMaxIndicator - yMinIndicator) + yMinIndicator * 100)) / 100)), BORDER / 2 + 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+        }
+        g.setColor(Color.black);
+        DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
+        int dateSubdivisions = 25;
+        for (int i = 0; i < dateSubdivisions; i++) {
+//            g.drawString(""+date.format((int)((double)i/dateSubdivisions*(xMaxWord-xMinWord)+xMinWord)), (int)((double)i/dateSubdivisions*(WIDTH-BORDER)+BORDER),(HEIGHT-BORDER)+5);
+        }
+        g.setColor(Color.black);
+        g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 50, 50);
 
         try {
             File outputfile = new File(fileOut + ".png");
@@ -169,6 +239,12 @@ public class Grapher {
         int[] tempPointB = convertPoint(pointB, xNum + 1, xMax, yMin, yMax);
         g.drawLine(tempPointA[0], tempPointA[1], tempPointB[0], tempPointB[1]);
     }
+    
+    private static void drawLine(Graphics g, float pointA, float pointB, double xNum, double xMax, double yMin, double yMax) {
+        int[] tempPointA = convertPoint(pointA, xNum, xMax, yMin, yMax);
+        int[] tempPointB = convertPoint(pointB, xNum + 1, xMax, yMin, yMax);
+        g.drawLine(tempPointA[0], tempPointA[1], tempPointB[0], tempPointB[1]);
+    }
 
     private static void drawLine(Graphics g, int[] pointA, int[] pointB, double xNum, double xMax, double yMin, double yMax) {
         int[] tempPointA = convertPoint(pointA, xNum, xMax, yMin, yMax);
@@ -180,6 +256,13 @@ public class Grapher {
         int[] ret = new int[2];
         ret[0] = (int) ((double) (xMin / xMax) * (WIDTH - BORDER) + BORDER);
         ret[1] = (int) ((double) (yMax - point[1]) / (yMax - yMin + 1) * (HEIGHT - BORDER));
+        return ret;
+    }
+    
+    private static int[] convertPoint(float point, double xMin, double xMax, double yMin, double yMax) {
+        int[] ret = new int[2];
+        ret[0] = (int) ((double) (xMin / xMax) * (WIDTH - BORDER) + BORDER);
+        ret[1] = (int) ((double) (yMax - point) / (yMax - yMin + 1) * (HEIGHT - BORDER));
         return ret;
     }
 
