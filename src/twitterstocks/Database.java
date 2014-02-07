@@ -43,6 +43,16 @@ class Database {
         Collections.sort(dates);
         Collections.sort(files);
     }
+    public static void addE(Article a) throws FileNotFoundException {
+        if (articles.get(a.getDate()) == null) {
+            articles.put(a.getDate(), new ArrayList<Article>());
+            dates.add(a.getDate());
+        }
+        articles.get(a.getDate()).add(a);
+        files.add(a.getNum());
+        Collections.sort(dates);
+        Collections.sort(files);
+    }
 
     public static void add(Indicator i) throws FileNotFoundException {
         indicators.add(i);
@@ -98,7 +108,7 @@ class Database {
 
         PrintWriter out = new PrintWriter(file);
         try {
-            out.println();
+            out.print(content);
         } finally {
             out.close();
         }
@@ -121,7 +131,7 @@ class Database {
         }
 
         for (int f : tempFiles) {
-            add(new Article(f));
+            addE(new Article(f));
         }
         System.out.println("Done.");
     }
