@@ -336,7 +336,6 @@ class Compare {
     }
     public static float[] scalar(float[] data, double endLength)
     {
-        double length = length(data);
         double scale = getScale(data, endLength);
         float[] newData = new float[data.length];
         for (int i = 0; i < data.length; i++)
@@ -352,7 +351,7 @@ class Compare {
     }
     public static double getScale(float[] data, float[] data2)
     {
-        return getScale(data, length(data));
+        return getScale(data, length(data2));
     }
     public static float[] getDifference(float[] goal, float[] approximation)
     {

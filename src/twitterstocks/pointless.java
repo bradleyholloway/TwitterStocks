@@ -6,6 +6,8 @@
 
 package twitterstocks;
 
+import java.util.Random;
+
 /**
  *
  * @author roberto dailey
@@ -16,10 +18,17 @@ public class pointless {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        for (int x = 0; x<=7353; x++)
+        float[] test1 = new float[100];
+        float[] test2 = new float[100];
+        Random r = new Random(1234);
+        for(int i = 0; i < 20; i++)
         {
-            System.out.println(x + ",");
+            test1[i] = 5;
+            test2[i] = 1;
         }
+        System.out.println(Compare.length(test1));
+        System.out.println(Compare.length(test2));
+        System.out.println(Compare.getScale(test1, test2));
     }
     
 }
