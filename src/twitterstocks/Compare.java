@@ -344,6 +344,30 @@ class Compare {
         }
         return newData;
     }
+    public static double correctScale(float[] goal, float[] data)
+    {
+        float[] scaledData = scalar(data, length(goal));
+        double reducedScale = dotProduct(scaledData, goal);
+        return getScale(goal, data) * reducedScale;
+    }
+    public static float[] multiply(float[] data, double scale)
+    {
+        for(int i = 0; i < data.length; i++)
+        {
+            data[i] = data[i] * (float) scale;
+        }
+        return data;
+    }
+    public static double dotProduct(float[] data1, float[] data2)
+    {
+        double sum = 0.0;
+        for(int i = 0; i < data1.length; i++)
+        {
+            sum += data1[i] * data2[i];
+        }
+        return sum / (length(data1) * length(data2));
+    }
+    
     public static double getScale(float[] data, double endLength)
     {
         double length = length(data);

@@ -18,8 +18,8 @@ public class pointless {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        HashMap<String, float[]> vectorMap = Database.getGSON();
-        System.out.println(Compare.length(vectorMap.get(" the ")));
+        Database.writeGSON();
+        //HashMap<String, float[]> vectorMap = Database.getGSON();
         /*float[] test1 = new float[100];
         float[] test2 = new float[100];
         Random r = new Random(1234);

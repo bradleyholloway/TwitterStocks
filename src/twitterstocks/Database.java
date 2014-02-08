@@ -18,6 +18,7 @@ class Database {
     public static ArrayList<Integer> dates = new ArrayList<Integer>();
     public static ArrayList<Indicator> indicators = new ArrayList<Indicator>();
     public static ArrayList<String> words = new ArrayList<String>();
+    public static ArrayList<String> RevWords = new ArrayList<String>();
 
     public static void add(Article a) throws FileNotFoundException {
         if (articles.get(a.getDate()) == null) {
@@ -46,6 +47,7 @@ class Database {
         Collections.sort(dates);
         Collections.sort(files);
     }
+
     public static void addE(Article a) throws FileNotFoundException {
         if (articles.get(a.getDate()) == null) {
             articles.put(a.getDate(), new ArrayList<Article>());
@@ -77,69 +79,113 @@ class Database {
         }
     }
 
-    public static void load() throws FileNotFoundException {
-        System.out.print("Database Loading...\t");
-        String content;
-        File file = new File("Indicators.txt");
-        Scanner fileIn = new Scanner(file);
-        try {
-            content = fileIn.nextLine();
-        } finally {
-            fileIn.close();
-        }
-        while (content.length() > 0) {
-            content = parseIndicators(content);
-        }
-        file = new File("10000_words.txt");
-        fileIn = new Scanner(file);
-        try {
-            content = fileIn.nextLine();
-        } finally {
-            fileIn.close();
-        }
-        while (content.length() > 0) {
-            content = parseWords(content);
-        }
-
-        file = new File("Articles.txt");
-        fileIn = new Scanner(file);
-        try {
-            content = fileIn.nextLine();
-        } finally {
-            fileIn.close();
-        }
-
-        PrintWriter out = new PrintWriter(file);
-        try {
-            out.print(content);
-        } finally {
-            out.close();
-        }
-
-        while (content.length() > 0) {
-            content = parseArticles(content);
-        }
-        int max = -1;
-        for (Integer temp : files) {
-            if (temp > max) {
-                max = temp;
-            }
-        }
-        Article.numFiles = max + 1;
-
-        ArrayList<Integer> tempFiles = new ArrayList<Integer>();
-
-        for (int f : files) {
-            tempFiles.add(f);
-        }
-
-        for (int f : tempFiles) {
-            addE(new Article(f));
-        }
-        System.out.println("Done.");
+    public static void load() {
+        System.out.println("Database Loading...");
+        loadIndicators();
+        loadWords();
+        loadRevWords();
+        loadArticles();
+        System.out.println("Database Loading Done.");
     }
-    public static HashMap<String, float[]> getGSON()
-    {
+
+    public static void loadArticles() {
+        System.out.print("Loading Articles...\t");
+        try {
+            File file = new File("Articles.txt");
+            Scanner fileIn = new Scanner(file);
+            String content;
+            try {
+                content = fileIn.nextLine();
+            } finally {
+                fileIn.close();
+            }
+
+            PrintWriter out = new PrintWriter(file);
+            try {
+                out.print(content);
+            } finally {
+                out.close();
+            }
+
+            while (content.length() > 0) {
+                content = parseArticles(content);
+            }
+            int max = -1;
+            for (Integer temp : files) {
+                if (temp > max) {
+                    max = temp;
+                }
+            }
+            Article.numFiles = max + 1;
+
+            ArrayList<Integer> tempFiles = new ArrayList<Integer>();
+
+            for (int f : files) {
+                tempFiles.add(f);
+            }
+
+            for (int f : tempFiles) {
+                addE(new Article(f));
+            }
+            System.out.println("Done.");
+        } catch (FileNotFoundException ex) {
+            System.out.println("Articles Failed: " + ex.getMessage());
+        }
+    }
+
+    public static void loadIndicators() {
+        System.out.print("Loading Indicators...\t");
+        try {
+            String content;
+            File file = new File("Indicators.txt");
+            Scanner fileIn = new Scanner(file);
+            try {
+                content = fileIn.nextLine();
+            } finally {
+                fileIn.close();
+            }
+            while (content.length() > 0) {
+                content = parseIndicators(content);
+            }
+            System.out.println("Done.");
+        } catch (FileNotFoundException ex) {
+            System.out.println("Indicators Failed: " + ex.getMessage());
+        }
+    }
+
+    public static void loadWords() {
+        System.out.print("Loading Words...\t");
+        try {
+            File file = new File("10000_words.txt");
+            Scanner fileIn = new Scanner(file);
+            String content;
+            try {
+                content = fileIn.nextLine();
+            } finally {
+                fileIn.close();
+            }
+            while (content.length() > 0) {
+                content = parseWords(content);
+            }
+            System.out.println("Done.");
+        } catch (FileNotFoundException ex) {
+            System.out.println("Words Failed: " + ex.getMessage());
+        }
+    }
+
+    public static void loadRevWords() {
+        System.out.print("Loading RevWords...\t");
+        Gson g = new Gson();
+        try {
+            File f = new File("gson\\REVWORDS");
+            Scanner fileIn = new Scanner(f);
+            RevWords = g.fromJson(fileIn.next(), ArrayList.class);
+        } catch (FileNotFoundException ex) {
+            System.out.println("RevWords Failed: " + ex.getMessage());
+        }
+    }
+
+    public static HashMap<String, float[]> getGSON(String indicatorName) {
         Gson g = new Gson();
         try {
             File file = new File("10000_words.txt");
@@ -157,19 +203,75 @@ class Database {
             Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
         }
         HashMap<String, float[]> data = new HashMap<String, float[]>();
-        File file; Scanner fileIn;
-        for (String word : words)
-        {
+        File file;
+        Scanner fileIn;
+        for (String word : words) {
             try {
-                file = new File("gson\\"+word+".txt");
+                file = new File("gson\\" + indicatorName + "\\" + word + ".txt");
                 fileIn = new Scanner(file);
                 data.put(word, g.fromJson(fileIn.next(), float[].class));
-                System.out.println("Success "+word);
+                //System.out.println("Success "+word);
             } catch (FileNotFoundException ex) {
                 //System.out.println(ex.getMessage());
             }
         }
         return data;
+    }
+
+    public static void writeGSON() {
+        Gson g = new Gson();
+        Database.load();
+        RevWords = new ArrayList<String>();
+
+        for (int index = 0; index < words.size(); index++) {
+            double count = Compare.sum(getCountOfWordGraph(words.get(index)));
+            //System.out.println("index: " + index + " " + words.get(index) + " wordcount: " + count);
+            if (count > 10) {
+                RevWords.add(words.get(index));
+            } else {
+                System.out.println("Removed "+words.get(index)+" at index: "+index);
+            }
+        }//takes out all the NAN's
+        //System.out.println("removed null words");
+
+        HashMap<String, float[]> wordVectors = new HashMap<String, float[]>();
+        for (Indicator indicator : indicators) {
+            double[][] indicatorData = Database.getIndicatorGraph(indicator);
+            System.out.println("Placeing Words in "+ indicator.getName()+"'s HashMap...\t");
+            //int index = 0;
+            for (String word : RevWords) {
+                wordVectors.put(word, Database.getWordVector(indicatorData, word));
+                //System.out.println(index + " Inserting: " + word);
+                //index++;
+            }
+
+            for (String word : RevWords) {
+                //System.out.print("Writing " + word + " ...\t");
+                try {
+                    File file = new File("gson\\" + indicator.getName() + "\\" + word + ".txt");
+                    PrintWriter out = new PrintWriter(file);
+                    try {
+                        out.print(g.toJson(wordVectors.get(word)));
+                    } finally {
+                        out.close();
+                    }
+                    //System.out.println("Done.");
+                } catch (FileNotFoundException ex) {
+                    System.out.println(ex.getMessage());
+                }
+                System.out.println(indicator.getName() + "'s arrays written.");
+            }
+        }
+        File file = new File("gson\\REVWORDS");
+        PrintWriter out;
+        try {
+            out = new PrintWriter(file);
+            out.print(g.toJson(RevWords));
+            out.close();
+        } catch (FileNotFoundException ex) {
+            //Logger.getLogger(StepTwoGSON.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println("DONE.");
     }
 
     public static boolean updateIndicator(String name, double x, double y) throws FileNotFoundException {
@@ -211,33 +313,31 @@ class Database {
         }
         return count;
     }
-    public static float[] getWordVector(double[][] indicator, String word)
-    {
+
+    public static float[] getWordVector(double[][] indicator, String word) {
         //double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
-        int[][] wordT = Compare.getWordMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
+        int[][] wordT = Compare.getWordMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int) indicator[0][0] - 1, (int) indicator[indicator.length - 1][0] + 1));
         //float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
         float[] wordZ = Compare.convertToVectorZ(wordT);
         return wordZ;
     }
-    public static float[] getScaledWordVector(double[][] indicator, String word, double scale)
-    {
+
+    public static float[] getScaledWordVector(double[][] indicator, String word, double scale) {
         float[] returns = getWordVector(indicator, word);
-        for(int i = 0; i < returns.length; i++)
-        {
-            returns[i] = returns[i] * (float)scale;
+        for (int i = 0; i < returns.length; i++) {
+            returns[i] = returns[i] * (float) scale;
         }
         return returns;
     }
-    public static float[] getIndicatorVector(double[][] indicator, String word)
-    {
-        double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
+
+    public static float[] getIndicatorVector(double[][] indicator, String word) {
+        double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int) indicator[0][0] - 1, (int) indicator[indicator.length - 1][0] + 1));
         //int[][] wordT = Compare.getWordMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
         float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
         //float[] wordZ = Compare.convertToVectorZ(wordT);
         return indicatorZ;
     }
-    
-    
+
     public static void ArticleFrequency() {
         ArrayList<Integer> datesInRange = new ArrayList<Integer>();
         for (int date : dates) {
