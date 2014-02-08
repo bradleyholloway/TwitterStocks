@@ -1,9 +1,11 @@
 package twitterstocks;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
@@ -179,7 +181,9 @@ class Database {
         try {
             File f = new File("gson\\REVWORDS.txt");
             Scanner fileIn = new Scanner(f);
-            RevWords = g.fromJson(fileIn.next(), ArrayList.class);
+            Type alType = new TypeToken<ArrayList<String>>() {}.getType();
+            RevWords = g.fromJson(fileIn.nextLine(), alType);
+            System.out.println("Done.");
         } catch (FileNotFoundException ex) {
             System.out.println("RevWords Failed: " + ex.getMessage());
         }
@@ -255,7 +259,8 @@ class Database {
         PrintWriter out;
         try {
             out = new PrintWriter(file);
-            out.print(g.toJson(RevWords));
+            Type alType = new TypeToken<ArrayList<String>>() {}.getType();
+            out.println(g.toJson(RevWords,alType));
             out.close();
             System.out.println("Wrote RevWords");
         } catch (FileNotFoundException ex) {
