@@ -209,11 +209,11 @@ class Database {
         HashMap<String, float[]> data = new HashMap<String, float[]>();
         File file;
         Scanner fileIn;
-        for (String word : words) {
+        for (String word : RevWords) {
             try {
                 file = new File("gson\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
                 fileIn = new Scanner(file);
-                data.put(word, g.fromJson(fileIn.next(), float[].class));
+                data.put(word, g.fromJson(fileIn.nextLine(), float[].class));
                 //System.out.println("Success "+word);
             } catch (FileNotFoundException ex) {
                 //System.out.println(ex.getMessage());

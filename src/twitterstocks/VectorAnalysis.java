@@ -47,15 +47,18 @@ public class VectorAnalysis {
          */
         Database.load();
         
-        for (Indicator indicator : Database.indicators) {
+        //for (Indicator indicator : Database.indicators) {
+        Indicator indicator = Database.indicators.get(2);
+        
             HashMap<String, float[]> wordVectors = Database.getGSON(indicator.getName());
             double[][] indicatorData = Database.getIndicatorGraph(indicator);
             float[] goal = Database.getIndicatorVector(indicatorData, "allignment");
-
-            for (int iteration = 0; iteration < 50; iteration++) {
+            float[] finalGoal = Database.getIndicatorVector(indicatorData, "allignment");
+            float[] total = new float[goal.length];
+            String bestWord = "";
+            for (int iteration = 0; iteration < 10000; iteration++) {
                 double minimumDistance = Double.MAX_VALUE;
                 double tempDistance = 0.0;
-                String bestWord = "";
                 System.out.println("Searching for closest vector... Iteration: " + iteration);
                 for (String word : Database.words) {
                     if (wordVectors.get(word) != null) {
@@ -63,15 +66,17 @@ public class VectorAnalysis {
                         if (tempDistance < minimumDistance) {
                             minimumDistance = tempDistance;
                             bestWord = word;
-                            System.out.println("New Best: " + bestWord);
+                            //System.out.println("New Best: " + bestWord);
                         }
                     }
                 } //System.out.println("Done.");
-                System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(goal, wordVectors.get(bestWord)));
-                goal = Compare.getDifference(goal, wordVectors.get(bestWord));
-                Grapher.createGraph(Compare.multiply(wordVectors.get(bestWord), Compare.correctScale(goal, wordVectors.get(bestWord))), goal, "Vector" + bestWord + "CTG");
+                //System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(goal, wordVectors.get(bestWord)));
+                total = Compare.add(total, Compare.multiply(wordVectors.get(bestWord), Compare.correctScale(goal, wordVectors.get(bestWord))));
+                goal = Compare.getDifference(finalGoal, total);
+                //Grapher.createGraph(total, finalGoal, "Vector" + bestWord + "CTG" + iteration);
             }
-        }
+            Grapher.createGraph(total, finalGoal, "Vector" + bestWord + "CTG" + 10000);
+        //}
 
     }
 }

@@ -350,6 +350,15 @@ class Compare {
         double reducedScale = dotProduct(scaledData, goal);
         return getScale(goal, data) * reducedScale;
     }
+    public static float[] add(float[] data, float[] data2)
+    {
+        float[] returns = new float[data.length];
+        for(int i = 0; i < data.length; i++)
+        {
+            returns[i] = data[i] + data2[i];
+        }
+        return returns;
+    }
     public static float[] multiply(float[] data, double scale)
     {
         for(int i = 0; i < data.length; i++)
