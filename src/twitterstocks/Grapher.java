@@ -155,7 +155,7 @@ public class Grapher {
         g.drawString(Compare.covariance(dataIndicator, dataWord) + "", BORDER + 50, 50);
 
         try {
-            File outputfile = new File(fileOut + ".png");
+            File outputfile = new File("graphs\\"+fileOut + ".png");
             ImageIO.write(render, "png", outputfile);
         } catch (IOException e) {
             System.err.print(e.getMessage());
@@ -226,7 +226,7 @@ public class Grapher {
         g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 50, 50);
 
         try {
-            File outputfile = new File(fileOut + ".png");
+            File outputfile = new File("graphs\\"+fileOut + ".png");
             ImageIO.write(render, "png", outputfile);
         } catch (IOException e) {
             System.err.print(e.getMessage());
