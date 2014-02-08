@@ -1,5 +1,6 @@
 package twitterstocks;
 
+import com.google.gson.Gson;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
@@ -7,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 class Database {
 
@@ -134,6 +137,39 @@ class Database {
             addE(new Article(f));
         }
         System.out.println("Done.");
+    }
+    public static HashMap<String, float[]> getGSON()
+    {
+        Gson g = new Gson();
+        try {
+            File file = new File("10000_words.txt");
+            Scanner fileIn = new Scanner(file);
+            String content = "";
+            try {
+                content = fileIn.nextLine();
+            } finally {
+                fileIn.close();
+            }
+            while (content.length() > 0) {
+                content = parseWords(content);
+            }
+        } catch (FileNotFoundException ex) {
+            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        HashMap<String, float[]> data = new HashMap<String, float[]>();
+        File file; Scanner fileIn;
+        for (String word : words)
+        {
+            try {
+                file = new File("gson\\"+word+".txt");
+                fileIn = new Scanner(file);
+                data.put(word, g.fromJson(fileIn.next(), float[].class));
+                System.out.println("Success "+word);
+            } catch (FileNotFoundException ex) {
+                //System.out.println(ex.getMessage());
+            }
+        }
+        return data;
     }
 
     public static boolean updateIndicator(String name, double x, double y) throws FileNotFoundException {

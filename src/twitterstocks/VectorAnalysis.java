@@ -66,5 +66,6 @@ public class VectorAnalysis {
         goal = Compare.getDifference(goal, wordVectors.get(bestWord));
         Grapher.createGraph(Compare.scalar(wordVectors.get(bestWord), Compare.length(goal)), goal, "Vector"+bestWord+"CTG");
         }
+        
     }
 }
