@@ -229,7 +229,7 @@ class Database {
             if (count > 10) {
                 RevWords.add(words.get(index));
             } else {
-                System.out.println("Removed "+words.get(index)+" at index: "+index);
+                System.out.println("Removed " + words.get(index) + " at index: " + index);
             }
         }//takes out all the NAN's
         //System.out.println("removed null words");
@@ -237,7 +237,7 @@ class Database {
         HashMap<String, float[]> wordVectors = new HashMap<String, float[]>();
         for (Indicator indicator : indicators) {
             double[][] indicatorData = Database.getIndicatorGraph(indicator);
-            System.out.println("Placeing Words in "+ indicator.getName()+"'s HashMap...\t");
+            System.out.println("Placeing Words in " + indicator.getName() + "'s HashMap...\t");
             //int index = 0;
             for (String word : RevWords) {
                 wordVectors.put(word, Database.getWordVector(indicatorData, word));
@@ -259,8 +259,8 @@ class Database {
                 } catch (FileNotFoundException ex) {
                     System.out.println(ex.getMessage());
                 }
-                System.out.println(indicator.getName() + "'s arrays written.");
             }
+            System.out.println(indicator.getName() + "'s arrays written.");
         }
         File file = new File("gson\\REVWORDS");
         PrintWriter out;
@@ -273,16 +273,14 @@ class Database {
         }
         System.out.println("DONE.");
     }
-    
-    public static String removeSpaces(String s)
-    {
-        return remove(s," ");
+
+    public static String removeSpaces(String s) {
+        return remove(s, " ");
     }
-    private static String remove(String s, String r)
-    {
-        while(s.indexOf(r)!=-1)
-        {
-            s = s.substring(0, s.indexOf(r)) + s.substring(s.indexOf(r)+r.length());
+
+    private static String remove(String s, String r) {
+        while (s.indexOf(r) != -1) {
+            s = s.substring(0, s.indexOf(r)) + s.substring(s.indexOf(r) + r.length());
         }
         return s;
     }
