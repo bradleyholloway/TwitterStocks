@@ -207,7 +207,7 @@ class Database {
         Scanner fileIn;
         for (String word : words) {
             try {
-                file = new File("gson\\" + indicatorName + "\\" + word + ".txt");
+                file = new File("gson\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
                 fileIn = new Scanner(file);
                 data.put(word, g.fromJson(fileIn.next(), float[].class));
                 //System.out.println("Success "+word);
@@ -248,7 +248,7 @@ class Database {
             for (String word : RevWords) {
                 //System.out.print("Writing " + word + " ...\t");
                 try {
-                    File file = new File("gson\\" + indicator.getName() + "\\" + word + ".txt");
+                    File file = new File("gson\\" + indicator.getName() + "\\" + removeSpaces(word) + ".txt");
                     PrintWriter out = new PrintWriter(file);
                     try {
                         out.print(g.toJson(wordVectors.get(word)));
@@ -272,6 +272,19 @@ class Database {
             //Logger.getLogger(StepTwoGSON.class.getName()).log(Level.SEVERE, null, ex);
         }
         System.out.println("DONE.");
+    }
+    
+    public static String removeSpaces(String s)
+    {
+        return remove(s," ");
+    }
+    private static String remove(String s, String r)
+    {
+        while(s.indexOf(r)!=-1)
+        {
+            s = s.substring(0, s.indexOf(r)) + s.substring(s.indexOf(r)+r.length());
+        }
+        return s;
     }
 
     public static boolean updateIndicator(String name, double x, double y) throws FileNotFoundException {
