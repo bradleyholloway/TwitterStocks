@@ -80,7 +80,7 @@ class Database {
     }
 
     public static void load() {
-        System.out.println("Database Loading...");
+        System.out.println("Loading Database...");
         loadIndicators();
         loadWords();
         loadRevWords();
@@ -177,7 +177,7 @@ class Database {
         System.out.print("Loading RevWords...\t");
         Gson g = new Gson();
         try {
-            File f = new File("gson\\REVWORDS");
+            File f = new File("gson\\REVWORDS.txt");
             Scanner fileIn = new Scanner(f);
             RevWords = g.fromJson(fileIn.next(), ArrayList.class);
         } catch (FileNotFoundException ex) {
@@ -217,14 +217,33 @@ class Database {
         }
         return data;
     }
+    private static HashMap<String, Integer> getWordCountsMap()
+    {
+        HashMap<String, Integer> wordCount = new HashMap<String, Integer>();
+        for (String word : words)
+        {
+            wordCount.put(word, new Integer(0));
+        }
+        for (Integer d : dates)
+        {
+            for (Article a : articles.get(d))
+            {
+                a.addWordCounts(wordCount);
+            }
+        }
+        return wordCount;
+    }
+    
 
     public static void writeGSON() {
         Gson g = new Gson();
         Database.load();
         RevWords = new ArrayList<String>();
 
+        HashMap<String, Integer> wordcounts = getWordCountsMap();
         for (int index = 0; index < words.size(); index++) {
-            double count = Compare.sum(getCountOfWordGraph(words.get(index)));
+            double count = wordcounts.get(words.get(index));
+            //double count = Compare.sum(getCountOfWordGraph(words.get(index)));
             //System.out.println("index: " + index + " " + words.get(index) + " wordcount: " + count);
             if (count > 10) {
                 RevWords.add(words.get(index));
@@ -232,10 +251,22 @@ class Database {
                 System.out.println("Removed " + words.get(index) + " at index: " + index);
             }
         }//takes out all the NAN's
+        File file = new File("gson\\REVWORDS.txt");
+        PrintWriter out;
+        try {
+            out = new PrintWriter(file);
+            out.print(g.toJson(RevWords));
+            out.close();
+            System.out.println("Wrote RevWords");
+        } catch (FileNotFoundException ex) {
+            //Logger.getLogger(StepTwoGSON.class.getName()).log(Level.SEVERE, null, ex);
+        }
         //System.out.println("removed null words");
 
         HashMap<String, float[]> wordVectors = new HashMap<String, float[]>();
         for (Indicator indicator : indicators) {
+            file = new File("gson\\"+indicator.getName());
+            file.mkdirs();
             double[][] indicatorData = Database.getIndicatorGraph(indicator);
             System.out.println("Placeing Words in " + indicator.getName() + "'s HashMap...\t");
             //int index = 0;
@@ -248,12 +279,12 @@ class Database {
             for (String word : RevWords) {
                 //System.out.print("Writing " + word + " ...\t");
                 try {
-                    File file = new File("gson\\" + indicator.getName() + "\\" + removeSpaces(word) + ".txt");
-                    PrintWriter out = new PrintWriter(file);
+                    File f = new File("gson\\" + indicator.getName() + "\\" + removeSpaces(word) + ".txt");
+                    PrintWriter fout = new PrintWriter(f);
                     try {
-                        out.print(g.toJson(wordVectors.get(word)));
+                        fout.print(g.toJson(wordVectors.get(word)));
                     } finally {
-                        out.close();
+                        fout.close();
                     }
                     //System.out.println("Done.");
                 } catch (FileNotFoundException ex) {
@@ -262,15 +293,7 @@ class Database {
             }
             System.out.println(indicator.getName() + "'s arrays written.");
         }
-        File file = new File("gson\\REVWORDS");
-        PrintWriter out;
-        try {
-            out = new PrintWriter(file);
-            out.print(g.toJson(RevWords));
-            out.close();
-        } catch (FileNotFoundException ex) {
-            //Logger.getLogger(StepTwoGSON.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        
         System.out.println("DONE.");
     }
 

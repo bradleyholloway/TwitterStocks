@@ -3,6 +3,7 @@ package twitterstocks;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
+import java.util.HashMap;
 import java.util.Scanner;
 
 class Article {
@@ -82,6 +83,19 @@ class Article {
             out.println(content);
         } finally {
             out.close();
+        }
+    }
+
+    public void addWordCounts(HashMap<String, Integer> map) {
+        String space = " ";
+        
+        String temp = this.content;
+        while (temp.indexOf(space) != -1) {
+            //System.out.println(" " + temp.substring(0, temp.indexOf(space)).toLowerCase()+" ");
+            if (map.get(" " + temp.substring(0, temp.indexOf(space)).toLowerCase()+" ") != null) {
+                map.put(" " + temp.substring(0, temp.indexOf(space)).toLowerCase()+" ", map.get(" " + temp.substring(0, temp.indexOf(space)).toLowerCase()+" ") + 1);
+            }
+            temp = temp.substring(temp.indexOf(space) + space.length());
         }
     }
 
