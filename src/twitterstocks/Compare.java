@@ -537,6 +537,7 @@ class Compare {
     public static double distanceBetweenScaled(float[] indicator, float[] word) {
         double indicatorLength = length(indicator);
         word = scalar(word, indicatorLength);
+        word = multiply(word, correctScale(indicator, word));
         return distance(indicator, word);
     }
 

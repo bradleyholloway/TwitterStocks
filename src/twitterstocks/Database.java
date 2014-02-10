@@ -190,29 +190,63 @@ class Database {
         }
     }
 
-    public static HashMap<String, float[]> getGSON(String indicatorName) {
+    public static HashMap<String, float[]> getGSONMap(String indicatorName) {
         Gson g = new Gson();
-        try {
-            File file = new File("10000_words.txt");
-            Scanner fileIn = new Scanner(file);
-            String content = "";
-            try {
-                content = fileIn.nextLine();
-            } finally {
-                fileIn.close();
-            }
-            while (content.length() > 0) {
-                content = parseWords(content);
-            }
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(Database.class.getName()).log(Level.SEVERE, null, ex);
-        }
         HashMap<String, float[]> data = new HashMap<String, float[]>();
         File file;
         Scanner fileIn;
         for (String word : RevWords) {
             try {
                 file = new File("gson\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
+                fileIn = new Scanner(file);
+                data.put(word, g.fromJson(fileIn.nextLine(), float[].class));
+                //System.out.println("Success "+word);
+            } catch (FileNotFoundException ex) {
+                //System.out.println(ex.getMessage());
+            }
+        }
+        return data;
+    }
+
+    public static float[] getGSONIndicator(String indicatorName) {
+        Gson g = new Gson();
+        float[] returns = null;
+        File file;
+        Scanner fileIn;
+        try {
+            file = new File("gson\\" + indicatorName + "\\" + indicatorName + ".txt");
+            fileIn = new Scanner(file);
+            returns = g.fromJson(fileIn.nextLine(), float[].class);
+            //System.out.println("Success "+word);
+        } catch (FileNotFoundException ex) {
+            //System.out.println(ex.getMessage());
+        }
+        return returns;
+    }
+    public static float[] getGSONIndicatorPer(String indicatorName) {
+        Gson g = new Gson();
+        float[] returns = null;
+        File file;
+        Scanner fileIn;
+        try {
+            file = new File("gsonper\\" + indicatorName + "\\" + indicatorName + ".txt");
+            fileIn = new Scanner(file);
+            returns = g.fromJson(fileIn.nextLine(), float[].class);
+            //System.out.println("Success "+word);
+        } catch (FileNotFoundException ex) {
+            //System.out.println(ex.getMessage());
+        }
+        return returns;
+    }
+
+    public static HashMap<String, float[]> getGSONPerMap(String indicatorName) {
+        Gson g = new Gson();
+        HashMap<String, float[]> data = new HashMap<String, float[]>();
+        File file;
+        Scanner fileIn;
+        for (String word : RevWords) {
+            try {
+                file = new File("gsonper\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
                 fileIn = new Scanner(file);
                 data.put(word, g.fromJson(fileIn.nextLine(), float[].class));
                 //System.out.println("Success "+word);
@@ -272,17 +306,17 @@ class Database {
             file.mkdirs();
             double[][] indicatorData = Database.getIndicatorGraph(indicator);
             try {
-                    File f = new File("gson\\" + indicator.getName() + "\\" + indicator.getName() + ".txt");
-                    PrintWriter fout = new PrintWriter(f);
-                    try {
-                        fout.print(g.toJson(Compare.convertToVectorZ(indicatorData)));
-                    } finally {
-                        fout.close();
-                    }
-                    //System.out.println("Done.");
-                } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                File f = new File("gson\\" + indicator.getName() + "\\" + indicator.getName() + ".txt");
+                PrintWriter fout = new PrintWriter(f);
+                try {
+                    fout.print(g.toJson(Compare.convertToVectorZ(indicatorData)));
+                } finally {
+                    fout.close();
                 }
+                //System.out.println("Done.");
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
             System.out.println("Placeing Words in " + indicator.getName() + "'s HashMap...\t");
             //int index = 0;
             for (String word : RevWords) {
@@ -311,7 +345,7 @@ class Database {
 
         System.out.println("DONE.");
     }
-    
+
     public static void writeGSONper() {
         Gson g = new Gson();
         Database.load();
@@ -348,17 +382,17 @@ class Database {
             file.mkdirs();
             double[][] indicatorData = Database.getIndicatorGraph(indicator);
             try {
-                    File f = new File("gsonper\\" + indicator.getName() + "\\" + indicator.getName() + ".txt");
-                    PrintWriter fout = new PrintWriter(f);
-                    try {
-                        fout.print(g.toJson(Compare.convertToVectorZ(indicatorData)));
-                    } finally {
-                        fout.close();
-                    }
-                    //System.out.println("Done.");
-                } catch (Exception ex) {
-                    System.out.println(ex.getMessage());
+                File f = new File("gsonper\\" + indicator.getName() + "\\" + indicator.getName() + ".txt");
+                PrintWriter fout = new PrintWriter(f);
+                try {
+                    fout.print(g.toJson(Compare.convertToVectorZ(indicatorData)));
+                } finally {
+                    fout.close();
                 }
+                //System.out.println("Done.");
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
             System.out.println("Placeing Words in " + indicator.getName() + "'s HashMap...\t");
             //int index = 0;
             for (String word : RevWords) {
@@ -438,18 +472,20 @@ class Database {
         }
         return count;
     }
+
     public static double getPercentOfWordByDate(String word, int date) {
-        double count = 0; int totalCount = 0;
+        double count = 0;
+        int totalCount = 0;
         for (Article a : getByDate(date)) {
             count += a.getCount(word);
             totalCount += a.getWordCount();
             //count += a.getCount(word)*10000/(a.getWordCount()+1);
             //returns word count adjusted for document length
         }
-        return (totalCount > 0) ? (count/totalCount) : 0.0;
+        return (totalCount > 0) ? (count / totalCount) : 0.0;
     }
-    public static int getWordCountByDate(int date)
-    {
+
+    public static int getWordCountByDate(int date) {
         int count = 0;
         for (Article a : getByDate(date)) {
             count += a.getWordCount();
@@ -461,12 +497,12 @@ class Database {
 
     public static float[] getWordVector(double[][] indicator, String word) {
         //double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
-        int[][] wordT = Compare.getWordMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int) indicator[0][0] - 1, (int) indicator[indicator.length - 1][0] + 1));
+        int[][] wordT = Compare.allignWord(indicator, getCountOfWordGraph(word));
         //float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
         float[] wordZ = Compare.convertToVectorZ(wordT);
         return wordZ;
     }
-    
+
     public static float[] getWordPercentVector(double[][] indicator, String word) {
         //double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
         double[][] wordT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph(word));
@@ -474,6 +510,7 @@ class Database {
         float[] wordZ = Compare.convertToVectorZ(wordT);
         return wordZ;
     }
+
     public static float[] getIndicatorVector(double[][] indicator) {
         double[][] indicatorT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph("allignment"));
         //double[][] wordT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph(word));
@@ -527,6 +564,7 @@ class Database {
     public static int[][] getCountOfWordGraph(String word) {
         return getCountOfWordGraph(word, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
+
     public static double[][] getPercentOfWordGraph(String word, int start, int end) {
         ArrayList<Integer> datesInRange = new ArrayList<Integer>();
         for (int date : dates) {

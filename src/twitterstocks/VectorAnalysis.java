@@ -50,7 +50,7 @@ public class VectorAnalysis {
         //for (Indicator indicator : Database.indicators) {
         Indicator indicator = Database.indicators.get(2);
         
-            HashMap<String, float[]> wordVectors = Database.getGSON(indicator.getName());
+            HashMap<String, float[]> wordVectors = Database.getGSONMap(indicator.getName());
             double[][] indicatorData = Database.getIndicatorGraph(indicator);
             float[] goal = Database.getIndicatorVector(indicatorData, "allignment");
             float[] finalGoal = Database.getIndicatorVector(indicatorData, "allignment");
