@@ -328,7 +328,7 @@ class Database {
                 System.out.println("Removed " + words.get(index) + " at index: " + index);
             }
         }//takes out all the NAN's
-        File file = new File("gsonper\\REVWORDS.txt");
+        File file = new File("gson\\REVWORDS.txt");
         PrintWriter out;
         try {
             out = new PrintWriter(file);
