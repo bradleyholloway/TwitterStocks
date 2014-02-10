@@ -193,6 +193,8 @@ public class Grapher {
                 yMaxIndicator = dataIndicatorz[a];
             }
         }
+        double yMin = Math.min(yMinWord, yMinIndicator);
+        double yMax = Math.max(yMaxWord, yMaxIndicator);
         //Begin Drawing
 
 
@@ -200,21 +202,91 @@ public class Grapher {
 
 
         for (int a = 1; a < dataIndicatorz.length; a++) {
-            drawLine(g, dataIndicatorz[a - 1], dataIndicatorz[a], a - 1, dataIndicatorz.length, yMinIndicator, yMaxIndicator);
+            drawLine(g, dataIndicatorz[a - 1], dataIndicatorz[a], a - 1, dataIndicatorz.length, yMin, yMax);
         }
 
         g.setColor(Color.blue);//Draw WordCount Line
         for (int a = 1; a < dataWordz.length; a++) {
-            drawLine(g, dataWordz[a - 1], dataWordz[a], a - 1, dataWordz.length, yMinWord, yMaxWord);
+            drawLine(g, dataWordz[a - 1], dataWordz[a], a - 1, dataWordz.length, yMin, yMax);
         }
 
         //-------------Need To Create and Draw Scales within BORDER---------------------
         int numSubdivisions = 25;
         for (int i = 0; i < numSubdivisions; i++) {
-            g.setColor(Color.blue);
-            g.drawString("" + ((double) Math.round((((double) (numSubdivisions - i) / numSubdivisions * (yMaxWord - yMinWord) + yMinWord) * 100) / 100)), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
-            g.setColor(Color.red);
-            g.drawString("" + ((double) Math.round((((double) (numSubdivisions - i) / numSubdivisions * (yMaxIndicator - yMinIndicator) + yMinIndicator * 100)) / 100)), BORDER / 2 + 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+            g.setColor(Color.black);
+            g.drawString("" + ((double) Math.round((((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin) * 100) / 100)), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+        }
+        g.setColor(Color.black);
+        DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
+        int dateSubdivisions = 25;
+        for (int i = 0; i < dateSubdivisions; i++) {
+//            g.drawString(""+date.format((int)((double)i/dateSubdivisions*(xMaxWord-xMinWord)+xMinWord)), (int)((double)i/dateSubdivisions*(WIDTH-BORDER)+BORDER),(HEIGHT-BORDER)+5);
+        }
+        g.setColor(Color.black);
+        g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 50, 50);
+
+        try {
+            File outputfile = new File("graphs\\"+fileOut + ".png");
+            ImageIO.write(render, "png", outputfile);
+        } catch (IOException e) {
+            System.err.print(e.getMessage());
+        }
+
+    }
+    
+    public static void createGraph(float[] dataWordz, String fileOut) {
+        BufferedImage render = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        Graphics g = render.getGraphics();
+        g.setColor(Color.white);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        g.setColor(Color.black);
+        g.drawRect(BORDER, 0, WIDTH - BORDER, HEIGHT - BORDER);
+        g.setColor(Color.lightGray);
+        g.fillRect(BORDER + 1, 1, WIDTH - BORDER - 2, HEIGHT - BORDER - 2);
+
+        //Get basic scale.
+        double yMinWord, yMaxWord;
+        yMinWord = yMaxWord = dataWordz[0];
+        for (int a = 1; a < dataWordz.length; a++) {
+            if (dataWordz[a] < yMinWord) {
+                yMinWord = dataWordz[a];
+            } else if (dataWordz[a] > yMaxWord) {
+                yMaxWord = dataWordz[a];
+            }
+        }
+        float[] dataIndicatorz = new float[dataWordz.length];
+        double yMinIndicator, yMaxIndicator;
+        yMinIndicator = yMaxIndicator = dataIndicatorz[0];
+        for (int a = 1; a < dataIndicatorz.length; a++) {
+            if (dataIndicatorz[a] < yMinIndicator) {
+                yMinIndicator = dataIndicatorz[a];
+            } else if (dataIndicatorz[a] > yMaxIndicator) {
+                yMaxIndicator = dataIndicatorz[a];
+            }
+        }
+        double yMin = Math.min(yMinWord, yMinIndicator);
+        double yMax = Math.max(yMaxWord, yMaxIndicator);
+        //Begin Drawing
+
+
+        g.setColor(Color.red);//Draw Indicator Line
+
+
+        for (int a = 1; a < dataIndicatorz.length; a++) {
+            drawLine(g, dataIndicatorz[a - 1], dataIndicatorz[a], a - 1, dataIndicatorz.length, yMin, yMax);
+        }
+
+        g.setColor(Color.blue);//Draw WordCount Line
+        for (int a = 1; a < dataWordz.length; a++) {
+            drawLine(g, dataWordz[a - 1], dataWordz[a], a - 1, dataWordz.length, yMin, yMax);
+        }
+
+        //-------------Need To Create and Draw Scales within BORDER---------------------
+        int numSubdivisions = 25;
+        for (int i = 0; i < numSubdivisions; i++) {
+            g.setColor(Color.black);
+            g.drawString("" + ((double) Math.round((((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin) * 100) / 100)), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
         }
         g.setColor(Color.black);
         DecimalFormat date = new DecimalFormat("XXXX/XX/XX");

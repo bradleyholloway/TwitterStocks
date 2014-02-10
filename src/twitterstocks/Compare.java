@@ -285,7 +285,7 @@ class Compare {
             double totalCount = 0;
             while (wordPercent[tempW][0] <= indicatorDate) {
                 
-                totalCount += wordPercent[tempW][3];
+                totalCount += wordPercent[tempW][2];
                 adjWord[newLength][1] += wordPercent[tempW][1] * wordPercent[tempW][2];
                 used = true;
                 tempW++;
@@ -299,8 +299,71 @@ class Compare {
             tempI++;
         }
         adjWord[newLength][0] = (int)indicator[tempI][0];
-        adjWord[newLength][1] = wordPercent[tempW][0];
+        adjWord[newLength][1] = wordPercent[tempW][1];
         return adjWord;
+    }
+    public static double[][] allignIndicatorPercent(double[][] indicator, double[][] wordPercent) {
+        int indicatorStart = (int) indicator[0][0];
+        int indicatorEnd = (int) indicator[indicator.length-1][0];
+        int wordStart = (int)wordPercent[0][0];
+        int wordEnd = (int)wordPercent[wordPercent.length-1][0];
+        int indicatorShift = 0, indicatorCut = indicator.length-1, wordShift = 0, wordCut = wordPercent.length-1;
+        if (indicatorStart > wordStart) {
+            while (wordShift != wordPercent.length-1 && indicatorStart > wordPercent[wordShift][0]) {
+                wordShift++;
+            }
+        } else {
+            while (indicatorShift != wordPercent.length-1 && wordStart > indicator[indicatorShift][0]) {
+                indicatorShift++;
+            }
+        }
+        if (indicatorEnd > wordEnd) {
+            while (indicatorCut > indicatorShift && wordEnd < indicator[indicatorCut][0]) {
+                indicatorCut--;
+            }
+        } else {
+            while (wordCut > wordShift && indicatorEnd < wordPercent[wordCut][0]) {
+                wordCut--;
+            }
+        }
+
+        int newLength = 0, tempI = indicatorShift, tempW = wordShift;
+        while (tempI < indicatorCut && tempW < wordCut) {
+
+            int indicatorDate = (int) indicator[tempI][0];
+            boolean used = false;
+            while (wordPercent[tempW][0] <= indicatorDate) {
+                used = true;
+                tempW++;
+            }
+            if (used) {
+                newLength++;
+            }
+
+            tempI++;
+        }
+        double[][] adjIndicator = new double[newLength+1][2];
+        newLength = 0;
+        tempI = indicatorShift;
+        tempW = wordShift;
+        while (tempI < indicatorCut && tempW < wordCut) {
+            int indicatorDate = (int) indicator[tempI][0];
+            boolean used = false;
+            while (wordPercent[tempW][0] <= indicatorDate) {
+                used = true;
+                tempW++;
+            }
+            if (used) {
+                adjIndicator[newLength][1] = indicator[tempI][1];
+                adjIndicator[newLength][0] = (int)indicator[tempI][0];
+                newLength++;
+                
+            }
+            tempI++;
+        }
+        adjIndicator[newLength][0] = (int)indicator[tempI][0];
+        adjIndicator[newLength][1] = indicator[tempI][1];
+        return adjIndicator;
     }
     public static double[][] allignIndicator(double[][] indicator, int[][] word) {
         int indicatorStart = (int) indicator[0][0];

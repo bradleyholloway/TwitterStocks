@@ -358,7 +358,7 @@ class Database {
             //count += a.getCount(word)*10000/(a.getWordCount()+1);
             //returns word count adjusted for document length
         }
-        return count/totalCount;
+        return (totalCount > 0) ? (count/totalCount) : 0.0;
     }
     public static int getWordCountByDate(int date)
     {
