@@ -16,7 +16,7 @@ public class PercentDriver {
     public static void main(String[] args) {
         Database.load();
         double[][] indicatorGraph = Database.getIndicatorGraph(Database.indicators.get(2));
-        double[][] wordPercent = Database.getPercentOfWordGraph("the");
+        double[][] wordPercent = Database.getPercentOfWordGraph(" the ");
         System.out.println("Got Percents and Indicator.");
         double[][] result = Compare.allignWordPercent(indicatorGraph, wordPercent);
         double[][] iResult = Compare.allignIndicatorPercent(indicatorGraph, wordPercent);

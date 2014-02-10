@@ -271,6 +271,18 @@ class Database {
             file = new File("gson\\" + indicator.getName());
             file.mkdirs();
             double[][] indicatorData = Database.getIndicatorGraph(indicator);
+            try {
+                    File f = new File("gson\\" + indicator.getName() + "\\" + indicator.getName() + ".txt");
+                    PrintWriter fout = new PrintWriter(f);
+                    try {
+                        fout.print(g.toJson(Compare.convertToVectorZ(indicatorData)));
+                    } finally {
+                        fout.close();
+                    }
+                    //System.out.println("Done.");
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
             System.out.println("Placeing Words in " + indicator.getName() + "'s HashMap...\t");
             //int index = 0;
             for (String word : RevWords) {
@@ -290,7 +302,83 @@ class Database {
                         fout.close();
                     }
                     //System.out.println("Done.");
-                } catch (FileNotFoundException ex) {
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
+            System.out.println(indicator.getName() + "'s arrays written.");
+        }
+
+        System.out.println("DONE.");
+    }
+    
+    public static void writeGSONper() {
+        Gson g = new Gson();
+        Database.load();
+        RevWords = new ArrayList<String>();
+
+        HashMap<String, Integer> wordcounts = getWordCountsMap();
+        for (int index = 0; index < words.size(); index++) {
+            double count = wordcounts.get(words.get(index));
+            //double count = Compare.sum(getCountOfWordGraph(words.get(index)));
+            //System.out.println("index: " + index + " " + words.get(index) + " wordcount: " + count);
+            if (count > 10) {
+                RevWords.add(words.get(index));
+            } else {
+                System.out.println("Removed " + words.get(index) + " at index: " + index);
+            }
+        }//takes out all the NAN's
+        File file = new File("gsonper\\REVWORDS.txt");
+        PrintWriter out;
+        try {
+            out = new PrintWriter(file);
+            Type alType = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            out.println(g.toJson(RevWords, alType));
+            out.close();
+            System.out.println("Wrote RevWords");
+        } catch (FileNotFoundException ex) {
+            //Logger.getLogger(StepTwoGSON.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //System.out.println("removed null words");
+
+        HashMap<String, float[]> wordVectors = new HashMap<String, float[]>();
+        for (Indicator indicator : indicators) {
+            file = new File("gsonper\\" + indicator.getName());
+            file.mkdirs();
+            double[][] indicatorData = Database.getIndicatorGraph(indicator);
+            try {
+                    File f = new File("gsonper\\" + indicator.getName() + "\\" + indicator.getName() + ".txt");
+                    PrintWriter fout = new PrintWriter(f);
+                    try {
+                        fout.print(g.toJson(Compare.convertToVectorZ(indicatorData)));
+                    } finally {
+                        fout.close();
+                    }
+                    //System.out.println("Done.");
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+            System.out.println("Placeing Words in " + indicator.getName() + "'s HashMap...\t");
+            //int index = 0;
+            for (String word : RevWords) {
+                wordVectors.put(word, Database.getWordPercentVector(indicatorData, word));
+                //System.out.println(index + " Inserting: " + word);
+                //index++;
+            }
+
+            for (String word : RevWords) {
+                //System.out.print("Writing " + word + " ...\t");
+                try {
+                    File f = new File("gsonper\\" + indicator.getName() + "\\" + removeSpaces(word) + ".txt");
+                    PrintWriter fout = new PrintWriter(f);
+                    try {
+                        fout.print(g.toJson(wordVectors.get(word)));
+                    } finally {
+                        fout.close();
+                    }
+                    //System.out.println("Done.");
+                } catch (Exception ex) {
                     System.out.println(ex.getMessage());
                 }
             }
@@ -377,6 +465,21 @@ class Database {
         //float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
         float[] wordZ = Compare.convertToVectorZ(wordT);
         return wordZ;
+    }
+    
+    public static float[] getWordPercentVector(double[][] indicator, String word) {
+        //double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
+        double[][] wordT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph(word));
+        //float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
+        float[] wordZ = Compare.convertToVectorZ(wordT);
+        return wordZ;
+    }
+    public static float[] getIndicatorVector(double[][] indicator) {
+        double[][] indicatorT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph("allignment"));
+        //double[][] wordT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph(word));
+        float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
+        //float[] wordZ = Compare.convertToVectorZ(wordT);
+        return indicatorZ;
     }
 
     public static float[] getScaledWordVector(double[][] indicator, String word, double scale) {

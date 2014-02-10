@@ -270,14 +270,14 @@ public class Grapher {
         //Begin Drawing
 
 
-        g.setColor(Color.red);//Draw Indicator Line
+        g.setColor(Color.black);//Draw Indicator Line
 
 
         for (int a = 1; a < dataIndicatorz.length; a++) {
             drawLine(g, dataIndicatorz[a - 1], dataIndicatorz[a], a - 1, dataIndicatorz.length, yMin, yMax);
         }
 
-        g.setColor(Color.blue);//Draw WordCount Line
+        g.setColor(Color.red);//Draw WordCount Line
         for (int a = 1; a < dataWordz.length; a++) {
             drawLine(g, dataWordz[a - 1], dataWordz[a], a - 1, dataWordz.length, yMin, yMax);
         }
