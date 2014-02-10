@@ -181,7 +181,8 @@ class Database {
         try {
             File f = new File("gson\\REVWORDS.txt");
             Scanner fileIn = new Scanner(f);
-            Type alType = new TypeToken<ArrayList<String>>() {}.getType();
+            Type alType = new TypeToken<ArrayList<String>>() {
+            }.getType();
             RevWords = g.fromJson(fileIn.nextLine(), alType);
             System.out.println("Done.");
         } catch (FileNotFoundException ex) {
@@ -221,23 +222,19 @@ class Database {
         }
         return data;
     }
-    private static HashMap<String, Integer> getWordCountsMap()
-    {
+
+    private static HashMap<String, Integer> getWordCountsMap() {
         HashMap<String, Integer> wordCount = new HashMap<String, Integer>();
-        for (String word : words)
-        {
+        for (String word : words) {
             wordCount.put(word, new Integer(0));
         }
-        for (Integer d : dates)
-        {
-            for (Article a : articles.get(d))
-            {
+        for (Integer d : dates) {
+            for (Article a : articles.get(d)) {
                 a.addWordCounts(wordCount);
             }
         }
         return wordCount;
     }
-    
 
     public static void writeGSON() {
         Gson g = new Gson();
@@ -259,8 +256,9 @@ class Database {
         PrintWriter out;
         try {
             out = new PrintWriter(file);
-            Type alType = new TypeToken<ArrayList<String>>() {}.getType();
-            out.println(g.toJson(RevWords,alType));
+            Type alType = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            out.println(g.toJson(RevWords, alType));
             out.close();
             System.out.println("Wrote RevWords");
         } catch (FileNotFoundException ex) {
@@ -270,7 +268,7 @@ class Database {
 
         HashMap<String, float[]> wordVectors = new HashMap<String, float[]>();
         for (Indicator indicator : indicators) {
-            file = new File("gson\\"+indicator.getName());
+            file = new File("gson\\" + indicator.getName());
             file.mkdirs();
             double[][] indicatorData = Database.getIndicatorGraph(indicator);
             System.out.println("Placeing Words in " + indicator.getName() + "'s HashMap...\t");
@@ -298,7 +296,7 @@ class Database {
             }
             System.out.println(indicator.getName() + "'s arrays written.");
         }
-        
+
         System.out.println("DONE.");
     }
 
@@ -352,6 +350,26 @@ class Database {
         }
         return count;
     }
+    public static double getPercentOfWordByDate(String word, int date) {
+        double count = 0; int totalCount = 0;
+        for (Article a : getByDate(date)) {
+            count += a.getCount(word);
+            totalCount += a.getWordCount();
+            //count += a.getCount(word)*10000/(a.getWordCount()+1);
+            //returns word count adjusted for document length
+        }
+        return count/totalCount;
+    }
+    public static int getWordCountByDate(int date)
+    {
+        int count = 0;
+        for (Article a : getByDate(date)) {
+            count += a.getWordCount();
+            //count += a.getCount(word)*10000/(a.getWordCount()+1);
+            //returns word count adjusted for document length
+        }
+        return count;
+    }
 
     public static float[] getWordVector(double[][] indicator, String word) {
         //double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
@@ -399,8 +417,27 @@ class Database {
         }
     }
 
+    public static double[][] getPercentOfWordGraph(String word) {
+        return getPercentOfWordGraph(word, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+
     public static int[][] getCountOfWordGraph(String word) {
         return getCountOfWordGraph(word, Integer.MIN_VALUE, Integer.MAX_VALUE);
+    }
+    public static double[][] getPercentOfWordGraph(String word, int start, int end) {
+        ArrayList<Integer> datesInRange = new ArrayList<Integer>();
+        for (int date : dates) {
+            if (date >= start && date <= end) {
+                datesInRange.add(date);
+            }
+        }
+        double[][] graphPoints = new double[datesInRange.size()][3];
+        for (int index = 0; index < datesInRange.size(); index++) {
+            graphPoints[index][0] = datesInRange.get(index);
+            graphPoints[index][1] = getPercentOfWordByDate(word, datesInRange.get(index));
+            graphPoints[index][2] = getWordCountByDate(datesInRange.get(index));
+        }
+        return graphPoints;
     }
 
     public static int[][] getCountOfWordGraph(String word, int start, int end) {

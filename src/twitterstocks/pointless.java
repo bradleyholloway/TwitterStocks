@@ -18,7 +18,9 @@ public class pointless {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Database.writeGSON();
+        
+        
+        //Database.writeGSON();
         //HashMap<String, float[]> vectorMap = Database.getGSON();
         /*float[] test1 = new float[100];
         float[] test2 = new float[100];

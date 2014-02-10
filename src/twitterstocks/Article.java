@@ -98,6 +98,10 @@ class Article {
             temp = temp.substring(temp.indexOf(space) + space.length());
         }
     }
+    public double getPercentUse(String word)
+    {
+        return (double)getCount(word)/getWordCount();
+    }
 
     private String replace(String original, char find, String replacement) {
         String temp = original;
