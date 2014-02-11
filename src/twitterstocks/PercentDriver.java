@@ -18,10 +18,10 @@ public class PercentDriver {
     public static void main(String[] args) {
         //Database.load();
         Database.loadIndicators();
-        int iterations = 15;
+        int iterations = 50;
 
-        Indicator indicator = Database.indicators.get(1);
-
+        for (Indicator indicator : Database.indicators)
+        {
         //Example of How to lod in Data using the GSON loaders (REDO WHEN INDICATOR CHANGES)
         HashMap<String, float[]> percentZVectors = Database.getGSONMap(indicator.getName());
         float[] indicatorPerData = Database.getGSONIndicator(indicator.getName());
@@ -57,9 +57,9 @@ public class PercentDriver {
             //Grapher.createGraph(total, finalGoal, "Vector" + bestWord + "CTG" + iteration);
         }
         Grapher.createGraph(total, finalGoal, "Vector" + indicator.getName() + "Approximation");
-        Grapher.createGraph(total, "Vector" + indicator.getName() + "Predicted");
-        Grapher.createGraph(finalGoal, "Vector" + indicator.getName() + "Goal");
-
+        //Grapher.createGraph(total, "Vector" + indicator.getName() + "Predicted");
+        //Grapher.createGraph(finalGoal, "Vector" + indicator.getName() + "Goal");
+        }
         /*double[][] indicatorGraph = Database.getIndicatorGraph(Database.indicators.get(2));
          double[][] wordPercent = Database.getPercentOfWordGraph(" the ");
          System.out.println("Got Percents and Indicator.");
