@@ -16,19 +16,17 @@ public class PercentDriver {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        Database.load();
-        int iterations = 1;
+        //Database.load();
+        Database.loadIndicators();
+        int iterations = 15;
 
-        Indicator indicator = Database.indicators.get(0);
+        Indicator indicator = Database.indicators.get(1);
 
         //Example of How to lod in Data using the GSON loaders (REDO WHEN INDICATOR CHANGES)
-        System.out.print("Loading in GSON Data...\t");
         HashMap<String, float[]> percentZVectors = Database.getGSONMap(indicator.getName());
-        System.out.println("Done.");
-        //float[] indicatorPerData = Database.getGSONIndicator(indicator.getName());
-        double[][] indicatorData = Database.getIndicatorGraph(indicator);
-        float[] indicatorPerData = Database.getIndicatorVector(indicatorData);
-        System.out.println("Done with Indicator Data");
+        float[] indicatorPerData = Database.getGSONIndicator(indicator.getName());
+        //double[][] indicatorData = Database.getIndicatorGraph(indicator);
+        //float[] indicatorPerData = Database.getIndicatorVector(indicatorData);
         
         //Example of How to load in the Percent GSON data
         
