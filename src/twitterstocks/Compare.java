@@ -232,7 +232,7 @@ class Compare {
             tempI++;
         }
         adjWord[newLength][0] = (int)indicator[tempI][0];
-        adjWord[newLength][1] = word[tempW][0];
+        adjWord[newLength][1] = word[tempW][1];
         return adjWord;
     }
     public static double[][] allignWordPercent(double[][] indicator, double[][] wordPercent) {

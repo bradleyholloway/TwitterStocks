@@ -17,19 +17,23 @@ public class PercentDriver {
      */
     public static void main(String[] args) {
         Database.load();
-        int iterations = 1000;
+        int iterations = 100;
 
         Indicator indicator = Database.indicators.get(0);
 
         //Example of How to lod in Data using the GSON loaders (REDO WHEN INDICATOR CHANGES)
-        
-        //HashMap<String, float[]> wordCountZVectors = Database.getGSONMap(indicator.getName());
-        //float[] indicatorData = Database.getGSONIndicator(indicator.getName());
+        System.out.print("Loading in GSON Data...\t");
+        HashMap<String, float[]> percentZVectors = Database.getGSONMap(indicator.getName());
+        System.out.println("Done.");
+        //float[] indicatorPerData = Database.getGSONIndicator(indicator.getName());
+        double[][] indicatorData = Database.getIndicatorGraph(indicator);
+        float[] indicatorPerData = Database.getIndicatorVector(indicatorData);
+        System.out.println("Done with Indicator Data");
         
         //Example of How to load in the Percent GSON data
         
-        HashMap<String, float[]> percentZVectors = Database.getGSONPerMap(indicator.getName());
-        float[] indicatorPerData = Database.getGSONIndicatorPer(indicator.getName());
+        //HashMap<String, float[]> percentZVectors = Database.getGSONPerMap(indicator.getName());
+        //float[] indicatorPerData = Database.getGSONIndicatorPer(indicator.getName());
         float[] goal = copy(indicatorPerData);
         float[] finalGoal = copy(goal);
         float[] total = new float[goal.length];
@@ -39,7 +43,7 @@ public class PercentDriver {
         for (int iteration = 0; iteration < iterations; iteration++) {
             double minimumDistance = Double.MAX_VALUE;
             //System.out.println("Searching for closest vector... Iteration: " + iteration);
-            for (String word : Database.words) {
+            for (String word : Database.RevWords) {
                 if (percentZVectors.get(word) != null) {
                     tempDistance = Compare.distanceBetweenScaled(goal, percentZVectors.get(word));
                     if (tempDistance < minimumDistance) {

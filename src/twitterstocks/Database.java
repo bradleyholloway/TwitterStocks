@@ -309,7 +309,7 @@ class Database {
                 File f = new File("gson\\" + indicator.getName() + "\\" + indicator.getName() + ".txt");
                 PrintWriter fout = new PrintWriter(f);
                 try {
-                    fout.print(g.toJson(Compare.convertToVectorZ(indicatorData)));
+                    fout.print(g.toJson(getIndicatorVector(indicatorData)));
                 } finally {
                     fout.close();
                 }
@@ -385,7 +385,7 @@ class Database {
                 File f = new File("gsonper\\" + indicator.getName() + "\\" + indicator.getName() + ".txt");
                 PrintWriter fout = new PrintWriter(f);
                 try {
-                    fout.print(g.toJson(Compare.convertToVectorZ(indicatorData)));
+                    fout.print(g.toJson(getIndicatorVector(indicatorData)));
                 } finally {
                     fout.close();
                 }
