@@ -191,6 +191,11 @@ class Database {
     }
 
     public static HashMap<String, float[]> getGSONMap(String indicatorName) {
+        if(RevWords.size() == 0)
+        {
+            loadRevWords();
+        }
+        System.out.print("Loading GSON Data...\t");
         Gson g = new Gson();
         HashMap<String, float[]> data = new HashMap<String, float[]>();
         File file;
@@ -205,10 +210,12 @@ class Database {
                 //System.out.println(ex.getMessage());
             }
         }
+        System.out.println("Done.");
         return data;
     }
 
     public static float[] getGSONIndicator(String indicatorName) {
+        System.out.print("Loading GSON Ind...\t");
         Gson g = new Gson();
         float[] returns = null;
         File file;
@@ -219,8 +226,9 @@ class Database {
             returns = g.fromJson(fileIn.nextLine(), float[].class);
             //System.out.println("Success "+word);
         } catch (FileNotFoundException ex) {
-            //System.out.println(ex.getMessage());
+            System.out.println(ex.getMessage());
         }
+        System.out.println("Done.");
         return returns;
     }
     public static float[] getGSONIndicatorPer(String indicatorName) {
