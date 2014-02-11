@@ -205,8 +205,9 @@ class Database {
                 file = new File("gson\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
                 fileIn = new Scanner(file);
                 data.put(word, g.fromJson(fileIn.nextLine(), float[].class));
+                
                 //System.out.println("Success "+word);
-            } catch (FileNotFoundException ex) {
+            } catch (Exception ex) {
                 //System.out.println(ex.getMessage());
             }
         }
