@@ -17,7 +17,7 @@ public class PercentDriver {
      */
     public static void main(String[] args) {
         Database.load();
-        int iterations = 100;
+        int iterations = 1;
 
         Indicator indicator = Database.indicators.get(0);
 
@@ -58,7 +58,9 @@ public class PercentDriver {
             goal = Compare.getDifference(finalGoal, total);
             //Grapher.createGraph(total, finalGoal, "Vector" + bestWord + "CTG" + iteration);
         }
-        Grapher.createGraph(total, finalGoal, "Vector" + indicator.getName() + "Approximation" + 10000);
+        Grapher.createGraph(total, finalGoal, "Vector" + indicator.getName() + "Approximation");
+        Grapher.createGraph(total, "Vector" + indicator.getName() + "Predicted");
+        Grapher.createGraph(finalGoal, "Vector" + indicator.getName() + "Goal");
 
         /*double[][] indicatorGraph = Database.getIndicatorGraph(Database.indicators.get(2));
          double[][] wordPercent = Database.getPercentOfWordGraph(" the ");
