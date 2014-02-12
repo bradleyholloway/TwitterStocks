@@ -82,9 +82,9 @@ public class Grapher {
             int numSubdivisions = 25;
             for (int i = 0; i < numSubdivisions; i++) {
                 g.setColor(Color.blue);
-                g.drawString("" + ((double) Math.round((((double) (numSubdivisions - i) / numSubdivisions * (yMaxWord - yMinWord) + yMinWord) * 100) / 100)), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+                g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMaxWord - yMinWord) + yMinWord),2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
                 g.setColor(Color.red);
-                g.drawString("" + ((double) Math.round((((double) (numSubdivisions - i) / numSubdivisions * (yMaxIndicator - yMinIndicator) + yMinIndicator * 100)) / 100)), BORDER / 2 + 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+                g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMaxIndicator - yMinIndicator) + yMinIndicator),2), BORDER / 2 + 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
             }
             g.setColor(Color.black);
             DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
@@ -140,8 +140,7 @@ public class Grapher {
             int numSubdivisions = 25;
             for (int i = 0; i < numSubdivisions; i++) {
                 g.setColor(Color.black);
-                g.drawString("" + ((double) Math.round((((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin) * 100)) / 100), BORDER / 2 - 15, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
-
+                g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin),5), BORDER / 2 - 15, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
             }
             g.setColor(Color.black);
             DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
@@ -214,7 +213,7 @@ public class Grapher {
         int numSubdivisions = 25;
         for (int i = 0; i < numSubdivisions; i++) {
             g.setColor(Color.black);
-            g.drawString("" + ((double) Math.round((((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin) * 100) / 100)), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+            g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin),2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
         }
         g.setColor(Color.black);
         DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
@@ -287,7 +286,7 @@ public class Grapher {
         int numSubdivisions = 25;
         for (int i = 0; i < numSubdivisions; i++) {
             g.setColor(Color.black);
-            g.drawString("" + ((double) Math.round((((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin) * 100) / 100)), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+            g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin),2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
         }
         g.setColor(Color.black);
         DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
@@ -344,5 +343,11 @@ public class Grapher {
         ret[0] = (int) (((double) xMin / xMax) * (WIDTH - BORDER) + BORDER);
         ret[1] = (int) ((yMax - point[1]) / (yMax - yMin + 1) * (HEIGHT - BORDER));
         return ret;
+    }
+    
+    private static double round(double number, int digits)
+    {
+        long temp = Math.round(number * Math.pow(10,digits));
+        return (double) temp / (Math.pow(10,digits));
     }
 }

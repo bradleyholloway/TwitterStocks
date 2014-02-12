@@ -569,7 +569,13 @@ class Compare {
     public static double correctScale(float[] goal, float[] data) {
         float[] scaledData = scalar(data, length(goal));
         double reducedScale = dotProduct(scaledData, goal);
+        if((""+(getScale(goal, data) * reducedScale)).equals(""+Double.NaN))
+        {
+            //System.out.println("NAN SCALE!");
+            return 0.0;
+        }
         return getScale(goal, data) * reducedScale;
+        
     }
 
     public static float[] add(float[] data, float[] data2) {
@@ -592,6 +598,14 @@ class Compare {
         for (int i = 0; i < data1.length; i++) {
             sum += data1[i] * data2[i];
         }
+        //if ((""+(sum / (length(data1) * length(data2)))).equals(""+Double.NaN))
+        //{
+        //    System.out.println("NAN");
+        //    if((length(data1) * length(data2)) == 0)
+        //    {
+        //        System.out.println("Length of 0");
+        //    }
+        //}
         return sum / (length(data1) * length(data2));
     }
 

@@ -36,6 +36,10 @@ public class WordWeightTable {
         for(String w : words)
         {
             data += w + ":" + weights.get(w)+"\n";
+            if((""+weights.get(w)).equals(""+Double.NaN))
+            {
+                System.out.println("NAN EXCEPTION");
+            }
         }
         return data;
     }

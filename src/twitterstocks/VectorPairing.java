@@ -14,7 +14,7 @@ import java.util.HashMap;
 public class VectorPairing {
 
     public static void dotProductWeighting(Indicator indicator, int iterations, boolean percentBased, boolean iterationGraphing) {
-        System.out.println("\nBeginning Vector Analysis on "+indicator.getName()+".");
+        System.out.println("\nBeginning Vector Analysis on " + indicator.getName() + ".");
         WordWeightTable wt = new WordWeightTable();
         //Example of How to lod in Data using the GSON loaders (REDO WHEN INDICATOR CHANGES)
         HashMap<String, float[]> ZVectors = (percentBased) ? Database.getGSONPerMap(indicator.getName()) : Database.getGSONMap(indicator.getName());
@@ -26,6 +26,7 @@ public class VectorPairing {
 
         //HashMap<String, float[]> percentZVectors = Database.getGSONPerMap(indicator.getName());
         //float[] indicatorPerData = Database.getGSONIndicatorPer(indicator.getName());
+        float[] tempData;
         float[] goal = copy(indicatorPerData);
         final float[] finalGoal = copy(goal);
         float[] total = new float[goal.length];
@@ -36,8 +37,9 @@ public class VectorPairing {
             double minimumDistance = Double.MAX_VALUE;
             //System.out.println("Searching for closest vector... Iteration: " + iteration);
             for (String word : Database.RevWords) {
+                tempData = ZVectors.get(word);
                 if (ZVectors.get(word) != null) {
-                    tempDistance = Compare.distanceBetweenScaled(goal, ZVectors.get(word));
+                    tempDistance = Compare.distanceBetweenScaled(goal, tempData);
                     if (tempDistance < minimumDistance) {
                         minimumDistance = tempDistance;
                         bestWord = word;
@@ -46,19 +48,32 @@ public class VectorPairing {
                 }
             } //System.out.println("Done.");
             //System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(goal, wordVectors.get(bestWord)));
-            wt.add(bestWord, Compare.correctScale(goal, ZVectors.get(bestWord)));
-            if(iterationGraphing)
-            {
-                Grapher.createGraph(total, finalGoal, "iterations\\total\\" + indicator.getName() + "\\iteration" + iteration);
-                Grapher.createGraph(Compare.multiply(ZVectors.get(bestWord), Compare.correctScale(goal, ZVectors.get(bestWord))), goal, "iterations\\temporary\\" + indicator.getName() + "\\iteration"+iteration);
+            tempData = ZVectors.get(bestWord);
+            if (!containsNANInfinity(tempData)) {
+                wt.add(bestWord, Compare.correctScale(goal, tempData));
+                if (iterationGraphing) {
+                    Grapher.createGraph(total, finalGoal, "iterations\\total\\" + indicator.getName() + "\\iteration" + iteration);
+                    Grapher.createGraph(Compare.multiply(tempData, Compare.correctScale(goal, tempData)), goal, "iterations\\temporary\\" + indicator.getName() + "\\iteration" + iteration);
+                }
+                total = Compare.add(total, Compare.multiply(tempData, Compare.correctScale(goal, tempData)));
+                goal = Compare.getDifference(finalGoal, total);
+                //Grapher.createGraph(total, finalGoal, "Vector" + bestWord + "CTG" + iteration);
             }
-            total = Compare.add(total, Compare.multiply(ZVectors.get(bestWord), Compare.correctScale(goal, ZVectors.get(bestWord))));
-            goal = Compare.getDifference(finalGoal, total);
-            //Grapher.createGraph(total, finalGoal, "Vector" + bestWord + "CTG" + iteration);
         }
         Grapher.createGraph(total, finalGoal, "Vector" + indicator.getName() + "Approximation");
         System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations.");
         System.out.println(wt);
+    }
+    private static boolean containsNANInfinity(float[] tempData)
+    {
+        for (float f : tempData)
+        {
+            if((""+f).equals(""+Float.NaN) || (""+f).equals(Float.NEGATIVE_INFINITY) || (f+"").equals(Float.POSITIVE_INFINITY))
+            {
+                return true;
+            }
+        }
+        return false;
     }
 
     private static float[] copy(float[] data) {

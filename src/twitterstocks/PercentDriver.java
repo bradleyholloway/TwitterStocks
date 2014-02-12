@@ -18,7 +18,7 @@ public class PercentDriver {
     public static void main(String[] args) {
         
         Database.loadIndicators();
-        int iterations = 20;
+        int iterations = 50;
         
         for(Indicator i : Database.indicators)
         {
