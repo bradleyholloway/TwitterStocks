@@ -18,11 +18,11 @@ public class PercentDriver {
     public static void main(String[] args) {
         
         Database.loadIndicators();
-        int iterations = 50;
+        int iterations = 500;
         
         for(Indicator i : Database.indicators)
         {
-            VectorPairing.dotProductWeighting(i, iterations, false, true);
+            VectorPairing.dotProductWeighting(i, iterations, false, false);
         }
 
         /*for (Indicator indicator : Database.indicators) {
