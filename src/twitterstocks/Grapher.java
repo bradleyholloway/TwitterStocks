@@ -227,6 +227,7 @@ public class Grapher {
 
         try {
             File outputfile = new File("graphs\\"+fileOut + ".png");
+            outputfile.mkdirs();
             ImageIO.write(render, "png", outputfile);
         } catch (IOException e) {
             System.err.print(e.getMessage());

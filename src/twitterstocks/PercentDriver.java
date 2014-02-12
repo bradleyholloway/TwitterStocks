@@ -16,11 +16,17 @@ public class PercentDriver {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        //Database.load();
+        
         Database.loadIndicators();
-        int iterations = 50;
+        int iterations = 20;
+        
+        for(Indicator i : Database.indicators)
+        {
+            VectorPairing.dotProductWeighting(i, iterations, false, true);
+        }
 
-        for (Indicator indicator : Database.indicators) {
+        /*for (Indicator indicator : Database.indicators) {
+            WordWeightTable wt = new WordWeightTable();
             //Example of How to lod in Data using the GSON loaders (REDO WHEN INDICATOR CHANGES)
             HashMap<String, float[]> percentZVectors = Database.getGSONMap(indicator.getName());
             float[] indicatorPerData = Database.getGSONIndicator(indicator.getName());
@@ -51,11 +57,14 @@ public class PercentDriver {
                     }
                 } //System.out.println("Done.");
                 //System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(goal, wordVectors.get(bestWord)));
+                wt.add(bestWord, Compare.correctScale(goal, percentZVectors.get(bestWord)));
                 total = Compare.add(total, Compare.multiply(percentZVectors.get(bestWord), Compare.correctScale(goal, percentZVectors.get(bestWord))));
                 goal = Compare.getDifference(finalGoal, total);
                 //Grapher.createGraph(total, finalGoal, "Vector" + bestWord + "CTG" + iteration);
             }
             Grapher.createGraph(total, finalGoal, "Vector" + indicator.getName() + "Approximation");
+            System.out.println("Working on "+indicator.getName());
+            System.out.print(wt);
             //Grapher.createGraph(total, "Vector" + indicator.getName() + "Predicted");
             //Grapher.createGraph(finalGoal, "Vector" + indicator.getName() + "Goal");
         }
