@@ -18,15 +18,18 @@ public class PercentDriver {
     public static void main(String[] args) {
         
         Database.loadIndicators();
-        int iterations = 100;
+        int iterations = 20;
         
-        for(Indicator i : Database.indicators)
+        //for(Indicator i : Database.indicators)
+        //{
+        //    VectorPairing.dotProductWeighting(i, iterations, false, true);
+        //}
+        Indicator indicator = Database.indicators.get(1);
+        
+        for(double percent = 0.05; percent < 1; percent +=.05)
         {
-            VectorPairing.dotProductWeighting(i, iterations, false, true);
+            VectorPairing.dotProductWeightingLimitedRegression(indicator, iterations, false, true, percent);
         }
-        
-        //for (DataType identifier : System.Collections<DataType>)
-
         /*for (Indicator indicator : Database.indicators) {
             WordWeightTable wt = new WordWeightTable();
             //Example of How to lod in Data using the GSON loaders (REDO WHEN INDICATOR CHANGES)

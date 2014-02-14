@@ -50,7 +50,7 @@ public class VectorPairing {
                         }
                     }
                 }
-                
+
             } //System.out.println("Done.");
             tempData = copy(ZVectors.get(bestWord));
             System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(goal, tempData));
@@ -70,6 +70,70 @@ public class VectorPairing {
         System.out.println(wt);
     }
 
+    public static void dotProductWeightingLimitedRegression(Indicator indicator, int iterations, boolean percentBased, boolean iterationGraphing, double percentAnalyzed) {
+        System.out.println("\nBeginning Vector Analysis on " + indicator.getName() + ".");
+        WordWeightTable wt = new WordWeightTable();
+        //Example of How to lod in Data using the GSON loaders (REDO WHEN INDICATOR CHANGES)
+        HashMap<String, float[]> ZVectors = (percentBased) ? Database.getGSONPerMap(indicator.getName()) : Database.getGSONMap(indicator.getName());
+        float[] indicatorPerData = Database.getGSONIndicator(indicator.getName());
+        //double[][] indicatorData = Database.getIndicatorGraph(indicator);
+        //float[] indicatorPerData = Database.getIndicatorVector(indicatorData);
+
+        //Example of How to load in the Percent GSON data
+
+        //HashMap<String, float[]> percentZVectors = Database.getGSONPerMap(indicator.getName());
+        //float[] indicatorPerData = Database.getGSONIndicatorPer(indicator.getName());
+        float[] tempData;
+        float[] goal = copy(indicatorPerData);
+        float[] tempGoal;
+        final float[] finalGoal = getPercent(copy(goal), percentAnalyzed);
+        final float[] finalDisplay = copy(goal);
+        float[] total = new float[goal.length];
+
+        String bestWord = "";
+        double tempDistance;
+
+        for (int iteration = 0; iteration < iterations; iteration++) {
+            double maxDistance = Double.MIN_VALUE;
+            tempGoal = getPercent(goal, percentAnalyzed);
+            //System.out.println("Searching for closest vector... Iteration: " + iteration);
+            for (String word : Database.RevWords) {
+                if (ZVectors.get(word) == null) {
+                } else {
+                    tempData = getPercent(copy(ZVectors.get(word)), percentAnalyzed);
+                    if (ZVectors.get(word) != null) {
+                        tempDistance = Math.abs(Compare.dotProduct(tempGoal, tempData));
+                        if (tempDistance > maxDistance) {
+                            maxDistance = tempDistance;
+                            bestWord = word;
+                            //System.out.println(word+maxDistance);
+                            //System.out.println("New Best: " + bestWord);
+                        }
+                    }
+                }
+
+            } //System.out.println("Done.");
+            tempData = getPercent(copy(ZVectors.get(bestWord)), percentAnalyzed);
+            System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(tempGoal, tempData));
+            if (!containsNANInfinity(tempData)) {
+                wt.add(bestWord, Compare.correctScale(tempGoal, tempData));
+                if (iterationGraphing) {
+                    Grapher.createGraph(total, finalDisplay, "percents\\iterations\\total\\" + indicator.getName() + "\\iteration" + iteration);
+                    Grapher.createGraph(Compare.multiply(tempData, Compare.correctScale(tempGoal, tempData)), tempGoal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iteration" + iteration);
+                }
+                total = Compare.add(total, Compare.multiply(ZVectors.get(bestWord), Compare.correctScale(tempGoal, tempData)));
+                goal = Compare.getDifference(finalGoal, total);
+                if (iterationGraphing) {
+                    Grapher.createGraph(goal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iterationR" + iteration);
+                }
+                //Grapher.createGraph(total, finalGoal, "Vector" + bestWord + "CTG" + iteration);
+            }
+        }
+        Grapher.createGraph(total, finalDisplay, "percents\\" + indicator.getName() + "\\" + round(percentAnalyzed*100,2) + "%");
+        System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations and " + (round(percentAnalyzed*100,2)) + "%.");
+        System.out.println(wt);
+    }
+
     private static boolean containsNANInfinity(float[] tempData) {
         for (float f : tempData) {
             if (("" + f).equals("" + Float.NaN) || ("" + f).equals(Float.NEGATIVE_INFINITY) || (f + "").equals(Float.POSITIVE_INFINITY)) {
@@ -83,5 +147,18 @@ public class VectorPairing {
         float[] returns = new float[data.length];
         System.arraycopy(data, 0, returns, 0, data.length);
         return returns;
+    }
+
+    private static float[] getPercent(float[] data, double percent) {
+        float[] newData = new float[(int) (Math.ceil((double) data.length * percent))];
+        for (int i = 0; i < newData.length; i++) {
+            newData[i] = data[i];
+        }
+        return newData;
+    }
+
+    private static double round(double number, int digits) {
+        long temp = Math.round(number * Math.pow(10, digits));
+        return (double) temp / (Math.pow(10, digits));
     }
 }

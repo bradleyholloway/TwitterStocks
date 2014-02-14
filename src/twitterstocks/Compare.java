@@ -585,10 +585,11 @@ class Compare {
     }
 
     public static float[] multiply(float[] data, double scale) {
+        float[] returns = new float[data.length];
         for (int i = 0; i < data.length; i++) {
-            data[i] = data[i] * (float) scale;
+            returns[i] = data[i] * (float) scale;
         }
-        return data;
+        return returns;
     }
 
     public static double dotProduct(float[] data1, float[] data2) {
