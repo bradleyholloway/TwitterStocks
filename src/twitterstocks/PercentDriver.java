@@ -18,12 +18,14 @@ public class PercentDriver {
     public static void main(String[] args) {
         
         Database.loadIndicators();
-        int iterations = 100;
+        int iterations = 25;
         
         for(Indicator i : Database.indicators)
         {
-            VectorPairing.dotProductWeighting(i, iterations, false, false);
+            VectorPairing.dotProductWeighting(i, iterations, false, true);
         }
+        
+        //for (DataType identifier : System.Collections<DataType>)
 
         /*for (Indicator indicator : Database.indicators) {
             WordWeightTable wt = new WordWeightTable();

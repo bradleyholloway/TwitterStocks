@@ -34,21 +34,26 @@ public class VectorPairing {
         double tempDistance;
 
         for (int iteration = 0; iteration < iterations; iteration++) {
-            double minimumDistance = Double.MAX_VALUE;
+            double maxDistance = Double.MIN_VALUE;
             //System.out.println("Searching for closest vector... Iteration: " + iteration);
             for (String word : Database.RevWords) {
-                tempData = ZVectors.get(word);
-                if (ZVectors.get(word) != null) {
-                    tempDistance = Compare.distanceBetweenScaled(goal, tempData);
-                    if (tempDistance < minimumDistance) {
-                        minimumDistance = tempDistance;
-                        bestWord = word;
-                        //System.out.println("New Best: " + bestWord);
+                if (ZVectors.get(word) == null) {
+                } else {
+                    tempData = copy(ZVectors.get(word));
+                    if (ZVectors.get(word) != null) {
+                        tempDistance = Math.abs(Compare.dotProduct(goal, tempData));
+                        if (tempDistance > maxDistance) {
+                            maxDistance = tempDistance;
+                            bestWord = word;
+                            //System.out.println(word+maxDistance);
+                            //System.out.println("New Best: " + bestWord);
+                        }
                     }
                 }
+                
             } //System.out.println("Done.");
-            //System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(goal, wordVectors.get(bestWord)));
-            tempData = ZVectors.get(bestWord);
+            tempData = copy(ZVectors.get(bestWord));
+            System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(goal, tempData));
             if (!containsNANInfinity(tempData)) {
                 wt.add(bestWord, Compare.correctScale(goal, tempData));
                 if (iterationGraphing) {
@@ -64,12 +69,10 @@ public class VectorPairing {
         System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations.");
         System.out.println(wt);
     }
-    private static boolean containsNANInfinity(float[] tempData)
-    {
-        for (float f : tempData)
-        {
-            if((""+f).equals(""+Float.NaN) || (""+f).equals(Float.NEGATIVE_INFINITY) || (f+"").equals(Float.POSITIVE_INFINITY))
-            {
+
+    private static boolean containsNANInfinity(float[] tempData) {
+        for (float f : tempData) {
+            if (("" + f).equals("" + Float.NaN) || ("" + f).equals(Float.NEGATIVE_INFINITY) || (f + "").equals(Float.POSITIVE_INFINITY)) {
                 return true;
             }
         }

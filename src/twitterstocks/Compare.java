@@ -535,10 +535,12 @@ class Compare {
     }
 
     public static double distanceBetweenScaled(float[] indicator, float[] word) {
-        double indicatorLength = length(indicator);
-        word = scalar(word, indicatorLength);
-        word = multiply(word, correctScale(indicator, word));
-        return distance(indicator, word);
+        if(Math.abs(correctScale(indicator, word)) > 20)
+        {
+            System.out.println("Suspicious:....");
+        }
+        float[] word2 = multiply(word, correctScale(indicator, word));
+        return distance(indicator, word2);
     }
 
     public static double distance(float[] indicator, float[] word) {
@@ -559,6 +561,7 @@ class Compare {
 
     public static float[] scalar(float[] data, double endLength) {
         double scale = getScale(data, endLength);
+//        System.out.print("Raw Scale:"+scale + " ");
         float[] newData = new float[data.length];
         for (int i = 0; i < data.length; i++) {
             newData[i] = (float) ((double) data[i] * scale);
@@ -567,15 +570,10 @@ class Compare {
     }
 
     public static double correctScale(float[] goal, float[] data) {
-        float[] scaledData = scalar(data, length(goal));
-        double reducedScale = dotProduct(scaledData, goal);
-        if((""+(getScale(goal, data) * reducedScale)).equals(""+Double.NaN))
-        {
-            //System.out.println("NAN SCALE!");
-            return 0.0;
-        }
-        return getScale(goal, data) * reducedScale;
-        
+        double endLength = length(goal);
+        double startLength = length(data);
+        double tempScale = (endLength / startLength) * dotProduct(goal, data);
+        return tempScale;
     }
 
     public static float[] add(float[] data, float[] data2) {
