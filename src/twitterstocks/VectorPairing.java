@@ -114,23 +114,26 @@ public class VectorPairing {
 
             } //System.out.println("Done.");
             tempData = getPercent(copy(ZVectors.get(bestWord)), percentAnalyzed);
-            System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(tempGoal, tempData));
-            if (!containsNANInfinity(tempData)) {
-                wt.add(bestWord, Compare.correctScale(tempGoal, tempData));
-                if (iterationGraphing) {
-                    Grapher.createGraph(total, finalDisplay, "percents\\iterations\\total\\" + indicator.getName() + "\\iteration" + iteration);
-                    Grapher.createGraph(Compare.multiply(tempData, Compare.correctScale(tempGoal, tempData)), tempGoal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iteration" + iteration);
+            if (!containsNANInfinity(Compare.correctScale(tempGoal, tempData))) {
+
+                System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(tempGoal, tempData));
+                if (!containsNANInfinity(tempData)) {
+                    wt.add(bestWord, Compare.correctScale(tempGoal, tempData));
+                    if (iterationGraphing) {
+                        Grapher.createGraph(total, finalDisplay, "percents\\iterations\\total\\" + indicator.getName() + "\\iteration" + iteration);
+                        Grapher.createGraph(Compare.multiply(tempData, Compare.correctScale(tempGoal, tempData)), tempGoal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iteration" + iteration);
+                    }
+                    total = Compare.add(total, Compare.multiply(ZVectors.get(bestWord), Compare.correctScale(tempGoal, tempData)));
+                    goal = Compare.getDifference(finalGoal, total);
+                    if (iterationGraphing) {
+                        Grapher.createGraph(goal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iterationR" + iteration);
+                    }
+                    //Grapher.createGraph(total, finalGoal, "Vector" + bestWord + "CTG" + iteration);
                 }
-                total = Compare.add(total, Compare.multiply(ZVectors.get(bestWord), Compare.correctScale(tempGoal, tempData)));
-                goal = Compare.getDifference(finalGoal, total);
-                if (iterationGraphing) {
-                    Grapher.createGraph(goal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iterationR" + iteration);
-                }
-                //Grapher.createGraph(total, finalGoal, "Vector" + bestWord + "CTG" + iteration);
             }
         }
-        Grapher.createGraph(total, finalDisplay, "percents\\" + indicator.getName() + "\\" + round(percentAnalyzed*100,2) + "%");
-        System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations and " + (round(percentAnalyzed*100,2)) + "%.");
+        Grapher.createGraph(total, finalDisplay, "percents\\" + indicator.getName() + "\\" + round(percentAnalyzed * 100, 2) + "%");
+        System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations and " + (round(percentAnalyzed * 100, 2)) + "%.");
         System.out.println(wt);
     }
 
@@ -139,6 +142,13 @@ public class VectorPairing {
             if (("" + f).equals("" + Float.NaN) || ("" + f).equals(Float.NEGATIVE_INFINITY) || (f + "").equals(Float.POSITIVE_INFINITY)) {
                 return true;
             }
+        }
+        return false;
+    }
+
+    private static boolean containsNANInfinity(double tempData) {
+        if (("" + tempData).equals("" + Double.NaN) || ("" + tempData).equals(Double.NEGATIVE_INFINITY) || (tempData + "").equals(Double.POSITIVE_INFINITY)) {
+            return true;
         }
         return false;
     }

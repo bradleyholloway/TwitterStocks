@@ -28,7 +28,7 @@ public class PercentDriver {
         
         for(double percent = 0.05; percent < 1; percent +=.05)
         {
-            VectorPairing.dotProductWeightingLimitedRegression(indicator, iterations, false, true, percent);
+            VectorPairing.dotProductWeightingLimitedRegression(indicator, iterations, false, false, percent);
         }
         /*for (Indicator indicator : Database.indicators) {
             WordWeightTable wt = new WordWeightTable();
