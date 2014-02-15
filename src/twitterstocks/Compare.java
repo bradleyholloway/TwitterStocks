@@ -20,6 +20,13 @@ class Compare {
         }
         return returns;
     }
+    public static float[] convertToDates(double[][] data) {
+        float[] returns = new float[data.length];
+        for (int a = 0; a < data.length; a++) {
+            returns[a] = (float)data[a][0];
+        }
+        return returns;
+    }
 
     public static float[] convertToVectorZ(int[][] data) {
         float[] returns = new float[data.length];

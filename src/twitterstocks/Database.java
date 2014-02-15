@@ -200,6 +200,16 @@ class Database {
         HashMap<String, float[]> data = new HashMap<String, float[]>();
         File file;
         Scanner fileIn;
+        try {
+                file = new File("gson\\" + indicatorName + "\\IDATES.txt");
+                fileIn = new Scanner(file);
+                data.put("IDATES", g.fromJson(fileIn.nextLine(), float[].class));
+                
+                //System.out.println("Success "+word);
+            } catch (Exception ex) {
+                //System.out.println(ex.getMessage());
+            }
+        
         for (String word : RevWords) {
             try {
                 file = new File("gson\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
@@ -253,13 +263,21 @@ class Database {
         HashMap<String, float[]> data = new HashMap<String, float[]>();
         File file;
         Scanner fileIn;
+        try {
+                file = new File("gsonper\\" + indicatorName + "\\IDATES.txt");
+                fileIn = new Scanner(file);
+                data.put("IDATES", g.fromJson(fileIn.nextLine(), float[].class));
+                //System.out.println("Success "+word);
+            } catch (Exception ex) {
+                //System.out.println(ex.getMessage());
+            }
         for (String word : RevWords) {
             try {
                 file = new File("gsonper\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
                 fileIn = new Scanner(file);
                 data.put(word, g.fromJson(fileIn.nextLine(), float[].class));
                 //System.out.println("Success "+word);
-            } catch (FileNotFoundException ex) {
+            } catch (Exception ex) {
                 //System.out.println(ex.getMessage());
             }
         }
@@ -313,12 +331,25 @@ class Database {
         for (Indicator indicator : indicators) {
             file = new File("gson\\" + indicator.getName());
             file.mkdirs();
+            file.mkdir();
             double[][] indicatorData = Database.getIndicatorGraph(indicator);
             try {
                 File f = new File("gson\\" + indicator.getName() + "\\" + indicator.getName() + ".txt");
                 PrintWriter fout = new PrintWriter(f);
                 try {
                     fout.print(g.toJson(getIndicatorVector(indicatorData)));
+                } finally {
+                    fout.close();
+                }
+                //System.out.println("Done.");
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+            try {
+                File f = new File("gson\\" + indicator.getName() + "\\IDATES.txt");
+                PrintWriter fout = new PrintWriter(f);
+                try {
+                    fout.print(g.toJson(getIndicatorDatesVector(indicatorData)));
                 } finally {
                     fout.close();
                 }
@@ -395,6 +426,18 @@ class Database {
                 PrintWriter fout = new PrintWriter(f);
                 try {
                     fout.print(g.toJson(getIndicatorVector(indicatorData)));
+                } finally {
+                    fout.close();
+                }
+                //System.out.println("Done.");
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+            try {
+                File f = new File("gsonper\\" + indicator.getName() + "\\IDATES.txt");
+                PrintWriter fout = new PrintWriter(f);
+                try {
+                    fout.print(g.toJson(getIndicatorDatesVector(indicatorData)));
                 } finally {
                     fout.close();
                 }
@@ -524,6 +567,13 @@ class Database {
         double[][] indicatorT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph("allignment"));
         //double[][] wordT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph(word));
         float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
+        //float[] wordZ = Compare.convertToVectorZ(wordT);
+        return indicatorZ;
+    }
+    public static float[] getIndicatorDatesVector(double[][] indicator) {
+        double[][] indicatorT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph("allignment"));
+        //double[][] wordT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph(word));
+        float[] indicatorZ = Compare.convertToDates(indicatorT);
         //float[] wordZ = Compare.convertToVectorZ(wordT);
         return indicatorZ;
     }

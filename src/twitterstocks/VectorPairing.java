@@ -70,7 +70,8 @@ public class VectorPairing {
         System.out.println(wt);
     }
 
-    public static void dotProductWeightingLimitedRegression(Indicator indicator, int iterations, boolean percentBased, boolean iterationGraphing, double percentAnalyzed) {
+    public static void dotProductWeightingLimitedRegression(Indicator indicator, boolean percentBased, boolean iterationGraphing, double percentAnalyzed) {
+        int iterations = 0;
         System.out.println("\nBeginning Vector Analysis on " + indicator.getName() + ".");
         WordWeightTable wt = new WordWeightTable();
         //Example of How to lod in Data using the GSON loaders (REDO WHEN INDICATOR CHANGES)
@@ -87,6 +88,7 @@ public class VectorPairing {
         float[] goal = copy(indicatorPerData);
         float[] tempGoal;
         final float[] finalGoal = getPercent(copy(goal), percentAnalyzed);
+        iterations = finalGoal.length - 1;
         final float[] finalDisplay = copy(goal);
         float[] total = new float[goal.length];
 
@@ -132,7 +134,7 @@ public class VectorPairing {
                 }
             }
         }
-        Grapher.createGraph(total, finalDisplay, "percents\\" + indicator.getName() + "\\" + round(percentAnalyzed * 100, 2) + "%");
+        Grapher.createGraph(total, finalDisplay, "percents\\" + indicator.getName() + "\\" + round(percentAnalyzed * 100, 2) + "%", percentAnalyzed);
         System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations and " + (round(percentAnalyzed * 100, 2)) + "%.");
         System.out.println(wt);
     }
@@ -160,6 +162,7 @@ public class VectorPairing {
     }
 
     private static float[] getPercent(float[] data, double percent) {
+        percent = Math.sqrt(percent);
         float[] newData = new float[(int) (Math.ceil((double) data.length * percent))];
         for (int i = 0; i < newData.length; i++) {
             newData[i] = data[i];
