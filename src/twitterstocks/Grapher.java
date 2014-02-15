@@ -162,7 +162,7 @@ public class Grapher {
 
     }
 
-    public static void createGraph(float[] dataWordz, float[] dataIndicatorz, String fileOut) {
+    public static void createGraph(float[] dataWordz, float[] dataIndicatorz, String fileOut, float[] dates) {
         BufferedImage render = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics g = render.getGraphics();
         g.setColor(Color.white);
@@ -233,7 +233,7 @@ public class Grapher {
         }
 
     }
-    public static void createGraph(float[] dataWordz, float[] dataIndicatorz, String fileOut, double percentAnalyzed) {
+    public static void createGraph(float[] dataWordz, float[] dataIndicatorz, String fileOut, double percentAnalyzed, float[] dates) {
         BufferedImage render = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics g = render.getGraphics();
         g.setColor(Color.white);
@@ -307,7 +307,7 @@ public class Grapher {
 
     }
     
-    public static void createGraph(float[] dataWordz, String fileOut) {
+    public static void createGraph(float[] dataWordz, String fileOut,float[] dates) {
         BufferedImage render = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics g = render.getGraphics();
         g.setColor(Color.white);

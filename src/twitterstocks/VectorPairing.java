@@ -29,6 +29,7 @@ public class VectorPairing {
         float[] tempData;
         float[] goal = copy(indicatorPerData);
         final float[] finalGoal = copy(goal);
+        final float[] dates = ZVectors.get("IDATES");
         float[] total = new float[goal.length];
         String bestWord = "";
         double tempDistance;
@@ -57,15 +58,15 @@ public class VectorPairing {
             if (!containsNANInfinity(tempData)) {
                 wt.add(bestWord, Compare.correctScale(goal, tempData));
                 if (iterationGraphing) {
-                    Grapher.createGraph(total, finalGoal, "iterations\\total\\" + indicator.getName() + "\\iteration" + iteration);
-                    Grapher.createGraph(Compare.multiply(tempData, Compare.correctScale(goal, tempData)), goal, "iterations\\temporary\\" + indicator.getName() + "\\iteration" + iteration);
+                    Grapher.createGraph(total, finalGoal, "iterations\\total\\" + indicator.getName() + "\\iteration" + iteration,dates);
+                    Grapher.createGraph(Compare.multiply(tempData, Compare.correctScale(goal, tempData)), goal, "iterations\\temporary\\" + indicator.getName() + "\\iteration" + iteration,dates);
                 }
                 total = Compare.add(total, Compare.multiply(tempData, Compare.correctScale(goal, tempData)));
                 goal = Compare.getDifference(finalGoal, total);
                 //Grapher.createGraph(total, finalGoal, "Vector" + bestWord + "CTG" + iteration);
             }
         }
-        Grapher.createGraph(total, finalGoal, "Vector" + indicator.getName() + "Approximation");
+        Grapher.createGraph(total, finalGoal, "Vector" + indicator.getName() + "Approximation",dates);
         System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations.");
         System.out.println(wt);
     }
@@ -88,6 +89,7 @@ public class VectorPairing {
         float[] goal = copy(indicatorPerData);
         float[] tempGoal;
         final float[] finalGoal = getPercent(copy(goal), percentAnalyzed);
+        final float[] dates = ZVectors.get("IDATES");
         iterations = finalGoal.length - 1;
         final float[] finalDisplay = copy(goal);
         float[] total = new float[goal.length];
@@ -122,19 +124,19 @@ public class VectorPairing {
                 if (!containsNANInfinity(tempData)) {
                     wt.add(bestWord, Compare.correctScale(tempGoal, tempData));
                     if (iterationGraphing) {
-                        Grapher.createGraph(total, finalDisplay, "percents\\iterations\\total\\" + indicator.getName() + "\\iteration" + iteration);
-                        Grapher.createGraph(Compare.multiply(tempData, Compare.correctScale(tempGoal, tempData)), tempGoal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iteration" + iteration);
+                        Grapher.createGraph(total, finalDisplay, "percents\\iterations\\total\\" + indicator.getName() + "\\iteration" + iteration,dates);
+                        Grapher.createGraph(Compare.multiply(tempData, Compare.correctScale(tempGoal, tempData)), tempGoal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iteration" + iteration,dates);
                     }
                     total = Compare.add(total, Compare.multiply(ZVectors.get(bestWord), Compare.correctScale(tempGoal, tempData)));
                     goal = Compare.getDifference(finalGoal, total);
                     if (iterationGraphing) {
-                        Grapher.createGraph(goal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iterationR" + iteration);
+                        Grapher.createGraph(goal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iterationR" + iteration,dates);
                     }
                     //Grapher.createGraph(total, finalGoal, "Vector" + bestWord + "CTG" + iteration);
                 }
             }
         }
-        Grapher.createGraph(total, finalDisplay, "percents\\" + indicator.getName() + "\\" + round(percentAnalyzed * 100, 2) + "%", percentAnalyzed);
+        Grapher.createGraph(total, finalDisplay, "percents\\" + indicator.getName() + "\\" + round(percentAnalyzed * 100, 2) + "%", percentAnalyzed,dates);
         System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations and " + (round(percentAnalyzed * 100, 2)) + "%.");
         System.out.println(wt);
     }
