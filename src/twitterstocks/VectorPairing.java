@@ -54,7 +54,7 @@ public class VectorPairing {
 
             } //System.out.println("Done.");
             tempData = copy(ZVectors.get(bestWord));
-            System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(goal, tempData));
+            //System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(goal, tempData));
             if (!containsNANInfinity(tempData)) {
                 wt.add(bestWord, Compare.correctScale(goal, tempData));
                 if (iterationGraphing) {
@@ -90,7 +90,7 @@ public class VectorPairing {
         float[] tempGoal;
         final float[] finalGoal = getPercent(copy(goal), percentAnalyzed);
         final float[] dates = ZVectors.get("IDATES");
-        iterations = finalGoal.length - 1;
+        iterations = finalGoal.length * 2 / 3 - 2;
         final float[] finalDisplay = copy(goal);
         float[] total = new float[goal.length];
 
@@ -120,7 +120,7 @@ public class VectorPairing {
             tempData = getPercent(copy(ZVectors.get(bestWord)), percentAnalyzed);
             if (!containsNANInfinity(Compare.correctScale(tempGoal, tempData))) {
 
-                System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(tempGoal, tempData));
+                //System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(tempGoal, tempData));
                 if (!containsNANInfinity(tempData)) {
                     wt.add(bestWord, Compare.correctScale(tempGoal, tempData));
                     if (iterationGraphing) {
