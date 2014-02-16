@@ -70,10 +70,18 @@ public class VectorPairing {
         System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations.");
         System.out.println(wt);
     }
-
-    public static void dotProductWeightingLimitedRegression(Indicator indicator, boolean percentBased, boolean iterationGraphing, double percentAnalyzed) {
-        int iterations = 0;
+    public static void dotProductWeightingLimitedSequence(Indicator indicator, boolean percentBased, boolean iterationGraphing, double percentStart, double percentEnd, double increment, int predictionCorrelation)
+    {
         System.out.println("\nBeginning Vector Analysis on " + indicator.getName() + ".");
+        for(double percent = percentStart; percent <= percentEnd; percent = round(percent+increment, 4))
+        {
+            dotProductWeightingLimitedRegression(indicator, percentBased, iterationGraphing, percent, predictionCorrelation);
+        }
+    }
+
+    public static void dotProductWeightingLimitedRegression(Indicator indicator, boolean percentBased, boolean iterationGraphing, double percentAnalyzed, int predictionCorrelation) {
+        int iterations = 0;
+        
         WordWeightTable wt = new WordWeightTable();
         //Example of How to lod in Data using the GSON loaders (REDO WHEN INDICATOR CHANGES)
         HashMap<String, float[]> ZVectors = (percentBased) ? Database.getGSONPerMap(indicator.getName()) : Database.getGSONMap(indicator.getName());
@@ -90,7 +98,7 @@ public class VectorPairing {
         float[] tempGoal;
         final float[] finalGoal = getPercent(copy(goal), percentAnalyzed);
         final float[] dates = ZVectors.get("IDATES");
-        iterations = finalGoal.length * 2 / 3 - 2;
+        iterations = finalGoal.length * 1 / 4 - 2;
         final float[] finalDisplay = copy(goal);
         float[] total = new float[goal.length];
 
@@ -136,7 +144,7 @@ public class VectorPairing {
                 }
             }
         }
-        Grapher.createGraph(total, finalDisplay, "percents\\" + indicator.getName() + "\\" + round(percentAnalyzed * 100, 2) + "%", percentAnalyzed,dates);
+        Grapher.createGraph(total, finalDisplay, "percents\\" + indicator.getName() + "\\" + round(percentAnalyzed * 100, 2) + "%", percentAnalyzed,predictionCorrelation,dates);
         System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations and " + (round(percentAnalyzed * 100, 2)) + "%.");
         System.out.println(wt);
     }

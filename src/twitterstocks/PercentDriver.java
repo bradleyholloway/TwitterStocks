@@ -16,22 +16,22 @@ public class PercentDriver {
      * @param args the command line arguments
      */
     public static void main(String[] args) {
-        
+
         Database.loadIndicators();
         //int iterations = 20
-        //for(Indicator i : Database.indicators)
-        //{
+        int prediction = 5;
+        for (Indicator i : Database.indicators) {
         //    VectorPairing.dotProductWeighting(i, iterations, false, true);
         //}
-        Indicator i = Database.indicators.get(1);
-        
-        for(double percent = 0.05; percent <= 1.03; percent +=.05)
-        {
-            System.out.println(percent);
-            VectorPairing.dotProductWeightingLimitedRegression(i, false, false, percent);
+        //Indicator i = Database.indicators.get(1);
+            
+            VectorPairing.dotProductWeightingLimitedSequence(i, false, false, .05, 1.0, .05, prediction);
+            //for (double percent = 0.05; percent <= 1.03; percent += .05) {
+            //    System.out.println(percent);
+            //    VectorPairing.dotProductWeightingLimitedRegression(i, false, false, percent);
+            //}
         }
-        //}
-        
+
     }
 
     public static float[] copy(float[] data) {

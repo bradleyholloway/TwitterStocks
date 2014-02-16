@@ -207,7 +207,7 @@ class Database {
                 
                 //System.out.println("Success "+word);
             } catch (Exception ex) {
-                //System.out.println(ex.getMessage());
+                System.out.print("dates failed,\t");
             }
         
         for (String word : RevWords) {
@@ -587,7 +587,7 @@ class Database {
     }
 
     public static float[] getIndicatorVector(double[][] indicator, String word) {
-        double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int) indicator[0][0] - 1, (int) indicator[indicator.length - 1][0] + 1));
+        double[][] indicatorT = Compare.allignIndicator(indicator, getCountOfWordGraph(word, (int) indicator[0][0] - 1, (int) indicator[indicator.length - 1][0] + 1));
         //int[][] wordT = Compare.getWordMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
         float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
         //float[] wordZ = Compare.convertToVectorZ(wordT);

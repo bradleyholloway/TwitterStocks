@@ -35,8 +35,8 @@ public class Grapher {
 
 
 
-        int[][] dataWord = Compare.getWordMatchIndicatorWord(dataIndicatori, dataWordi);
-        double[][] dataIndicator = Compare.getIndicatorMatchIndicatorWord(dataIndicatori, dataWordi);
+        int[][] dataWord = Compare.allignWord(dataIndicatori, dataWordi);
+        double[][] dataIndicator = Compare.allignIndicator(dataIndicatori, dataWordi);
 
         if (!zSpace) {
 
@@ -233,7 +233,7 @@ public class Grapher {
         }
 
     }
-    public static void createGraph(float[] dataWordz, float[] dataIndicatorz, String fileOut, double percentAnalyzed, float[] dates) {
+    public static void createGraph(float[] dataWordz, float[] dataIndicatorz, String fileOut, double percentAnalyzed, int predictionCorrelation, float[] dates) {
         BufferedImage render = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics g = render.getGraphics();
         g.setColor(Color.white);
@@ -293,9 +293,16 @@ public class Grapher {
 //            g.drawString(""+date.format((int)((double)i/dateSubdivisions*(xMaxWord-xMinWord)+xMinWord)), (int)((double)i/dateSubdivisions*(WIDTH-BORDER)+BORDER),(HEIGHT-BORDER)+5);
         }
         g.setColor(Color.black);
-        g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 50, 50);
+        g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 10, 50);
+        float[] indicatorPredicted = getLastPercent(dataIndicatorz, percentAnalyzed, predictionCorrelation);
+        float[] wordPredicted = getLastPercent(dataWordz, percentAnalyzed, predictionCorrelation);
+        g.drawString(Compare.covariance(indicatorPredicted, wordPredicted)+"", BORDER + (WIDTH-BORDER)/2+10, 50);
         int x = (int)((double)(WIDTH - BORDER) * percentAnalyzed) + BORDER;
         g.drawLine(x,0,x,HEIGHT - BORDER);
+        g.setColor(new Color(0,255,0,100));
+        g.fillRect(x,0,(int)(predictionCorrelation * ((double)WIDTH-BORDER)/dataIndicatorz.length),HEIGHT - BORDER);
+        g.setColor(new Color(255,0,0,100));
+        g.fillRect(BORDER,0,x-BORDER,HEIGHT-BORDER);
 
         try {
             File outputfile = new File("graphs\\"+fileOut + ".png");
@@ -422,5 +429,16 @@ public class Grapher {
     {
         long temp = Math.round(number * Math.pow(10,digits));
         return (double) temp / (Math.pow(10,digits));
+    }
+    
+    private static float[] getLastPercent(float[] data, double percent, int length) {
+        percent = Math.sqrt(percent);
+        float[] newData = new float[length];
+        int index;
+        for (int i = 0; i < newData.length; i++) {
+            index = ((int) (Math.ceil((double) data.length * percent)))+i;
+            newData[i] = data[(index < data.length) ? index : data.length - 1];
+        }
+        return newData;
     }
 }

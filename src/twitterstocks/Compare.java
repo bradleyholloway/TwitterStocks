@@ -57,32 +57,8 @@ class Compare {
     }
 
     public static double covariance(double[][] indicator, int[][] word) {
-        /*//int indicatorerror = 31;//used for testing Constructiondx
-         //indicatorerror = 298;//- used for testing GDPdx
-         int init=0;
-         while (indicator [init][0]+indicatorerror< word [0][0])
-         {
-         init++;
-         }
-        
-         int end = indicator.length-1;
-         while (indicator [end][0]+indicatorerror> word[word.length-1][0])
-         {
-         end--;
-         }
-         */
-        double[][] adjIndicator = getIndicatorMatchIndicatorWord(indicator, word);
-        int[][] adjWord = getWordMatchIndicatorWord(indicator, word);
-
-        /*
-         for(int index = 0; index <adjIndicator.length;index ++)
-         {
-         adjIndicator [index][0]= indicator [index+init][0];
-         adjIndicator [index][1]= indicator [index+init][1];
-         adjWord [index] [0] = (int) indicator [index+init][0];
-         adjWord [index] [1] = (int) sum(word, adjWord [index] [0]-1,adjWord [index] [0]+298);
-         }
-         */
+        double[][] adjIndicator = allignIndicator(indicator, word);
+        int[][] adjWord = allignWord(indicator, word);
 
         double xMean = mean(adjIndicator);
         double yMean = mean(adjWord);
@@ -111,10 +87,8 @@ class Compare {
         return coV;
     }
 
-    public static double[][] getIndicatorMatchIndicatorWord(double[][] indicator, int[][] word) {
+/*    public static double[][] getIndicatorMatchIndicatorWord(double[][] indicator, int[][] word) {
         int indicatorShift = 0;
-        //int indicatorShift = 31;//used for testing Constructiondx
-        //int indicatorShift = 298;//- used for testing GDPdx
         int init = 0;
         while (indicator[init][0] + indicatorShift < word[0][0]) {
             init++;
@@ -133,22 +107,12 @@ class Compare {
             adjWord[index][0] = (int) indicator[index + init][0];
             adjWord[index][1] = (int) sum(word, adjWord[index][0] - 1, adjWord[index][0] + 298);
         }
-
-        //for(int a = 0; a < adjIndicator.length; a++)
-        //{
-        //    System.out.print("date-in: " + adjIndicator [a] [0]);
-        //    System.out.print(" value: " + adjIndicator [a] [1]);
-        //    System.out.print("date-wd: " + adjWord [a] [0]);
-        //    System.out.println(" : " + adjWord [a] [1]);
-        //}
 
         return adjIndicator;
     }
 
     public static int[][] getWordMatchIndicatorWord(double[][] indicator, int[][] word) {
         int indicatorShift = 0;
-        //int indicatorShift = 31;//used for testing Constructiondx
-        //indicatorShift = 298;//- used for testing GDPdx
         int init = 0;
         while (indicator[init][0] + indicatorShift < word[0][0]) {
             init++;
@@ -168,16 +132,8 @@ class Compare {
             adjWord[index][1] = (int) sum(word, adjWord[index][0] - 1, adjWord[index][0] + 298);
         }
 
-        //for(int a = 0; a < adjIndicator.length; a++)
-        //{
-        //    System.out.print("date-in: " + adjIndicator [a] [0]);
-        //    System.out.print(" value: " + adjIndicator [a] [1]);
-        //    System.out.print("date-wd: " + adjWord [a] [0]);
-        //    System.out.println(" : " + adjWord [a] [1]);
-        //}
-
         return adjWord;
-    }
+    }*/
 
     public static int[][] allignWord(double[][] indicator, int[][] word) {
         int indicatorStart = (int) indicator[0][0];
