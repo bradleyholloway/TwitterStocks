@@ -296,7 +296,9 @@ public class Grapher {
         g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 10, 50);
         float[] indicatorPredicted = getLastPercent(dataIndicatorz, percentAnalyzed, predictionCorrelation);
         float[] wordPredicted = getLastPercent(dataWordz, percentAnalyzed, predictionCorrelation);
+        //This is where coVarience needs to be changed with a different type of comparrison.
         g.drawString(Compare.covariance(indicatorPredicted, wordPredicted)+"", BORDER + (WIDTH-BORDER)/2+10, 50);
+        
         int x = (int)((double)(WIDTH - BORDER) * percentAnalyzed) + BORDER;
         g.drawLine(x,0,x,HEIGHT - BORDER);
 
