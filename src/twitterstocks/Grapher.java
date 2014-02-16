@@ -434,7 +434,7 @@ public class Grapher {
     }
     
     private static float[] getLastPercent(float[] data, double percent, int length) {
-        percent = Math.sqrt(percent);
+        //percent = Math.sqrt(percent);
         float[] newData = new float[length];
         int index;
         for (int i = 0; i < newData.length; i++) {
