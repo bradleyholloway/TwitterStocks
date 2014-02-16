@@ -19,7 +19,7 @@ public class PercentDriver {
 
         Database.loadIndicators();
         //int iterations = 20
-        int prediction = 5;
+        int prediction = 4;
         for (Indicator i : Database.indicators) {
         //    VectorPairing.dotProductWeighting(i, iterations, false, true);
         //}

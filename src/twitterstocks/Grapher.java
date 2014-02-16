@@ -299,8 +299,10 @@ public class Grapher {
         g.drawString(Compare.covariance(indicatorPredicted, wordPredicted)+"", BORDER + (WIDTH-BORDER)/2+10, 50);
         int x = (int)((double)(WIDTH - BORDER) * percentAnalyzed) + BORDER;
         g.drawLine(x,0,x,HEIGHT - BORDER);
+
         g.setColor(new Color(0,255,0,100));
         g.fillRect(x,0,(int)(predictionCorrelation * ((double)WIDTH-BORDER)/dataIndicatorz.length),HEIGHT - BORDER);
+
         g.setColor(new Color(255,0,0,100));
         g.fillRect(BORDER,0,x-BORDER,HEIGHT-BORDER);
 
