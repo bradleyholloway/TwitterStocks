@@ -190,20 +190,20 @@ class Database {
         }
     }
 
-    public static HashMap<String, float[]> getGSONMap(String indicatorName) {
+    public static HashMap<String, ZVector> getGSONMap(String indicatorName) {
         if(RevWords.size() == 0)
         {
             loadRevWords();
         }
         System.out.print("Loading GSON Data...\t");
         Gson g = new Gson();
-        HashMap<String, float[]> data = new HashMap<String, float[]>();
+        HashMap<String, ZVector> data = new HashMap<String, ZVector>();
         File file;
         Scanner fileIn;
         try {
                 file = new File("gson\\" + indicatorName + "\\IDATES.txt");
                 fileIn = new Scanner(file);
-                data.put("IDATES", g.fromJson(fileIn.nextLine(), float[].class));
+                data.put("IDATES", g.fromJson(fileIn.nextLine(), ZVector.class));
                 
                 //System.out.println("Success "+word);
             } catch (Exception ex) {
@@ -214,7 +214,7 @@ class Database {
             try {
                 file = new File("gson\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
                 fileIn = new Scanner(file);
-                data.put(word, g.fromJson(fileIn.nextLine(), float[].class));
+                data.put(word, g.fromJson(fileIn.nextLine(), ZVector.class));
                 
                 //System.out.println("Success "+word);
             } catch (Exception ex) {
@@ -225,16 +225,16 @@ class Database {
         return data;
     }
 
-    public static float[] getGSONIndicator(String indicatorName) {
+    public static ZVector getGSONIndicator(String indicatorName) {
         System.out.print("Loading GSON Ind...\t");
         Gson g = new Gson();
-        float[] returns = null;
+        ZVector returns = null;
         File file;
         Scanner fileIn;
         try {
             file = new File("gson\\" + indicatorName + "\\" + indicatorName + ".txt");
             fileIn = new Scanner(file);
-            returns = g.fromJson(fileIn.nextLine(), float[].class);
+            returns = g.fromJson(fileIn.nextLine(), ZVector.class);
             //System.out.println("Success "+word);
         } catch (FileNotFoundException ex) {
             System.out.println(ex.getMessage());
@@ -242,15 +242,15 @@ class Database {
         System.out.println("Done.");
         return returns;
     }
-    public static float[] getGSONIndicatorPer(String indicatorName) {
+    public static ZVector getGSONIndicatorPer(String indicatorName) {
         Gson g = new Gson();
-        float[] returns = null;
+        ZVector returns = null;
         File file;
         Scanner fileIn;
         try {
             file = new File("gsonper\\" + indicatorName + "\\" + indicatorName + ".txt");
             fileIn = new Scanner(file);
-            returns = g.fromJson(fileIn.nextLine(), float[].class);
+            returns = g.fromJson(fileIn.nextLine(), ZVector.class);
             //System.out.println("Success "+word);
         } catch (FileNotFoundException ex) {
             //System.out.println(ex.getMessage());
@@ -258,15 +258,15 @@ class Database {
         return returns;
     }
 
-    public static HashMap<String, float[]> getGSONPerMap(String indicatorName) {
+    public static HashMap<String, ZVector> getGSONPerMap(String indicatorName) {
         Gson g = new Gson();
-        HashMap<String, float[]> data = new HashMap<String, float[]>();
+        HashMap<String, ZVector> data = new HashMap<String, ZVector>();
         File file;
         Scanner fileIn;
         try {
                 file = new File("gsonper\\" + indicatorName + "\\IDATES.txt");
                 fileIn = new Scanner(file);
-                data.put("IDATES", g.fromJson(fileIn.nextLine(), float[].class));
+                data.put("IDATES", g.fromJson(fileIn.nextLine(), ZVector.class));
                 //System.out.println("Success "+word);
             } catch (Exception ex) {
                 //System.out.println(ex.getMessage());
@@ -275,7 +275,7 @@ class Database {
             try {
                 file = new File("gsonper\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
                 fileIn = new Scanner(file);
-                data.put(word, g.fromJson(fileIn.nextLine(), float[].class));
+                data.put(word, g.fromJson(fileIn.nextLine(), ZVector.class));
                 //System.out.println("Success "+word);
             } catch (Exception ex) {
                 //System.out.println(ex.getMessage());

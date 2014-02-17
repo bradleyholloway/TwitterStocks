@@ -20,10 +20,11 @@ class Compare {
         }
         return returns;
     }
+
     public static float[] convertToDates(double[][] data) {
         float[] returns = new float[data.length];
         for (int a = 0; a < data.length; a++) {
-            returns[a] = (float)data[a][0];
+            returns[a] = (float) data[a][0];
         }
         return returns;
     }
@@ -87,60 +88,80 @@ class Compare {
         return coV;
     }
 
-/*    public static double[][] getIndicatorMatchIndicatorWord(double[][] indicator, int[][] word) {
-        int indicatorShift = 0;
-        int init = 0;
-        while (indicator[init][0] + indicatorShift < word[0][0]) {
-            init++;
+    public static double covariance(float[] indicator, float[] word, int onlyAnalyze) {
+        float[] zIndicator = getLastPartial(convertToZ(indicator), onlyAnalyze);
+        float[] zWord = getLastPartial(convertToZ(word), onlyAnalyze);
+        double coV = covariance(zIndicator, zWord);
+        double sumResid = 0.0;
+        for (int a = 0; a < zIndicator.length; a++) {
+            sumResid += Math.abs(zIndicator[a] - zWord[a]);
         }
-
-        int end = indicator.length - 1;
-        while (indicator[end][0] + indicatorShift > word[word.length - 1][0]) {
-            end--;
-        }
-
-        double[][] adjIndicator = new double[(end + 1) - init][2];
-        int[][] adjWord = new int[(end + 1) - init][2];
-        for (int index = 0; index < adjIndicator.length; index++) {
-            adjIndicator[index][0] = indicator[index + init][0];
-            adjIndicator[index][1] = indicator[index + init][1];
-            adjWord[index][0] = (int) indicator[index + init][0];
-            adjWord[index][1] = (int) sum(word, adjWord[index][0] - 1, adjWord[index][0] + 298);
-        }
-
-        return adjIndicator;
+        sumResid = sumResid / onlyAnalyze;
+        sumResid = 1 / (sumResid + 1);
+        return sumResid * coV;
     }
 
-    public static int[][] getWordMatchIndicatorWord(double[][] indicator, int[][] word) {
-        int indicatorShift = 0;
-        int init = 0;
-        while (indicator[init][0] + indicatorShift < word[0][0]) {
-            init++;
+    private static float[] getLastPartial(float[] data, int num) {
+        float[] returns = new float[num];
+        for (int i = 0; i < num; i++) {
+            returns[i] = data[data.length - num + i];
         }
+        return returns;
+    }
 
-        int end = indicator.length - 1;
-        while (indicator[end][0] + indicatorShift > word[word.length - 1][0]) {
-            end--;
-        }
+    /*    public static double[][] getIndicatorMatchIndicatorWord(double[][] indicator, int[][] word) {
+     int indicatorShift = 0;
+     int init = 0;
+     while (indicator[init][0] + indicatorShift < word[0][0]) {
+     init++;
+     }
 
-        double[][] adjIndicator = new double[(end + 1) - init][2];
-        int[][] adjWord = new int[(end + 1) - init][2];
-        for (int index = 0; index < adjIndicator.length; index++) {
-            adjIndicator[index][0] = indicator[index + init][0];
-            adjIndicator[index][1] = indicator[index + init][1];
-            adjWord[index][0] = (int) indicator[index + init][0];
-            adjWord[index][1] = (int) sum(word, adjWord[index][0] - 1, adjWord[index][0] + 298);
-        }
+     int end = indicator.length - 1;
+     while (indicator[end][0] + indicatorShift > word[word.length - 1][0]) {
+     end--;
+     }
 
-        return adjWord;
-    }*/
+     double[][] adjIndicator = new double[(end + 1) - init][2];
+     int[][] adjWord = new int[(end + 1) - init][2];
+     for (int index = 0; index < adjIndicator.length; index++) {
+     adjIndicator[index][0] = indicator[index + init][0];
+     adjIndicator[index][1] = indicator[index + init][1];
+     adjWord[index][0] = (int) indicator[index + init][0];
+     adjWord[index][1] = (int) sum(word, adjWord[index][0] - 1, adjWord[index][0] + 298);
+     }
 
+     return adjIndicator;
+     }
+
+     public static int[][] getWordMatchIndicatorWord(double[][] indicator, int[][] word) {
+     int indicatorShift = 0;
+     int init = 0;
+     while (indicator[init][0] + indicatorShift < word[0][0]) {
+     init++;
+     }
+
+     int end = indicator.length - 1;
+     while (indicator[end][0] + indicatorShift > word[word.length - 1][0]) {
+     end--;
+     }
+
+     double[][] adjIndicator = new double[(end + 1) - init][2];
+     int[][] adjWord = new int[(end + 1) - init][2];
+     for (int index = 0; index < adjIndicator.length; index++) {
+     adjIndicator[index][0] = indicator[index + init][0];
+     adjIndicator[index][1] = indicator[index + init][1];
+     adjWord[index][0] = (int) indicator[index + init][0];
+     adjWord[index][1] = (int) sum(word, adjWord[index][0] - 1, adjWord[index][0] + 298);
+     }
+
+     return adjWord;
+     }*/
     public static int[][] allignWord(double[][] indicator, int[][] word) {
         int indicatorStart = (int) indicator[0][0];
-        int indicatorEnd = (int) indicator[indicator.length-1][0];
+        int indicatorEnd = (int) indicator[indicator.length - 1][0];
         int wordStart = word[0][0];
-        int wordEnd = word[word.length-1][0];
-        int indicatorShift = 0, indicatorCut = indicator.length-1, wordShift = 0, wordCut = word.length-1;
+        int wordEnd = word[word.length - 1][0];
+        int indicatorShift = 0, indicatorCut = indicator.length - 1, wordShift = 0, wordCut = word.length - 1;
         if (indicatorStart > wordStart) {
             while (wordShift != word.length && indicatorStart > word[wordShift][0]) {
                 wordShift++;
@@ -175,7 +196,7 @@ class Compare {
 
             tempI++;
         }
-        int[][] adjWord = new int[newLength+1][2];
+        int[][] adjWord = new int[newLength + 1][2];
         newLength = 0;
         tempI = indicatorShift;
         tempW = wordShift;
@@ -188,28 +209,29 @@ class Compare {
                 tempW++;
             }
             if (used) {
-                adjWord[newLength][0] = (int)indicator[tempI][0];
+                adjWord[newLength][0] = (int) indicator[tempI][0];
                 newLength++;
-                
+
             }
             tempI++;
         }
-        adjWord[newLength][0] = (int)indicator[tempI][0];
+        adjWord[newLength][0] = (int) indicator[tempI][0];
         adjWord[newLength][1] = word[tempW][1];
         return adjWord;
     }
+
     public static double[][] allignWordPercent(double[][] indicator, double[][] wordPercent) {
         int indicatorStart = (int) indicator[0][0];
-        int indicatorEnd = (int) indicator[indicator.length-1][0];
-        int wordStart = (int)wordPercent[0][0];
-        int wordEnd = (int)wordPercent[wordPercent.length-1][0];
-        int indicatorShift = 0, indicatorCut = indicator.length-1, wordShift = 0, wordCut = wordPercent.length-1;
+        int indicatorEnd = (int) indicator[indicator.length - 1][0];
+        int wordStart = (int) wordPercent[0][0];
+        int wordEnd = (int) wordPercent[wordPercent.length - 1][0];
+        int indicatorShift = 0, indicatorCut = indicator.length - 1, wordShift = 0, wordCut = wordPercent.length - 1;
         if (indicatorStart > wordStart) {
-            while (wordShift != wordPercent.length-1 && indicatorStart > wordPercent[wordShift][0]) {
+            while (wordShift != wordPercent.length - 1 && indicatorStart > wordPercent[wordShift][0]) {
                 wordShift++;
             }
         } else {
-            while (indicatorShift != wordPercent.length-1 && wordStart > indicator[indicatorShift][0]) {
+            while (indicatorShift != wordPercent.length - 1 && wordStart > indicator[indicatorShift][0]) {
                 indicatorShift++;
             }
         }
@@ -238,7 +260,7 @@ class Compare {
 
             tempI++;
         }
-        double[][] adjWord = new double[newLength+1][2];
+        double[][] adjWord = new double[newLength + 1][2];
         newLength = 0;
         tempI = indicatorShift;
         tempW = wordShift;
@@ -247,7 +269,7 @@ class Compare {
             boolean used = false;
             double totalCount = 0;
             while (wordPercent[tempW][0] <= indicatorDate) {
-                
+
                 totalCount += wordPercent[tempW][2];
                 adjWord[newLength][1] += wordPercent[tempW][1] * wordPercent[tempW][2];
                 used = true;
@@ -255,28 +277,29 @@ class Compare {
             }
             if (used) {
                 adjWord[newLength][1] /= totalCount;
-                adjWord[newLength][0] = (int)indicator[tempI][0];
+                adjWord[newLength][0] = (int) indicator[tempI][0];
                 newLength++;
-                
+
             }
             tempI++;
         }
-        adjWord[newLength][0] = (int)indicator[tempI][0];
+        adjWord[newLength][0] = (int) indicator[tempI][0];
         adjWord[newLength][1] = wordPercent[tempW][1];
         return adjWord;
     }
+
     public static double[][] allignIndicatorPercent(double[][] indicator, double[][] wordPercent) {
         int indicatorStart = (int) indicator[0][0];
-        int indicatorEnd = (int) indicator[indicator.length-1][0];
-        int wordStart = (int)wordPercent[0][0];
-        int wordEnd = (int)wordPercent[wordPercent.length-1][0];
-        int indicatorShift = 0, indicatorCut = indicator.length-1, wordShift = 0, wordCut = wordPercent.length-1;
+        int indicatorEnd = (int) indicator[indicator.length - 1][0];
+        int wordStart = (int) wordPercent[0][0];
+        int wordEnd = (int) wordPercent[wordPercent.length - 1][0];
+        int indicatorShift = 0, indicatorCut = indicator.length - 1, wordShift = 0, wordCut = wordPercent.length - 1;
         if (indicatorStart > wordStart) {
-            while (wordShift != wordPercent.length-1 && indicatorStart > wordPercent[wordShift][0]) {
+            while (wordShift != wordPercent.length - 1 && indicatorStart > wordPercent[wordShift][0]) {
                 wordShift++;
             }
         } else {
-            while (indicatorShift != wordPercent.length-1 && wordStart > indicator[indicatorShift][0]) {
+            while (indicatorShift != wordPercent.length - 1 && wordStart > indicator[indicatorShift][0]) {
                 indicatorShift++;
             }
         }
@@ -305,7 +328,7 @@ class Compare {
 
             tempI++;
         }
-        double[][] adjIndicator = new double[newLength+1][2];
+        double[][] adjIndicator = new double[newLength + 1][2];
         newLength = 0;
         tempI = indicatorShift;
         tempW = wordShift;
@@ -318,22 +341,23 @@ class Compare {
             }
             if (used) {
                 adjIndicator[newLength][1] = indicator[tempI][1];
-                adjIndicator[newLength][0] = (int)indicator[tempI][0];
+                adjIndicator[newLength][0] = (int) indicator[tempI][0];
                 newLength++;
-                
+
             }
             tempI++;
         }
-        adjIndicator[newLength][0] = (int)indicator[tempI][0];
+        adjIndicator[newLength][0] = (int) indicator[tempI][0];
         adjIndicator[newLength][1] = indicator[tempI][1];
         return adjIndicator;
     }
+
     public static double[][] allignIndicator(double[][] indicator, int[][] word) {
         int indicatorStart = (int) indicator[0][0];
-        int indicatorEnd = (int) indicator[indicator.length-1][0];
+        int indicatorEnd = (int) indicator[indicator.length - 1][0];
         int wordStart = word[0][0];
-        int wordEnd = word[word.length-1][0];
-        int indicatorShift = 0, indicatorCut = indicator.length-1, wordShift = 0, wordCut = word.length-1;
+        int wordEnd = word[word.length - 1][0];
+        int indicatorShift = 0, indicatorCut = indicator.length - 1, wordShift = 0, wordCut = word.length - 1;
         if (indicatorStart > wordStart) {
             while (wordShift != word.length && indicatorStart > word[wordShift][0]) {
                 wordShift++;
@@ -343,7 +367,7 @@ class Compare {
                 indicatorShift++;
             }
         }
-        
+
         if (indicatorEnd > wordEnd) {
             while (indicatorCut > indicatorShift && wordEnd < indicator[indicatorCut][0]) {
                 indicatorCut--;
@@ -369,7 +393,7 @@ class Compare {
 
             tempI++;
         }
-        double[][] adjIndicator = new double[newLength+1][2];
+        double[][] adjIndicator = new double[newLength + 1][2];
         newLength = 0;
         tempI = indicatorShift;
         tempW = wordShift;
@@ -381,26 +405,36 @@ class Compare {
                 tempW++;
             }
             if (used) {
-                adjIndicator[newLength][0] = (int)indicator[tempI][0];
+                adjIndicator[newLength][0] = (int) indicator[tempI][0];
                 adjIndicator[newLength][1] = indicator[tempI][1];
                 newLength++;
-                
+
             }
             tempI++;
         }
-        adjIndicator[newLength][0] = (int)indicator[tempI][0];
+        adjIndicator[newLength][0] = (int) indicator[tempI][0];
         adjIndicator[newLength][1] = indicator[tempI][1];
         return adjIndicator;
     }
-    
 
     public static double[][] convertToZ(double[][] data) {
+        double[][] tempData = new double[data.length][2];
         double mean = mean(data);
         double stDev = standardDev(data);
         for (int a = 0; a < data.length; a++) {
-            data[a][1] = (data[a][1] - mean) / stDev;
+            tempData[a][1] = (data[a][1] - mean) / stDev;
         }
-        return data;
+        return tempData;
+    }
+
+    public static float[] convertToZ(float[] data) {
+        float[] tempData = new float[data.length];
+        double mean = mean(data);
+        double stDev = standardDev(data);
+        for (int a = 0; a < data.length; a++) {
+            tempData[a] = (float) ((data[a] - mean) / stDev);
+        }
+        return tempData;
     }
 
     public static double[][] convertToZ(int[][] data) {
@@ -426,6 +460,15 @@ class Compare {
     private static double mean(float[] data) {
         double sum = 0, count = 0;
         for (int i = 0; i < data.length; i++) {
+            sum += data[i];
+            count++;
+        }
+        return sum / count;
+    }
+
+    private static double mean(float[] data, int lengthToMean) {
+        double sum = 0, count = 0;
+        for (int i = 0; i < lengthToMean; i++) {
             sum += data[i];
             count++;
         }
@@ -487,6 +530,16 @@ class Compare {
         return Math.sqrt(var);
     }
 
+    private static double standardDev(float[] data, int lengthToAnalyze) {
+        double xMean = mean(data, lengthToAnalyze);
+        double var = 0;
+        for (int i = 0; i < lengthToAnalyze; i++) {
+            var += (data[i] - xMean) * (data[i] - xMean);
+        }
+        var /= data.length - 1;
+        return Math.sqrt(var);
+    }
+
     private static double standardDev(int[][] data) {
         double xMean = mean(data);
         double var = 0;
@@ -498,8 +551,7 @@ class Compare {
     }
 
     public static double distanceBetweenScaled(float[] indicator, float[] word) {
-        if(Math.abs(correctScale(indicator, word)) > 20)
-        {
+        if (Math.abs(correctScale(indicator, word)) > 20) {
             System.out.println("Suspicious:....");
         }
         float[] word2 = multiply(word, correctScale(indicator, word));
