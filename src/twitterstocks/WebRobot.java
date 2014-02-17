@@ -204,11 +204,11 @@ public class WebRobot {
     
     
      public void mineFoxNews() {
-        int year = 2010;
+        int year = 2011;
         int dateTab = 0;
-        while (year < 2011) {
+        while (year < 2012) {
             typeURL("http://web.archive.org/web/"+ year + "0515000000*/http://www.foxnews.com/");
-            tabTo(28+ dateTab);
+            tabTo(28+ 79+ dateTab);
             enter();
             waitTillDone();
             String URL;
