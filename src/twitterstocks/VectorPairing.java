@@ -18,7 +18,7 @@ public class VectorPairing {
         WordWeightTable wt = new WordWeightTable();
         //Example of How to lod in Data using the GSON loaders (REDO WHEN INDICATOR CHANGES)
         HashMap<String, ZVector> ZVectors = (percentBased) ? Database.getGSONPerMap(indicator.getName()) : Database.getGSONMap(indicator.getName());
-        ZVector indicatorPerData = Database.getGSONIndicator(indicator.getName());
+        ZVector indicatorData = Database.getGSONIndicator(indicator.getName());
         //double[][] indicatorData = Database.getIndicatorGraph(indicator);
         //float[] indicatorPerData = Database.getIndicatorVector(indicatorData);
 
@@ -27,9 +27,9 @@ public class VectorPairing {
         //HashMap<String, float[]> percentZVectors = Database.getGSONPerMap(indicator.getName());
         //float[] indicatorPerData = Database.getGSONIndicatorPer(indicator.getName());
         float[] tempData;
-        float[] goal = copy(indicatorPerData);
+        float[] goal = copy(indicatorData.getZData());
         final float[] finalGoal = copy(goal);
-        final float[] dates = ZVectors.get("IDATES");
+        final float[] dates = ZVectors.get("IDATES").getScaledData();
         float[] total = new float[goal.length];
         String bestWord = "";
         double tempDistance;
@@ -40,7 +40,7 @@ public class VectorPairing {
             for (String word : Database.RevWords) {
                 if (ZVectors.get(word) == null) {
                 } else {
-                    tempData = copy(ZVectors.get(word));
+                    tempData = copy(ZVectors.get(word).getZData());
                     if (ZVectors.get(word) != null) {
                         tempDistance = Math.abs(Compare.dotProduct(goal, tempData));
                         if (tempDistance > maxDistance) {
@@ -53,7 +53,7 @@ public class VectorPairing {
                 }
 
             } //System.out.println("Done.");
-            tempData = copy(ZVectors.get(bestWord));
+            tempData = copy(ZVectors.get(bestWord).getZData());
             //System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(goal, tempData));
             if (!containsNANInfinity(tempData)) {
                 wt.add(bestWord, Compare.correctScale(goal, tempData));
@@ -84,8 +84,8 @@ public class VectorPairing {
         
         WordWeightTable wt = new WordWeightTable();
         //Example of How to lod in Data using the GSON loaders (REDO WHEN INDICATOR CHANGES)
-        HashMap<String, float[]> ZVectors = (percentBased) ? Database.getGSONPerMap(indicator.getName()) : Database.getGSONMap(indicator.getName());
-        float[] indicatorPerData = Database.getGSONIndicator(indicator.getName());
+        HashMap<String, ZVector> ZVectors = (percentBased) ? Database.getGSONPerMap(indicator.getName()) : Database.getGSONMap(indicator.getName());
+        ZVector indicatorPerData = Database.getGSONIndicator(indicator.getName());
         //double[][] indicatorData = Database.getIndicatorGraph(indicator);
         //float[] indicatorPerData = Database.getIndicatorVector(indicatorData);
 
@@ -94,10 +94,10 @@ public class VectorPairing {
         //HashMap<String, float[]> percentZVectors = Database.getGSONPerMap(indicator.getName());
         //float[] indicatorPerData = Database.getGSONIndicatorPer(indicator.getName());
         float[] tempData;
-        float[] goal = copy(indicatorPerData);
+        float[] goal = copy(indicatorPerData.getZData());
         float[] tempGoal;
         final float[] finalGoal = getPercent(copy(goal), percentAnalyzed);
-        final float[] dates = ZVectors.get("IDATES");
+        final float[] dates = ZVectors.get("IDATES").getScaledData();
         iterations = finalGoal.length * 1 / 4 - 2;
         final float[] finalDisplay = copy(goal);
         float[] total = new float[goal.length];
@@ -112,7 +112,7 @@ public class VectorPairing {
             for (String word : Database.RevWords) {
                 if (ZVectors.get(word) == null) {
                 } else {
-                    tempData = getPercent(copy(ZVectors.get(word)), percentAnalyzed);
+                    tempData = getPercent(copy(ZVectors.get(word).getZData()), percentAnalyzed);
                     if (ZVectors.get(word) != null) {
                         tempDistance = Math.abs(Compare.dotProduct(tempGoal, tempData));
                         if (tempDistance > maxDistance) {
@@ -125,7 +125,7 @@ public class VectorPairing {
                 }
 
             } //System.out.println("Done.");
-            tempData = getPercent(copy(ZVectors.get(bestWord)), percentAnalyzed);
+            tempData = getPercent(copy(ZVectors.get(bestWord).getZData()), percentAnalyzed);
             if (!containsNANInfinity(Compare.correctScale(tempGoal, tempData))) {
 
                 //System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(tempGoal, tempData));
@@ -135,7 +135,7 @@ public class VectorPairing {
                         Grapher.createGraph(total, finalDisplay, "percents\\iterations\\total\\" + indicator.getName() + "\\iteration" + iteration,dates);
                         Grapher.createGraph(Compare.multiply(tempData, Compare.correctScale(tempGoal, tempData)), tempGoal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iteration" + iteration,dates);
                     }
-                    total = Compare.add(total, Compare.multiply(ZVectors.get(bestWord), Compare.correctScale(tempGoal, tempData)));
+                    total = Compare.add(total, Compare.multiply(ZVectors.get(bestWord).getZData(), Compare.correctScale(tempGoal, tempData)));
                     goal = Compare.getDifference(finalGoal, total);
                     if (iterationGraphing) {
                         Grapher.createGraph(goal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iterationR" + iteration,dates);

@@ -57,14 +57,30 @@ public class ZVector {
     {
         return stDev;
     }
-    public double[] getScaledData()
+    public float[] getScaledData()
     {
-        double[] temp = new double[zData.length];
+        float[] temp = new float[zData.length];
         for(int i = 0; i < temp.length; i++)
         {
-            temp[i] = zData[i] * stDev + rawMean;
+            temp[i] = zData[i] * (float)stDev + (float)rawMean;
         }
         return temp;
+    }
+    public ZVector divideBy(ZVector divisor)
+    {
+        float[] numerator = this.getScaledData();
+        float[] denomonator = divisor.getScaledData();
+        return new ZVector(divide(numerator, denomonator));
+    }
+    
+    private float[] divide(float[] numerator, float[] denomonator)
+    {
+        float[] result = new float[numerator.length];
+        for(int i = 0; i < numerator.length; i++)
+        {
+            result[i] = numerator[i] / denomonator[i];
+        }
+        return result;
     }
     
 }

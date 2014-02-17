@@ -15,11 +15,11 @@ import java.util.Scanner;
 class Database {
 
     public static HashMap<Integer, ArrayList<Article>> articles = new HashMap<Integer, ArrayList<Article>>();
+    public static ArrayList<Integer> files = new ArrayList<Integer>();
+    public static ArrayList<Integer> dates = new ArrayList<Integer>();
     public static ArrayList<String> directories = new ArrayList<String>();
     public static HashMap<String, HashMap<Integer, ArrayList<Article>>> directoriesArticles = new HashMap<String, HashMap<Integer, ArrayList<Article>>>();
     public static HashMap<String, ArrayList<Integer>> directoriesDates = new HashMap<String, ArrayList<Integer>>();
-    public static ArrayList<Integer> files = new ArrayList<Integer>();
-    public static ArrayList<Integer> dates = new ArrayList<Integer>();
     public static ArrayList<Indicator> indicators = new ArrayList<Indicator>();
     public static ArrayList<String> words = new ArrayList<String>();
     public static ArrayList<String> RevWords = new ArrayList<String>();
@@ -28,23 +28,20 @@ class Database {
         String fileName = a.getFileName();
         if (fileName.substring(0, fileName.indexOf("Article")).equals("articles\\")) {
             addNoDirectory(a);
-        } else
-        {
-            add(a, fileName.substring(0,fileName.indexOf("\\")));
+        } else {
+            add(a, fileName.substring(0, fileName.indexOf("\\")));
         }
 
     }
 
     private static void add(Article a, String directory) throws FileNotFoundException {
-        if (directoriesArticles.get(directory)==null)
-        {
+        if (directoriesArticles.get(directory) == null) {
             directories.add(directory);
             directoriesArticles.put(directory, new HashMap<Integer, ArrayList<Article>>());
         }
         if (directoriesArticles.get(directory).get(a.getDate()) == null) {
             directoriesArticles.get(directory).put(a.getDate(), new ArrayList<Article>());
-            if(directoriesDates.get(directory)==null)
-            {
+            if (directoriesDates.get(directory) == null) {
                 directoriesDates.put(directory, new ArrayList<Integer>());
             }
             directoriesDates.get(directory).add(a.getDate());
@@ -54,7 +51,8 @@ class Database {
         Collections.sort(directoriesDates.get(directory));
 
     }
-    private static void addNoDirectory(Article a) throws FileNotFoundException{
+
+    private static void addNoDirectory(Article a) throws FileNotFoundException {
         if (articles.get(a.getDate()) == null) {
             articles.put(a.getDate(), new ArrayList<Article>());
             dates.add(a.getDate());
@@ -81,22 +79,20 @@ class Database {
         Collections.sort(dates);
         Collections.sort(files);
     }
-    public static ZVector getTotalWordCountAlligned(double[][] indicatorData)
-    {
+
+    public static ZVector getTotalWordCountAlligned(double[][] indicatorData) {
         ArrayList<int[]> wordCounts = new ArrayList<int[]>();
-        for (int date : dates)
-        {
+        for (int date : dates) {
             int[] point = {date, getWordCountByDate(date)};
             wordCounts.add(point);
         }
         int[][] wordData = new int[wordCounts.size()][2];
-        for(int i = 0; i < wordData.length; i++)
-        {
+        for (int i = 0; i < wordData.length; i++) {
             wordData[i] = wordCounts.get(i);
         }
         int[][] allignedCount = Compare.allignWord(indicatorData, wordData);
         return new ZVector(allignedCount);
-        
+
     }
 
     public static void addE(Article a) throws FileNotFoundException {
@@ -180,50 +176,43 @@ class Database {
             }
             // Begin new Loading Process
             File articlesFolder = new File("articles");
-            
-            File[] dirs = articlesFolder.listFiles(new FileFilter() {
 
+            File[] dirs = articlesFolder.listFiles(new FileFilter() {
                 @Override
                 public boolean accept(File file) {
                     return !(file.getName().contains("Article"));
                 }
             });
-            for (File dir : dirs)
-            {
-                if(!directories.contains(dir.getName()))
-                {
-                directories.add(dir.getName());}
-                if(directoriesArticles.get(dir.getName())==null)
-                {
+            for (File dir : dirs) {
+                if (!directories.contains(dir.getName())) {
+                    directories.add(dir.getName());
+                }
+                if (directoriesArticles.get(dir.getName()) == null) {
                     directoriesArticles.put(dir.getName(), new HashMap<Integer, ArrayList<Article>>());
                 }
-                if(directoriesDates.get(dir.getName())==null) {
+                if (directoriesDates.get(dir.getName()) == null) {
                     directoriesDates.put(dir.getName(), new ArrayList<Integer>());
                 }
-                if(Article.numFilesMap.get(dir.getName())==null)
-                {
+                if (Article.numFilesMap.get(dir.getName()) == null) {
                     Article.numFilesMap.put(dir.getName(), 0);
                 }
-                for (File art : dir.listFiles())
-                {
-                    int articleNum = Integer.parseInt(art.getName().substring(art.getName().indexOf("e")+1, art.getName().length()-4));
-                    if (articleNum >= Article.numFilesMap.get(dir.getName()))
-                    {
-                        Article.numFilesMap.put(dir.getName(), articleNum+1);
+                for (File art : dir.listFiles()) {
+                    int articleNum = Integer.parseInt(art.getName().substring(art.getName().indexOf("e") + 1, art.getName().length() - 4));
+                    if (articleNum >= Article.numFilesMap.get(dir.getName())) {
+                        Article.numFilesMap.put(dir.getName(), articleNum + 1);
                     }
                     Article a = new Article(articleNum, dir.getName());
-                    if(directoriesArticles.get(dir.getName()).get(a.getDate())==null)
-                    {
+                    if (directoriesArticles.get(dir.getName()).get(a.getDate()) == null) {
                         directoriesArticles.get(dir.getName()).put(a.getDate(), new ArrayList<Article>());
                     }
                     directoriesArticles.get(dir.getName()).get(a.getDate()).add(a);
-                    if(!directoriesDates.get(dir.getName()).contains(a.getDate())) {
+                    if (!directoriesDates.get(dir.getName()).contains(a.getDate())) {
                         directoriesDates.get(dir.getName()).add(a.getDate());
                     }
                 }
-                
+
             }
-            
+
             System.out.println("Done.");
         } catch (FileNotFoundException ex) {
             System.out.println("Articles Failed: " + ex.getMessage());
@@ -286,8 +275,7 @@ class Database {
     }
 
     public static HashMap<String, ZVector> getGSONMap(String indicatorName) {
-        if(RevWords.size() == 0)
-        {
+        if (RevWords.size() == 0) {
             loadRevWords();
         }
         System.out.print("Loading GSON Data...\t");
@@ -296,21 +284,21 @@ class Database {
         File file;
         Scanner fileIn;
         try {
-                file = new File("gson\\" + indicatorName + "\\IDATES.txt");
-                fileIn = new Scanner(file);
-                data.put("IDATES", g.fromJson(fileIn.nextLine(), ZVector.class));
-                
-                //System.out.println("Success "+word);
-            } catch (Exception ex) {
-                System.out.print("dates failed,\t");
-            }
-        
+            file = new File("gson\\" + indicatorName + "\\IDATES.txt");
+            fileIn = new Scanner(file);
+            data.put("IDATES", g.fromJson(fileIn.nextLine(), ZVector.class));
+
+            //System.out.println("Success "+word);
+        } catch (Exception ex) {
+            System.out.print("dates failed,\t");
+        }
+
         for (String word : RevWords) {
             try {
                 file = new File("gson\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
                 fileIn = new Scanner(file);
                 data.put(word, g.fromJson(fileIn.nextLine(), ZVector.class));
-                
+
                 //System.out.println("Success "+word);
             } catch (Exception ex) {
                 //System.out.println(ex.getMessage());
@@ -337,21 +325,6 @@ class Database {
         System.out.println("Done.");
         return returns;
     }
-    public static ZVector getGSONIndicatorPer(String indicatorName) {
-        Gson g = new Gson();
-        ZVector returns = null;
-        File file;
-        Scanner fileIn;
-        try {
-            file = new File("gsonper\\" + indicatorName + "\\" + indicatorName + ".txt");
-            fileIn = new Scanner(file);
-            returns = g.fromJson(fileIn.nextLine(), ZVector.class);
-            //System.out.println("Success "+word);
-        } catch (FileNotFoundException ex) {
-            //System.out.println(ex.getMessage());
-        }
-        return returns;
-    }
 
     public static HashMap<String, ZVector> getGSONPerMap(String indicatorName) {
         Gson g = new Gson();
@@ -359,18 +332,26 @@ class Database {
         File file;
         Scanner fileIn;
         try {
-                file = new File("gsonper\\" + indicatorName + "\\IDATES.txt");
-                fileIn = new Scanner(file);
-                data.put("IDATES", g.fromJson(fileIn.nextLine(), ZVector.class));
-                //System.out.println("Success "+word);
-            } catch (Exception ex) {
-                //System.out.println(ex.getMessage());
-            }
+            file = new File("gsonper\\" + indicatorName + "\\IDATES.txt");
+            fileIn = new Scanner(file);
+            data.put("IDATES", g.fromJson(fileIn.nextLine(), ZVector.class));
+            //System.out.println("Success "+word);
+        } catch (Exception ex) {
+            //System.out.println(ex.getMessage());
+        }
+        try {
+            file = new File("gsonper\\" + indicatorName + "\\TWORDS.txt");
+            fileIn = new Scanner(file);
+            data.put("TWORDS", g.fromJson(fileIn.nextLine(), ZVector.class));
+            //System.out.println("Success "+word);
+        } catch (Exception ex) {
+            //System.out.println(ex.getMessage());
+        }
         for (String word : RevWords) {
             try {
                 file = new File("gsonper\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
                 fileIn = new Scanner(file);
-                data.put(word, g.fromJson(fileIn.nextLine(), ZVector.class));
+                data.put(word, g.fromJson(fileIn.nextLine(), ZVector.class).divideBy(data.get("TWORDS")));
                 //System.out.println("Success "+word);
             } catch (Exception ex) {
                 //System.out.println(ex.getMessage());
@@ -530,7 +511,23 @@ class Database {
     }
 
     private static ArrayList<Article> getByDate(int date) {
-        return articles.get(date);
+        ArrayList<Article> returns = articles.get(date);
+        for (String dir : directories)
+        {
+            returns = merge(returns, directoriesArticles.get(dir).get(date));
+        }
+        return returns;
+    }
+
+    private static ArrayList<Article> merge(ArrayList<Article> listA, ArrayList<Article> listB) {
+        ArrayList<Article> returns = new ArrayList<Article>();
+        for (Article a : listA) {
+            returns.add(a);
+        }
+        for (Article a : listB) {
+            returns.add(a);
+        }
+        return returns;
     }
 
     public static int getCountOfWordByDate(String word, int date) {
@@ -542,18 +539,6 @@ class Database {
             //returns word count adjusted for document length
         }
         return count;
-    }
-
-    public static double getPercentOfWordByDate(String word, int date) {
-        double count = 0;
-        int totalCount = 0;
-        for (Article a : getByDate(date)) {
-            count += a.getCount(word);
-            totalCount += a.getWordCount();
-            //count += a.getCount(word)*10000/(a.getWordCount()+1);
-            //returns word count adjusted for document length
-        }
-        return (totalCount > 0) ? (count / totalCount) : 0.0;
     }
 
     public static int getWordCountByDate(int date) {
@@ -574,16 +559,8 @@ class Database {
         return wordZ;
     }
 
-    public static float[] getWordPercentVector(double[][] indicator, String word) {
-        //double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
-        double[][] wordT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph(word));
-        //float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
-        float[] wordZ = Compare.convertToVectorZ(wordT);
-        return wordZ;
-    }
-
     public static ZVector getIndicatorVector(double[][] indicator) {
-        double[][] indicatorT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph("allignment"));
+        double[][] indicatorT = Compare.allignIndicator(indicator, getCountOfWordGraph("allignment"));
         //double[][] wordT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph(word));
         ZVector indicatorZ = new ZVector(indicatorT);
         //float[] wordZ = Compare.convertToVectorZ(wordT);
@@ -591,20 +568,12 @@ class Database {
     }
 
     public static ZVector getIndicatorDatesVector(double[][] indicator) {
-        double[][] indicatorT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph("allignment"));
+        double[][] indicatorT = Compare.allignIndicator(indicator, getCountOfWordGraph("allignment"));
         //double[][] wordT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph(word));
         float[] indicatorZ = Compare.convertToDates(indicatorT);
         //float[] wordZ = Compare.convertToVectorZ(wordT);
         return new ZVector(indicatorZ);
     }
-
-    /*public static float[] getScaledWordVector(double[][] indicator, String word, double scale) {
-        float[] returns = getWordVector(indicator, word);
-        for (int i = 0; i < returns.length; i++) {
-            returns[i] = returns[i] * (float) scale;
-        }
-        return returns;
-    }*/
 
     public static float[] getIndicatorVector(double[][] indicator, String word) {
         double[][] indicatorT = Compare.allignIndicator(indicator, getCountOfWordGraph(word, (int) indicator[0][0] - 1, (int) indicator[indicator.length - 1][0] + 1));
@@ -616,7 +585,7 @@ class Database {
 
     public static void ArticleFrequency() {
         ArrayList<Integer> datesInRange = new ArrayList<Integer>();
-        for (int date : dates) {
+        for (int date : combinedDates()) {
             if (date >= Integer.MIN_VALUE && date <= Integer.MAX_VALUE) {
                 datesInRange.add(date);
             }
@@ -636,33 +605,13 @@ class Database {
         }
     }
 
-    public static double[][] getPercentOfWordGraph(String word) {
-        return getPercentOfWordGraph(word, Integer.MIN_VALUE, Integer.MAX_VALUE);
-    }
-
     public static int[][] getCountOfWordGraph(String word) {
         return getCountOfWordGraph(word, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
 
-    public static double[][] getPercentOfWordGraph(String word, int start, int end) {
-        ArrayList<Integer> datesInRange = new ArrayList<Integer>();
-        for (int date : dates) {
-            if (date >= start && date <= end) {
-                datesInRange.add(date);
-            }
-        }
-        double[][] graphPoints = new double[datesInRange.size()][3];
-        for (int index = 0; index < datesInRange.size(); index++) {
-            graphPoints[index][0] = datesInRange.get(index);
-            graphPoints[index][1] = getPercentOfWordByDate(word, datesInRange.get(index));
-            graphPoints[index][2] = getWordCountByDate(datesInRange.get(index));
-        }
-        return graphPoints;
-    }
-
     public static int[][] getCountOfWordGraph(String word, int start, int end) {
         ArrayList<Integer> datesInRange = new ArrayList<Integer>();
-        for (int date : dates) {
+        for (int date : combinedDates()) {
             if (date >= start && date <= end) {
                 datesInRange.add(date);
             }
@@ -751,5 +700,22 @@ class Database {
         //    System.out.println(point [1]);
 
         return combined;
+    }
+
+    public static ArrayList<Integer> combinedDates() {
+        ArrayList<Integer> combined = new ArrayList<Integer>();
+        for (int date : dates) {
+            combined.add(date);
+        }
+        for (String dir : directories) {
+            for (Integer dirDate : directoriesDates.get(dir)) {
+                if (!combined.contains(dirDate)) {
+                    combined.add(dirDate);
+                }
+            }
+        }
+        Collections.sort(combined);
+        return combined;
+
     }
 }
