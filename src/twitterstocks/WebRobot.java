@@ -198,13 +198,12 @@ public class WebRobot {
             }
         }
     }
-
-    public void mineFoxNews() {
-        int year = 2001;
+     public void mineFoxNews() {
+        int year = 2010;
         int dateTab = 0;
-        while (year < 2002) {
-            typeURL("http://web.archive.org/web/" + year + "0515000000*/http://www.foxnews.com/");
-            tabTo(28 + dateTab);
+        while (year < 2011) {
+            typeURL("http://web.archive.org/web/"+ year + "0515000000*/http://www.foxnews.com/");
+            tabTo(28+ dateTab);
             enter();
             waitTillDone();
             String URL;
