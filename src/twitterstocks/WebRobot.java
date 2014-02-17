@@ -104,9 +104,9 @@ public class WebRobot {
     }
 
     public void mineReddit() {
-        int year = 2009;
+        int year = 2010;
         int dateTab = 0;
-        while (year < 2010) {
+        while (year < 2011) {
             typeURL("http://web.archive.org/web/" + year + "0601000000*/http://www.reddit.com/");
             tabTo(28 + dateTab);
             enter();
