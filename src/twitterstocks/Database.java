@@ -528,6 +528,121 @@ class Database {
 
         System.out.println("DONE.");
     }
+    public static void writeGSON(Indicator indicator) {
+        Gson g = new Gson();
+        Database.load();
+        RevWords = new ArrayList<String>();
+
+        HashMap<String, Integer> wordcounts = getWordCountsMap();
+        for (int index = 0; index < words.size(); index++) {
+            double count = wordcounts.get(words.get(index));
+            //double count = Compare.sum(getCountOfWordGraph(words.get(index)));
+            //System.out.println("index: " + index + " " + words.get(index) + " wordcount: " + count);
+            if (count > 10) {
+                RevWords.add(words.get(index));
+            } else {
+                //System.out.println("Removed " + words.get(index) + " at index: " + index);
+            }
+        }//takes out all the NAN's
+        File file = new File("gson\\REVWORDS.txt");
+        PrintWriter out;
+        try {
+            out = new PrintWriter(file);
+            Type alType = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            out.println(g.toJson(RevWords, alType));
+            out.close();
+            System.out.println("Wrote RevWords");
+        } catch (FileNotFoundException ex) {
+            //Logger.getLogger(StepTwoGSON.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //System.out.println("removed null words");
+
+        HashMap<String, ZVector> wordVectors = new HashMap<String, ZVector>();
+            file = new File("gson\\" + indicator.getName());
+            file.mkdirs();
+            file.mkdir();
+            double[][] indicatorData = Database.getIndicatorGraph(indicator);
+            try {
+                File f = new File("gson\\" + indicator.getName() + "\\" + indicator.getName() + ".txt");
+                PrintWriter fout = new PrintWriter(f);
+                try {
+                    fout.print(g.toJson(getIndicatorVector(indicatorData)));
+                } finally {
+                    fout.close();
+                    System.out.println("Wrote Indicator");
+                }
+                //System.out.println("Done.");
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+            try {
+                File f = new File("gson\\" + indicator.getName() + "\\IDATES.txt");
+                PrintWriter fout = new PrintWriter(f);
+                try {
+                    fout.print(g.toJson(getIndicatorDatesVector(indicatorData)));
+                } finally {
+                    fout.close();
+                    System.out.println("Wrote IDATES");
+                }
+                //System.out.println("Done.");
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+            try {
+                File f = new File("gson\\" + indicator.getName() + "\\TWORDS.txt");
+                PrintWriter fout = new PrintWriter(f);
+                try {
+                    fout.print(g.toJson(getTotalWordCountAlligned(indicatorData)));
+                } finally {
+                    fout.close();
+                    System.out.println("Wrote Total Words");
+                }
+                //System.out.println("Done.");
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+            System.out.println("Placeing Words in " + indicator.getName() + "'s HashMap...\t");
+            int index = 0;
+            double prevPercent = 0, percent;
+            for (String word : RevWords) {
+                percent = (double) index * 10 / RevWords.size();
+                if (Math.floor(prevPercent) != Math.floor(percent)) {
+                    System.out.print(".");
+                }
+                wordVectors.put(word, Database.getWordVector(indicatorData, word));
+                //System.out.println(index + " Inserting: " + word);
+                index++;
+                prevPercent = percent;
+            }
+            System.out.println("Writing from HashMap");
+            index = 0;
+            prevPercent = 0;
+            for (String word : RevWords) {
+                percent = (double) index * 10 / RevWords.size();
+                if (Math.floor(percent) != Math.floor(prevPercent)) {
+                    System.out.print(".");
+                }
+                //System.out.print("Writing " + word + " ...\t");
+                try {
+                    File f = new File("gson\\" + indicator.getName() + "\\" + removeSpaces(word) + ".txt");
+                    PrintWriter fout = new PrintWriter(f);
+                    try {
+                        fout.print(g.toJson(wordVectors.get(word)));
+                    } finally {
+                        fout.close();
+                    }
+                    //System.out.println("Done.");
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+                index++;
+                prevPercent = percent;
+            }
+            System.out.println(indicator.getName() + "'s arrays written.");
+
+        System.out.println("DONE.");
+    }
 
     public static void writeGSON(String dir) {
         Gson g = new Gson();
