@@ -3,6 +3,7 @@ package twitterstocks;
 import com.google.gson.Gson;
 import com.google.gson.reflect.TypeToken;
 import java.io.File;
+import java.io.FileFilter;
 import java.io.FileNotFoundException;
 import java.io.PrintWriter;
 import java.lang.reflect.Type;
@@ -10,12 +11,13 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Scanner;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 class Database {
 
     public static HashMap<Integer, ArrayList<Article>> articles = new HashMap<Integer, ArrayList<Article>>();
+    public static ArrayList<String> directories = new ArrayList<String>();
+    public static HashMap<String, HashMap<Integer, ArrayList<Article>>> directoriesArticles = new HashMap<String, HashMap<Integer, ArrayList<Article>>>();
+    public static HashMap<String, ArrayList<Integer>> directoriesDates = new HashMap<String, ArrayList<Integer>>();
     public static ArrayList<Integer> files = new ArrayList<Integer>();
     public static ArrayList<Integer> dates = new ArrayList<Integer>();
     public static ArrayList<Indicator> indicators = new ArrayList<Indicator>();
@@ -23,6 +25,36 @@ class Database {
     public static ArrayList<String> RevWords = new ArrayList<String>();
 
     public static void add(Article a) throws FileNotFoundException {
+        String fileName = a.getFileName();
+        if (fileName.substring(0, fileName.indexOf("Article")).equals("articles\\")) {
+            addNoDirectory(a);
+        } else
+        {
+            add(a, fileName.substring(0,fileName.indexOf("\\")));
+        }
+
+    }
+
+    private static void add(Article a, String directory) throws FileNotFoundException {
+        if (directoriesArticles.get(directory)==null)
+        {
+            directories.add(directory);
+            directoriesArticles.put(directory, new HashMap<Integer, ArrayList<Article>>());
+        }
+        if (directoriesArticles.get(directory).get(a.getDate()) == null) {
+            directoriesArticles.get(directory).put(a.getDate(), new ArrayList<Article>());
+            if(directoriesDates.get(directory)==null)
+            {
+                directoriesDates.put(directory, new ArrayList<Integer>());
+            }
+            directoriesDates.get(directory).add(a.getDate());
+        }
+        directoriesArticles.get(directory).get(a.getDate()).add(a);
+
+        Collections.sort(directoriesDates.get(directory));
+
+    }
+    private static void addNoDirectory(Article a) throws FileNotFoundException{
         if (articles.get(a.getDate()) == null) {
             articles.put(a.getDate(), new ArrayList<Article>());
             dates.add(a.getDate());
@@ -129,6 +161,52 @@ class Database {
             for (int f : tempFiles) {
                 addE(new Article(f));
             }
+            // Begin new Loading Process
+            File articlesFolder = new File("articles");
+            
+            File[] dirs = articlesFolder.listFiles(new FileFilter() {
+
+                @Override
+                public boolean accept(File file) {
+                    return !(file.getName().contains("Article"));
+                }
+            });
+            for (File dir : dirs)
+            {
+                if(!directories.contains(dir.getName()))
+                {
+                directories.add(dir.getName());}
+                if(directoriesArticles.get(dir.getName())==null)
+                {
+                    directoriesArticles.put(dir.getName(), new HashMap<Integer, ArrayList<Article>>());
+                }
+                if(directoriesDates.get(dir.getName())==null) {
+                    directoriesDates.put(dir.getName(), new ArrayList<Integer>());
+                }
+                if(Article.numFilesMap.get(dir.getName())==null)
+                {
+                    Article.numFilesMap.put(dir.getName(), 0);
+                }
+                for (File art : dir.listFiles())
+                {
+                    int articleNum = Integer.parseInt(art.getName().substring(art.getName().indexOf("e")+1, art.getName().length()-4));
+                    if (articleNum >= Article.numFilesMap.get(dir.getName()))
+                    {
+                        Article.numFilesMap.put(dir.getName(), articleNum+1);
+                    }
+                    Article a = new Article(articleNum, dir.getName());
+                    if(directoriesArticles.get(dir.getName()).get(a.getDate())==null)
+                    {
+                        directoriesArticles.get(dir.getName()).put(a.getDate(), new ArrayList<Article>());
+                    }
+                    directoriesArticles.get(dir.getName()).get(a.getDate()).add(a);
+                    if(!directoriesDates.get(dir.getName()).contains(a.getDate())) {
+                        directoriesDates.get(dir.getName()).add(a.getDate());
+                    }
+                }
+                
+            }
+            
             System.out.println("Done.");
         } catch (FileNotFoundException ex) {
             System.out.println("Articles Failed: " + ex.getMessage());
@@ -570,6 +648,7 @@ class Database {
         //float[] wordZ = Compare.convertToVectorZ(wordT);
         return indicatorZ;
     }
+
     public static float[] getIndicatorDatesVector(double[][] indicator) {
         double[][] indicatorT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph("allignment"));
         //double[][] wordT = Compare.allignIndicatorPercent(indicator, getPercentOfWordGraph(word));

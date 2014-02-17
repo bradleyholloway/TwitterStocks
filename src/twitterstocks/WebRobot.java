@@ -21,9 +21,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 public class WebRobot {
-    
+
     Robot robot;
-    
+
     public WebRobot() {
         while (robot == null) {
             try {
@@ -33,94 +33,133 @@ public class WebRobot {
             }
         }
     }
-    
+
     public void launchChrome() {
         System.out.println("Warning: Make sure that Chrome is not running!");
         System.out.println("You have 10 Seconds before it could cause problems.");
         robot.delay(10000);
         launchRun();
         type("chrome", true);
-        waitTillDone(10,1);
+        waitTillDone(10, 1);
     }
-    
+
     public void typeURL(String URL) {
+        //System.out.println(URL);
         setClipboard(URL);
         type(KeyEvent.VK_F6);
         waitTillDone();
-        
+
         paste();
         enter();
-        
+
         waitTillDone();
-        
+
     }
-    public void mineNYTimes(int day, int month, int year, int results)
-    {
-        
-    
-    DecimalFormat dayMonth = new DecimalFormat("00");
+
+    public void mineNYTimes(int day, int month, int year, int results) {
+
+
+        DecimalFormat dayMonth = new DecimalFormat("00");
         DecimalFormat yearFormat = new DecimalFormat("0000");
         String date = "" + yearFormat.format(year) + dayMonth.format(month) + dayMonth.format(day);
-        for(int result = 0; result < results; result++)
-        {
-        typeURL("http://query.nytimes.com/search/sitesearch/#/a/from"+date+"to"+date+"/allresults/1/allauthors/oldest/");
-        select(12+result);
-        enter();
-        waitTillDone();
-        selectAll();
-        try {
-            Database.add(new Article(findNYTimesArticle(getClipboard()), year*10000+month*100+day));
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+        for (int result = 0; result < results; result++) {
+            typeURL("http://query.nytimes.com/search/sitesearch/#/a/from" + date + "to" + date + "/allresults/1/allauthors/oldest/");
+            tabTo(12 + result);
+            enter();
+            waitTillDone();
+            selectAll();
+            try {
+                Database.add(new Article(findNYTimesArticle(getClipboard()), year * 10000 + month * 100 + day));
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        }
-    
+
     }
-    
-    public void mineNYTimes(int day, int month, int year)
-    {
+
+    public void mineNYTimes(int day, int month, int year) {
         mineNYTimes(day, month, year, 1);
     }
-    
-    public void mineWSJ(int day, int month, int year, int results)
-    {
-        
-    
-    DecimalFormat dayMonth = new DecimalFormat("00");
+
+    public void mineWSJ(int day, int month, int year, int results) {
+
+
+        DecimalFormat dayMonth = new DecimalFormat("00");
         DecimalFormat yearFormat = new DecimalFormat("0000");
-        for(int result = 0; result < results; result++)
-        {
-        typeURL("http://pqasb.pqarchiver.com/djreprints/results.html?st=advanced&QryTxt=*&type=current&sortby=RELEVANCE&datetype=6&frommonth="+dayMonth.format(month)+"&fromday="+dayMonth.format(day)+"&fromyear="+ yearFormat.format(year) +"&tomonth="+dayMonth.format(month)+"&today="+dayMonth.format(day+1)+"&toyear="+ yearFormat.format(year) +"&By=&Title=");
-        select(23+result*2);
-        enter();
-        waitTillDone();
-        selectAll();
-        try {
-            Database.add(new Article(findWSJArticle(getClipboard()), year*10000+month*100+day));
-        } catch (FileNotFoundException ex) {
-            Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+        for (int result = 0; result < results; result++) {
+            typeURL("http://pqasb.pqarchiver.com/djreprints/results.html?st=advanced&QryTxt=*&type=current&sortby=RELEVANCE&datetype=6&frommonth=" + dayMonth.format(month) + "&fromday=" + dayMonth.format(day) + "&fromyear=" + yearFormat.format(year) + "&tomonth=" + dayMonth.format(month) + "&today=" + dayMonth.format(day + 1) + "&toyear=" + yearFormat.format(year) + "&By=&Title=");
+            tabTo(23 + result * 2);
+            enter();
+            waitTillDone();
+            selectAll();
+            try {
+                Database.add(new Article(findWSJArticle(getClipboard()), year * 10000 + month * 100 + day));
+            } catch (FileNotFoundException ex) {
+                Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+            }
         }
-        }
-    
+
     }
-    
-    public void mineWSJ(int day, int month, int year)
-    {
+
+    public void mineWSJ(int day, int month, int year) {
         mineWSJ(day, month, year, 1);
     }
-    
+
+    public void mineReddit() {
+        int year = 2005;
+        int dateTab = 0;
+        while (year < 2015) {
+            typeURL("http://web.archive.org/web/"+ year + "0601000000*/http://www.reddit.com/");
+            tabTo(28 + dateTab);
+            enter();
+            waitTillDone();
+            String URL;
+            URL=getURL();
+            if (URL.equals("http://archive.org/about/faqs.php#The_Wayback_Machine"))
+            {
+                year++;
+                dateTab = 0;
+            } 
+            else 
+            {
+                tabTo(1);
+                type(KeyEvent.VK_ESCAPE);
+                tabTo(1);
+                selectAll();
+                dateTab++;
+            }
+            try {
+                //System.out.println(URL.substring(27,35));
+         Database.add(new Article((getClipboard()),Integer.parseInt(URL.substring(27,35)), "REDDIT"));
+         } catch (FileNotFoundException ex) {
+         Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+         }
+        }
+    }
+
+    public void mineReddit(int day, int month, int year) {
+        mineReddit();
+    }
+
     private void type(int k) {
         robot.keyPress(k);
         robot.delay(30);
         robot.keyRelease(k);
         robot.delay(30);
     }
-    
-    private void enter()
-    {
+
+    private void typeFast(int k) {
+        robot.keyPress(k);
+        robot.delay(5);
+        robot.keyRelease(k);
+        robot.delay(5);
+    }
+
+    private void enter() {
+        robot.delay(500);
         type(KeyEvent.VK_ENTER);
     }
-    
+
     private void type(String text, boolean enter) {
         int i = 0;
         char c;
@@ -129,7 +168,7 @@ public class WebRobot {
         boolean shift = false;
         while (i < text.length()) {
             c = text.charAt(i);
-            
+
             switch (c) {
                 case 'a':
                     k = KeyEvent.VK_A;
@@ -299,21 +338,21 @@ public class WebRobot {
                     shift = false;
                     k = KeyEvent.VK_9;
                     break;
-                
+
             }
             if (shift) {
                 robot.keyPress(KeyEvent.VK_SHIFT);
                 robot.delay(30);
-                
+
             }
             type(k);
-            
+
             if (shift) {
                 robot.keyRelease(KeyEvent.VK_SHIFT);
-                
+
             }
-            
-            
+
+
             i++;
         }
         robot.delay(500);
@@ -324,21 +363,21 @@ public class WebRobot {
             robot.delay(300);
         }
     }
-    
+
     private void click() {
         robot.mousePress(MouseEvent.BUTTON1_MASK);
         robot.delay(10);
         robot.mouseRelease(MouseEvent.BUTTON1_MASK);
         robot.delay(10);
     }
-    
-    private void select(int tabs) {
+
+    private void tabTo(int tabs) {
         //type(KeyEvent.VK_F6, r);
         for (int t = 0; t < tabs; t++) {
-            type(KeyEvent.VK_TAB);
+            typeFast(KeyEvent.VK_TAB);
         }
     }
-    
+
     public void switchWindows() {
         robot.keyPress(KeyEvent.VK_ALT);
         robot.delay(500);
@@ -348,7 +387,7 @@ public class WebRobot {
         robot.keyRelease(KeyEvent.VK_TAB);
         robot.delay(500);
     }
-    
+
     private void selectAll() {
         robot.keyPress(KeyEvent.VK_CONTROL);
         robot.delay(50);
@@ -363,12 +402,12 @@ public class WebRobot {
         robot.keyRelease(KeyEvent.VK_CONTROL);
         robot.delay(400);
     }
-    private void setClipboard(String text)
-    {
+
+    private void setClipboard(String text) {
         StringSelection sText = new StringSelection(text);
         Toolkit.getDefaultToolkit().getSystemClipboard().setContents(sText, null);
     }
-    
+
     private void launchRun() {
         robot.keyPress(KeyEvent.VK_WINDOWS);
         robot.delay(50);
@@ -378,9 +417,8 @@ public class WebRobot {
         robot.keyRelease(KeyEvent.VK_WINDOWS);
         robot.delay(200);
     }
-    
-    private void paste()
-    {
+
+    private void paste() {
         robot.keyPress(KeyEvent.VK_CONTROL);
         robot.delay(40);
         robot.keyPress(KeyEvent.VK_V);
@@ -389,7 +427,7 @@ public class WebRobot {
         robot.keyRelease(KeyEvent.VK_CONTROL);
         robot.delay(30);
     }
-    
+
     private void waitTillDone() {
         boolean waiting = true;
         int waitTime = 1;
@@ -405,6 +443,7 @@ public class WebRobot {
             }
         }
     }
+
     private void waitTillDone(int firstWait, int afterWait) {
         boolean waiting = true;
         int waitTime = firstWait;
@@ -421,7 +460,7 @@ public class WebRobot {
             }
         }
     }
-    
+
     private boolean equal(BufferedImage first, BufferedImage second) {
         for (int x = 0; x < first.getWidth(); x++) {
             for (int y = 0; y < first.getHeight(); y++) {
@@ -432,37 +471,49 @@ public class WebRobot {
         }
         return true;
     }
-    
-    public String getClipboard()
-    {
+
+    public String getClipboard() {
         String data = "";
         int tries = 25;
-        while(tries > 0 && data.equals("")) {
-        try {
-            data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
-        } catch (UnsupportedFlavorException ex) {
-            Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IOException ex) {
-            Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+        while (tries > 0 && data.equals("")) {
+            try {
+                data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
+            } catch (UnsupportedFlavorException ex) {
+                Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+            } catch (IOException ex) {
+                Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            robot.delay(200);
+
         }
-        robot.delay(200);
-        
-    }
         return data;
     }
-    
-    private String findNYTimesArticle(String data)
-    {
-        if(data.indexOf("REPRINTS") != -1  && data.indexOf("FACEBOOK", data.indexOf("REPRINTS")) != -1) {
-            return data.substring(data.indexOf("REPRINTS")+9, data.indexOf("FACEBOOK", data.indexOf("REPRINTS")));
+            
+            
+    public String getURL() {
+      
+        type(KeyEvent.VK_F6);
+        robot.keyPress(KeyEvent.VK_CONTROL);
+        robot.delay(100);
+        robot.keyPress(KeyEvent.VK_C);
+        robot.delay(100);
+        robot.keyRelease(KeyEvent.VK_C);
+        robot.delay(100);
+        robot.keyRelease(KeyEvent.VK_CONTROL);
+        robot.delay(100);
+        return getClipboard();
+    }
+
+    private String findNYTimesArticle(String data) {
+        if (data.indexOf("REPRINTS") != -1 && data.indexOf("FACEBOOK", data.indexOf("REPRINTS")) != -1) {
+            return data.substring(data.indexOf("REPRINTS") + 9, data.indexOf("FACEBOOK", data.indexOf("REPRINTS")));
         }
         return "";
     }
-    
-    private String findWSJArticle(String data)
-    {
-        if(data.indexOf("ProQuest") != -1  && data.indexOf("Reproduced", data.indexOf("ProQuest")) != -1) {
-            return data.substring(data.indexOf("ProQuest")+9, data.indexOf("Reproduced", data.indexOf("ProQuest")));
+
+    private String findWSJArticle(String data) {
+        if (data.indexOf("ProQuest") != -1 && data.indexOf("Reproduced", data.indexOf("ProQuest")) != -1) {
+            return data.substring(data.indexOf("ProQuest") + 9, data.indexOf("Reproduced", data.indexOf("ProQuest")));
         }
         return "";
     }
