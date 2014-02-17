@@ -94,6 +94,20 @@ class Database {
         return new ZVector(allignedCount);
 
     }
+    public static ZVector getTotalWordCountAlligned(double[][] indicatorData, String dir) {
+        ArrayList<int[]> wordCounts = new ArrayList<int[]>();
+        for (int date : dates) {
+            int[] point = {date, getWordCountByDate(date, dir)};
+            wordCounts.add(point);
+        }
+        int[][] wordData = new int[wordCounts.size()][2];
+        for (int i = 0; i < wordData.length; i++) {
+            wordData[i] = wordCounts.get(i);
+        }
+        int[][] allignedCount = Compare.allignWord(indicatorData, wordData);
+        return new ZVector(allignedCount);
+
+    }
 
     public static void addE(Article a) throws FileNotFoundException {
         if (articles.get(a.getDate()) == null) {
@@ -370,6 +384,26 @@ class Database {
                 a.addWordCounts(wordCount);
             }
         }
+        for (String dir : directories) {
+            for (Integer d : directoriesDates.get(dir)) {
+                for (Article a : directoriesArticles.get(dir).get(d)) {
+                    a.addWordCounts(wordCount);
+                }
+            }
+        }
+        return wordCount;
+    }
+
+    private static HashMap<String, Integer> getWordCountsMap(String dir) {
+        HashMap<String, Integer> wordCount = new HashMap<String, Integer>();
+        for (String word : words) {
+            wordCount.put(word, new Integer(0));
+        }
+        for (Integer d : directoriesDates.get(dir)) {
+            for (Article a : directoriesArticles.get(dir).get(d)) {
+                a.addWordCounts(wordCount);
+            }
+        }
         return wordCount;
     }
 
@@ -474,6 +508,107 @@ class Database {
         System.out.println("DONE.");
     }
 
+    public static void writeGSON(String dir) {
+        Gson g = new Gson();
+        Database.load();
+        RevWords = new ArrayList<String>();
+
+        HashMap<String, Integer> wordcounts = getWordCountsMap(dir);
+        for (int index = 0; index < words.size(); index++) {
+            double count = wordcounts.get(words.get(index));
+            //double count = Compare.sum(getCountOfWordGraph(words.get(index)));
+            //System.out.println("index: " + index + " " + words.get(index) + " wordcount: " + count);
+            if (count > 10) {
+                RevWords.add(words.get(index));
+            } else {
+                System.out.println("Removed " + words.get(index) + " at index: " + index);
+            }
+        }//takes out all the NAN's
+        File file = new File("gson\\REVWORDS.txt");
+        PrintWriter out;
+        try {
+            out = new PrintWriter(file);
+            Type alType = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            out.println(g.toJson(RevWords, alType));
+            out.close();
+            System.out.println("Wrote RevWords");
+        } catch (FileNotFoundException ex) {
+            //Logger.getLogger(StepTwoGSON.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //System.out.println("removed null words");
+
+        HashMap<String, ZVector> wordVectors = new HashMap<String, ZVector>();
+        for (Indicator indicator : indicators) {
+            file = new File("gson\\" + indicator.getName());
+            file.mkdirs();
+            file.mkdir();
+            double[][] indicatorData = Database.getIndicatorGraph(indicator);
+            try {
+                File f = new File("gson\\" + indicator.getName() + "\\" + indicator.getName() + ".txt");
+                PrintWriter fout = new PrintWriter(f);
+                try {
+                    fout.print(g.toJson(getIndicatorVector(indicatorData, dir)));
+                } finally {
+                    fout.close();
+                }
+                //System.out.println("Done.");
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+            try {
+                File f = new File("gson\\" + indicator.getName() + "\\IDATES.txt");
+                PrintWriter fout = new PrintWriter(f);
+                try {
+                    fout.print(g.toJson(getIndicatorDatesVector(indicatorData)));
+                } finally {
+                    fout.close();
+                }
+                //System.out.println("Done.");
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+            try {
+                File f = new File("gson\\" + indicator.getName() + "\\TWORDS.txt");
+                PrintWriter fout = new PrintWriter(f);
+                try {
+                    fout.print(g.toJson(getTotalWordCountAlligned(indicatorData, dir)));
+                } finally {
+                    fout.close();
+                }
+                //System.out.println("Done.");
+            } catch (Exception ex) {
+                System.out.println(ex.getMessage());
+            }
+            System.out.println("Placeing Words in " + indicator.getName() + "'s HashMap...\t");
+            //int index = 0;
+            for (String word : RevWords) {
+                wordVectors.put(word, Database.getWordVector(indicatorData, word, dir));
+                //System.out.println(index + " Inserting: " + word);
+                //index++;
+            }
+
+            for (String word : RevWords) {
+                //System.out.print("Writing " + word + " ...\t");
+                try {
+                    File f = new File("gson\\" + indicator.getName() + "\\" + removeSpaces(word) + ".txt");
+                    PrintWriter fout = new PrintWriter(f);
+                    try {
+                        fout.print(g.toJson(wordVectors.get(word)));
+                    } finally {
+                        fout.close();
+                    }
+                    //System.out.println("Done.");
+                } catch (Exception ex) {
+                    System.out.println(ex.getMessage());
+                }
+            }
+            System.out.println(indicator.getName() + "'s arrays written.");
+        }
+
+        System.out.println("DONE.");
+    }
+
     public static String removeSpaces(String s) {
         return remove(s, " ");
     }
@@ -512,8 +647,7 @@ class Database {
 
     private static ArrayList<Article> getByDate(int date) {
         ArrayList<Article> returns = articles.get(date);
-        for (String dir : directories)
-        {
+        for (String dir : directories) {
             returns = merge(returns, directoriesArticles.get(dir).get(date));
         }
         return returns;
@@ -540,6 +674,16 @@ class Database {
         }
         return count;
     }
+    public static int getCountOfWordByDate(String word, int date, String dir) {
+        int count = 0;
+        for (Article a : directoriesArticles.get(dir).get(date)) {
+            count += a.getCount(word);
+
+            //count += a.getCount(word)*10000/(a.getWordCount()+1);
+            //returns word count adjusted for document length
+        }
+        return count;
+    }
 
     public static int getWordCountByDate(int date) {
         int count = 0;
@@ -550,10 +694,26 @@ class Database {
         }
         return count;
     }
+    public static int getWordCountByDate(int date, String dir) {
+        int count = 0;
+        for (Article a : directoriesArticles.get(dir).get(date)) {
+            count += a.getWordCount();
+            //count += a.getCount(word)*10000/(a.getWordCount()+1);
+            //returns word count adjusted for document length
+        }
+        return count;
+    }
 
     public static ZVector getWordVector(double[][] indicator, String word) {
         //double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
         int[][] wordT = Compare.allignWord(indicator, getCountOfWordGraph(word));
+        //float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
+        ZVector wordZ = new ZVector(wordT);
+        return wordZ;
+    }
+    public static ZVector getWordVector(double[][] indicator, String word, String dir) {
+        //double[][] indicatorT = Compare.getIndicatorMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
+        int[][] wordT = Compare.allignWord(indicator, getCountOfWordGraph(word,dir));
         //float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
         ZVector wordZ = new ZVector(wordT);
         return wordZ;
@@ -575,10 +735,10 @@ class Database {
         return new ZVector(indicatorZ);
     }
 
-    public static float[] getIndicatorVector(double[][] indicator, String word) {
-        double[][] indicatorT = Compare.allignIndicator(indicator, getCountOfWordGraph(word, (int) indicator[0][0] - 1, (int) indicator[indicator.length - 1][0] + 1));
+    public static ZVector getIndicatorVector(double[][] indicator, String dir) {
+        double[][] indicatorT = Compare.allignIndicator(indicator, getCountOfWordGraph("allign", (int) indicator[0][0] - 1, (int) indicator[indicator.length - 1][0] + 1, dir));
         //int[][] wordT = Compare.getWordMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
-        float[] indicatorZ = Compare.convertToVectorZ(indicatorT);
+        ZVector indicatorZ = new ZVector(indicatorT);
         //float[] wordZ = Compare.convertToVectorZ(wordT);
         return indicatorZ;
     }
@@ -608,6 +768,9 @@ class Database {
     public static int[][] getCountOfWordGraph(String word) {
         return getCountOfWordGraph(word, Integer.MIN_VALUE, Integer.MAX_VALUE);
     }
+    public static int[][] getCountOfWordGraph(String word, String dir) {
+        return getCountOfWordGraph(word, Integer.MIN_VALUE, Integer.MAX_VALUE, dir);
+    }
 
     public static int[][] getCountOfWordGraph(String word, int start, int end) {
         ArrayList<Integer> datesInRange = new ArrayList<Integer>();
@@ -620,6 +783,20 @@ class Database {
         for (int index = 0; index < datesInRange.size(); index++) {
             graphPoints[index][0] = datesInRange.get(index);
             graphPoints[index][1] = getCountOfWordByDate(word, datesInRange.get(index));
+        }
+        return graphPoints;
+    }
+    public static int[][] getCountOfWordGraph(String word, int start, int end, String dir) {
+        ArrayList<Integer> datesInRange = new ArrayList<Integer>();
+        for (int date : directoriesDates.get(dir)) {
+            if (date >= start && date <= end) {
+                datesInRange.add(date);
+            }
+        }
+        int[][] graphPoints = new int[datesInRange.size()][2];
+        for (int index = 0; index < datesInRange.size(); index++) {
+            graphPoints[index][0] = datesInRange.get(index);
+            graphPoints[index][1] = getCountOfWordByDate(word, datesInRange.get(index), dir);
         }
         return graphPoints;
     }
