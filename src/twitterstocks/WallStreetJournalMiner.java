@@ -17,6 +17,7 @@ public class WallStreetJournalMiner {
     /**
      * @param args the command line arguments
      */
+    
     public static void main(String[] args) {
         // TODO code application logic here
         WebRobot robot = new WebRobot();
@@ -87,5 +88,5 @@ public class WallStreetJournalMiner {
                 robot.mineWSJ(day, month, year, articles);
             }
         }
-    }//main
+    }
 }//wallStreetJournalMiner

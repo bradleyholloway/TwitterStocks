@@ -9,24 +9,39 @@ import java.util.Scanner;
 class Article {
 
     private String content;
-    private String name;
     private String fileName;
     private int date;
     public static int numFiles = 0;
+    public static HashMap<String, Integer> numFilesMap = new HashMap<String, Integer>();
 
     public Article(String content, int date) throws FileNotFoundException {
         this.content = replace(content, '\n', " ");
         this.fileName = "articles\\Article" + numFiles;
-        this.name = this.fileName;
         this.date = date;
         writeToFile();
         numFiles++;
+    }
+    public Article(String content, int date, String directory) throws FileNotFoundException {
+        if(!numFilesMap.containsKey(directory))
+        {
+            numFilesMap.put(directory,0);
+        }
+        
+        this.content = replace(content, '\n', " ");
+        this.fileName = "articles\\"+directory + "\\Article" + numFilesMap.get(directory);
+        this.date = date;
+        writeToFile();
+        numFilesMap.put(directory, numFilesMap.get(directory)+1);
+    }
+    public Article(int fileNum, String directory) throws FileNotFoundException
+    {
+        readFromFile("articles\\"+directory + "\\Article" + fileNum);
+        this.fileName = "articles\\"+directory + "\\Article" + fileNum;
     }
 
     public Article(int fileNum) throws FileNotFoundException {
         readFromFile("articles\\Article" + fileNum);
         this.fileName = "articles\\Article" + fileNum;
-        this.name = this.fileName;
 
     }
 
@@ -77,6 +92,8 @@ class Article {
     }
 
     private void writeToFile() throws FileNotFoundException {
+        File f = new File(fileName+".txt");
+        f.getParentFile().mkdirs();
         PrintWriter out = new PrintWriter(fileName + ".txt");
         try {
             out.println(date);
@@ -110,6 +127,10 @@ class Article {
         }
 
         return temp;
+    }
+    public String getFileName()
+    {
+        return fileName;
     }
 
     @Override
