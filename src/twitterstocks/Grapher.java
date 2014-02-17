@@ -324,6 +324,98 @@ public class Grapher {
 
     }
     
+    public static void createGraph(float[] dataWordz, float[] dataIndicatorz, String fileOut, double percentAnalyzed, int predictionCorrelation, int pastData, float[] dates) {
+        BufferedImage render = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
+        Graphics g = render.getGraphics();
+        g.setColor(Color.white);
+        g.fillRect(0, 0, WIDTH, HEIGHT);
+
+        g.setColor(Color.black);
+        g.drawRect(BORDER, 0, WIDTH - BORDER, HEIGHT - BORDER);
+        g.setColor(Color.lightGray);
+        g.fillRect(BORDER + 1, 1, WIDTH - BORDER - 2, HEIGHT - BORDER - 2);
+
+        //Get basic scale.
+        float[] indicatorPredicted = getPercentPlus(dataIndicatorz, percentAnalyzed, predictionCorrelation);
+        float[] wordPredicted = getPercentPlus(dataWordz, percentAnalyzed, predictionCorrelation);
+        double yMinWord, yMaxWord;
+        yMinWord = yMaxWord = dataWordz[0];
+        for (int a = 1; a < Math.min(wordPredicted.length, dataWordz.length); a++) {
+            if (dataWordz[a] < yMinWord) {
+                yMinWord = Math.floor(dataWordz[a]);
+            } else if (dataWordz[a] > yMaxWord) {
+                yMaxWord = Math.ceil(dataWordz[a]);
+            }
+        }
+        double yMinIndicator, yMaxIndicator;
+        yMinIndicator = yMaxIndicator = dataIndicatorz[0];
+        for (int a = 1; a < Math.min(indicatorPredicted.length,dataIndicatorz.length); a++) {
+            if (dataIndicatorz[a] < yMinIndicator) {
+                yMinIndicator = Math.floor(dataIndicatorz[a]);
+            } else if (dataIndicatorz[a] > yMaxIndicator) {
+                yMaxIndicator = Math.ceil(dataIndicatorz[a]);
+            }
+        }
+        double yMin = Math.min(yMinWord, yMinIndicator);
+        double yMax = Math.max(yMaxWord, yMaxIndicator);
+        //Begin Drawing
+        System.out.println(yMin+" "+yMax);
+
+
+        g.setColor(Color.red);//Draw Indicator Line
+
+
+        for (int a = 1; a < dataIndicatorz.length; a++) {
+            drawLine(g, dataIndicatorz[a - 1], dataIndicatorz[a], a - 1, dataIndicatorz.length, yMin, yMax);
+        }
+
+        g.setColor(Color.blue);//Draw WordCount Line
+        for (int a = 1; a < dataWordz.length; a++) {
+            drawLine(g, dataWordz[a - 1], dataWordz[a], a - 1, dataWordz.length, yMin, yMax);
+        }
+
+        //-------------Need To Create and Draw Scales within BORDER---------------------
+        int numSubdivisions = 25;
+        for (int i = 0; i < numSubdivisions; i++) {
+            g.setColor(Color.black);
+            g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin),2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+        }
+        g.setColor(Color.black);
+        DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
+        int dateSubdivisions = 25;
+        for (int i = 0; i < dateSubdivisions; i++) {
+//            g.drawString(""+date.format((int)((double)i/dateSubdivisions*(xMaxWord-xMinWord)+xMinWord)), (int)((double)i/dateSubdivisions*(WIDTH-BORDER)+BORDER),(HEIGHT-BORDER)+5);
+        }
+        g.setColor(Color.black);
+        g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 10, 50);
+        
+        //This is where coVarience needs to be changed with a different type of comparrison.
+        g.drawString(Compare.covariance(indicatorPredicted, wordPredicted, predictionCorrelation) +"", BORDER + (WIDTH-BORDER)/2+10, 50);
+        
+        int x = (int)((double)(WIDTH - BORDER) * percentAnalyzed) + BORDER;
+        g.drawLine(x,0,x,HEIGHT - BORDER);
+
+        g.setColor(new Color(0,255,0,100));
+        g.fillRect(x,0,(int)(predictionCorrelation * ((double)WIDTH-BORDER)/dataIndicatorz.length),HEIGHT - BORDER);
+
+        g.setColor(new Color(255,0,0,100));
+        g.fillRect(BORDER,0,x-BORDER,HEIGHT-BORDER);
+        
+        x += (int)(predictionCorrelation * ((double)WIDTH-BORDER)/dataIndicatorz.length);
+        g.setColor(new Color(0,0,0,100));
+        g.fillRect(x, 0,WIDTH-x,HEIGHT-BORDER);
+
+        try {
+            File outputfile = new File("graphs\\"+fileOut + ".png");
+            outputfile.mkdirs();
+            ImageIO.write(render, "png", outputfile);
+        } catch (IOException e) {
+            System.err.print(e.getMessage());
+        }
+
+    }
+    
+    
     public static void createGraph(float[] dataWordz, String fileOut,float[] dates) {
         BufferedImage render = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics g = render.getGraphics();

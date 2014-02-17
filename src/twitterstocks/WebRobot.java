@@ -58,7 +58,6 @@ public class WebRobot {
 
     public void mineNYTimes(int day, int month, int year, int results) {
 
-
         DecimalFormat dayMonth = new DecimalFormat("00");
         DecimalFormat yearFormat = new DecimalFormat("0000");
         String date = "" + yearFormat.format(year) + dayMonth.format(month) + dayMonth.format(day);
@@ -83,7 +82,6 @@ public class WebRobot {
 
     public void mineWSJ(int day, int month, int year, int results) {
 
-
         DecimalFormat dayMonth = new DecimalFormat("00");
         DecimalFormat yearFormat = new DecimalFormat("0000");
         for (int result = 0; result < results; result++) {
@@ -106,27 +104,33 @@ public class WebRobot {
     }
 
     public void mineReddit() {
-        int year = 2005;
+        int year = 2009;
         int dateTab = 0;
         while (year < 2015) {
-            typeURL("http://web.archive.org/web/"+ year + "0601000000*/http://www.reddit.com/");
+            typeURL("http://web.archive.org/web/" + year + "0601000000*/http://www.reddit.com/");
             tabTo(28 + dateTab);
             enter();
             waitTillDone();
             String URL;
-            URL=getURL();
-            if (URL.equals("http://archive.org/about/faqs.php#The_Wayback_Machine"))
-            {
+            URL = getURL();
+            if (URL.indexOf("faqs")!=-1) {
                 year++;
                 dateTab = 0;
-            } 
-            else 
-            {
                 tabTo(1);
                 type(KeyEvent.VK_ESCAPE);
+                robot.delay(1000);
+            } else {
                 tabTo(1);
+                type(KeyEvent.VK_ESCAPE);
                 selectAll();
                 dateTab++;
+
+                try {
+                    //System.out.println(URL.substring(27,35));
+                    Database.add(new Article((getClipboard()), Integer.parseInt(URL.substring(27, 35)), "REDDIT"));
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
             try {
                 //System.out.println(URL.substring(27,35));
@@ -255,9 +259,9 @@ public class WebRobot {
 
     private void typeFast(int k) {
         robot.keyPress(k);
-        robot.delay(5);
+        robot.delay(7);
         robot.keyRelease(k);
-        robot.delay(5);
+        robot.delay(7);
     }
 
     private void enter() {
@@ -457,7 +461,6 @@ public class WebRobot {
 
             }
 
-
             i++;
         }
         robot.delay(500);
@@ -584,19 +587,23 @@ public class WebRobot {
             try {
                 data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
             } catch (UnsupportedFlavorException ex) {
-                Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+                try {
+                data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.getTextPlainUnicodeFlavor());
+            } catch (Exception e) {
+                System.out.println("Clipboard failed");
+                //Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+            }
             } catch (IOException ex) {
-                Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+                //Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
             }
             robot.delay(200);
 
         }
         return data;
     }
-            
-            
+
     public String getURL() {
-      
+
         type(KeyEvent.VK_F6);
         robot.keyPress(KeyEvent.VK_CONTROL);
         robot.delay(100);
