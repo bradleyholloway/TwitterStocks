@@ -1,0 +1,2 @@
+20050730
+ Internet Archive's Wayback Machine Loading...  http://www.reddit.com:80/ | 0:46:53 Jul 30, 2005  Got an HTTP 302 response at crawl time  Redirecting to...  http://www.reddit.com/?tbnl-session=6069%3A4FAED0247476459D6BF6F19D52A2AD40  Impatient?  The Wayback Machine is an initiative of the Internet Archive, a 501(c)(3) non-profit, building a digital library of Internet sites and other cultural artifacts in digital form. Other projects include Open Library & archive-it.org.  Your use of the Wayback Machine is subject to the Internet Archive's Terms of Use.
