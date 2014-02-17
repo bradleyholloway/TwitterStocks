@@ -104,16 +104,16 @@ public class WebRobot {
     }
 
     public void mineReddit() {
-        int year = 2009;
+        int year = 2010;
         int dateTab = 0;
-        while (year < 2015) {
+        while (year < 2011) {
             typeURL("http://web.archive.org/web/" + year + "0601000000*/http://www.reddit.com/");
             tabTo(28 + dateTab);
             enter();
-            waitTillDone();
+            waitTillDone(2, 1);
             String URL;
             URL = getURL();
-            if (URL.indexOf("faqs")!=-1) {
+            if (URL.indexOf("faqs") != -1) {
                 year++;
                 dateTab = 0;
                 tabTo(1);
@@ -132,29 +132,21 @@ public class WebRobot {
                     Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
-            try {
-                //System.out.println(URL.substring(27,35));
-         Database.add(new Article((getClipboard()),Integer.parseInt(URL.substring(27,35)), "REDDIT"));
-         } catch (FileNotFoundException ex) {
-         Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
-         }
         }
     }
-    
-    
+
     public void mineYahooFinance() {
         int year = 2004;
         int dateTab = 0;
         while (year < 2015) {
-            typeURL("http://web.archive.org/web/"+ year + "0215000000*/http://finance.yahoo.com/");
+            typeURL("http://web.archive.org/web/" + year + "0215000000*/http://finance.yahoo.com/");
             tabTo(28 + dateTab);
             enter();
             waitTillDone();
             String URL;
-            URL=getURL();
-            if (URL.indexOf("faqs")!=-1)
-            {
-                
+            URL = getURL();
+            if (URL.indexOf("faqs") != -1) {
+
                 year++;
                 dateTab = 0;
                 tabTo(1);
@@ -195,9 +187,7 @@ public class WebRobot {
                 tabTo(1);
                 type(KeyEvent.VK_ESCAPE);
                 robot.delay(1000);
-            } 
-            else 
-            {
+            } else {
                 tabTo(1);
                 type(KeyEvent.VK_ESCAPE);
                 selectAll();
@@ -248,8 +238,6 @@ public class WebRobot {
         }
     }
 
-
-
     private void type(int k) {
         robot.keyPress(k);
         robot.delay(30);
@@ -259,9 +247,9 @@ public class WebRobot {
 
     private void typeFast(int k) {
         robot.keyPress(k);
-        robot.delay(7);
+        robot.delay(10);
         robot.keyRelease(k);
-        robot.delay(7);
+        robot.delay(10);
     }
 
     private void enter() {
@@ -497,6 +485,7 @@ public class WebRobot {
     }
 
     private void selectAll() {
+        robot.delay(50);
         robot.keyPress(KeyEvent.VK_CONTROL);
         robot.delay(50);
         robot.keyPress(KeyEvent.VK_A);
@@ -588,11 +577,11 @@ public class WebRobot {
                 data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.stringFlavor);
             } catch (UnsupportedFlavorException ex) {
                 try {
-                data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.getTextPlainUnicodeFlavor());
-            } catch (Exception e) {
-                System.out.println("Clipboard failed");
-                //Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
-            }
+                    data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.getTextPlainUnicodeFlavor());
+                } catch (Exception e) {
+                    System.out.println("Clipboard failed");
+                    //Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+                }
             } catch (IOException ex) {
                 //Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
             }
