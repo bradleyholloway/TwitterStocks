@@ -521,7 +521,7 @@ class Database {
             if (count > 10) {
                 RevWords.add(words.get(index));
             } else {
-                System.out.println("Removed " + words.get(index) + " at index: " + index);
+                //System.out.println("Removed " + words.get(index) + " at index: " + index);
             }
         }//takes out all the NAN's
         File file = new File("gson\\REVWORDS.txt");
@@ -551,6 +551,7 @@ class Database {
                     fout.print(g.toJson(getIndicatorVector(indicatorData, dir)));
                 } finally {
                     fout.close();
+                    System.out.println("Wrote Indicator");
                 }
                 //System.out.println("Done.");
             } catch (Exception ex) {
@@ -563,6 +564,7 @@ class Database {
                     fout.print(g.toJson(getIndicatorDatesVector(indicatorData)));
                 } finally {
                     fout.close();
+                    System.out.println("Wrote IDATES");
                 }
                 //System.out.println("Done.");
             } catch (Exception ex) {
@@ -575,6 +577,7 @@ class Database {
                     fout.print(g.toJson(getTotalWordCountAlligned(indicatorData, dir)));
                 } finally {
                     fout.close();
+                    System.out.println("Wrote TWORDS");
                 }
                 //System.out.println("Done.");
             } catch (Exception ex) {
@@ -587,7 +590,7 @@ class Database {
                 //System.out.println(index + " Inserting: " + word);
                 //index++;
             }
-
+            System.out.println("Writing from HashMap.");
             for (String word : RevWords) {
                 //System.out.print("Writing " + word + " ...\t");
                 try {
