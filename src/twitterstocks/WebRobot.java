@@ -136,8 +136,9 @@ public class WebRobot {
     }
 
     public void mineYahooFinance() {
-        int year = 2004;
+        int year = 2005;
         int dateTab = 0;
+        robot.delay(10000);
         while (year < 2015) {
             typeURL("http://web.archive.org/web/" + year + "0215000000*/http://finance.yahoo.com/");
             tabTo(28 + dateTab);
