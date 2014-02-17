@@ -19,8 +19,9 @@ public class pointless {
      */
     public static void main(String[] args) {
         
-        
-        Database.writeGSON();
+        Database.loadIndicators();
+        Indicator i = Database.indicators.get(0);
+        Database.writeGSON(i);
         //HashMap<String, float[]> vectorMap = Database.getGSON();
         /*float[] test1 = new float[100];
         float[] test2 = new float[100];
