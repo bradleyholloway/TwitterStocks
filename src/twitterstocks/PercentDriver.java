@@ -20,12 +20,13 @@ public class PercentDriver {
         Database.loadIndicators();
         //int iterations = 20
         int prediction = 4;
+        int analysis = 8;
         for (Indicator i : Database.indicators) {
         //    VectorPairing.dotProductWeighting(i, iterations, false, true);
         //}
         //Indicator i = Database.indicators.get(1);
             
-            VectorPairing.dotProductWeightingLimitedSequence(i, false, false, .05, 1.0, .05, prediction);
+            VectorPairing.dotProductWeightingLimitedSequence(i, false, false, .05, 1.0, .05, prediction, analysis);
             //for (double percent = 0.05; percent <= 1.03; percent += .05) {
             //    System.out.println(percent);
             //    VectorPairing.dotProductWeightingLimitedRegression(i, false, false, percent);
