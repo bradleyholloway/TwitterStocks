@@ -1,1 +1,1 @@
-gdp by quarter,GDPdx,Constructiondx,CUR,TETA,Velocity of M1 Money Stock,New One Family Houses Sold United States,BOPBCA,
+gdp by quarter,GDPdx,Constructiondx,CUR,TETA,Velocity of M1 Money Stock,New One Family Houses Sold United States,BOPBCA,Total Consumer Credit Owned and Securitized Outstanding,Securitized Total Consumer Loans Outstanding,Securities in Bank Credit at All Commercial Banks,
