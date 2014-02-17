@@ -136,10 +136,46 @@ public class WebRobot {
          }
         }
     }
-
-    public void mineReddit(int day, int month, int year) {
-        mineReddit();
+    
+    
+    public void mineYahooFinance() {
+        int year = 2003;
+        int dateTab = 0;
+        while (year < 2015) {
+            typeURL("http://web.archive.org/web/"+ year + "0215000000*/http://finance.yahoo.com/");
+            tabTo(28 + dateTab);
+            enter();
+            waitTillDone();
+            String URL;
+            URL=getURL();
+            if (URL.indexOf("faqs")!=-1)
+            {
+                
+                year++;
+                dateTab = 0;
+                tabTo(1);
+                type(KeyEvent.VK_ESCAPE);
+                tabTo(1);
+                robot.delay(1000);
+            } 
+            else 
+            {
+                tabTo(1);
+                type(KeyEvent.VK_ESCAPE);
+                tabTo(1);
+                selectAll();
+                dateTab++;
+                        try {
+                        //System.out.println(URL.substring(27,35));
+                 Database.add(new Article((getClipboard()),Integer.parseInt(URL.substring(27,35)), "YahooFinance"));
+                 } catch (FileNotFoundException ex) {
+                 Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+                 }
+            } 
+        }
     }
+
+
 
     private void type(int k) {
         robot.keyPress(k);
