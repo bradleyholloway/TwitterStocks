@@ -36,8 +36,10 @@ public class ZVector {
         float[] normalData = new float[graphData.length];
         for(int i = 0; i < normalData.length; i++)
         {
+            //System.out.println((float) graphData[i][1]);
             normalData[i] = (float) graphData[i][1];
         }
+        construct(normalData);
     }
     private void construct(float[] normalData)
     {

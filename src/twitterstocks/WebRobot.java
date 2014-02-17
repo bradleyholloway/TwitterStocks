@@ -108,7 +108,7 @@ public class WebRobot {
         int dateTab = 0;
         while (year < 2011) {
             typeURL("http://web.archive.org/web/" + year + "0601000000*/http://www.reddit.com/");
-            tabTo(28 + dateTab);
+            tabTo(28 + 81+ dateTab);
             enter();
             waitTillDone(2, 1);
             String URL;
@@ -152,36 +152,33 @@ public class WebRobot {
                 tabTo(1);
                 type(KeyEvent.VK_ESCAPE);
                 robot.delay(1000);
-            } 
-            else 
-            {
+            } else {
                 tabTo(1);
                 type(KeyEvent.VK_ESCAPE);
                 selectAll();
                 dateTab++;
-                        try {
-                        //System.out.println(URL.substring(27,35));
-                 Database.add(new Article((getClipboard()),Integer.parseInt(URL.substring(27,35)), "YahooFinance"));
-                 } catch (FileNotFoundException ex) {
-                 Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
-                 }
-            } 
+                try {
+                    //System.out.println(URL.substring(27,35));
+                    Database.add(new Article((getClipboard()), Integer.parseInt(URL.substring(27, 35)), "YahooFinance"));
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
-    
+
     public void mineCnnMoney() {
         int year = 2003;
         int dateTab = 0;
         while (year < 2015) {
-            typeURL("http://web.archive.org/web/"+ year + "0801000000*/http://money.cnn.com/");
+            typeURL("http://web.archive.org/web/" + year + "0801000000*/http://money.cnn.com/");
             tabTo(28 + dateTab);
             enter();
             waitTillDone();
             String URL;
-            URL=getURL();
-            if (URL.indexOf("faqs")!=-1)
-            {
-                
+            URL = getURL();
+            if (URL.indexOf("faqs") != -1) {
+
                 year++;
                 dateTab = 0;
                 tabTo(1);
@@ -192,17 +189,15 @@ public class WebRobot {
                 type(KeyEvent.VK_ESCAPE);
                 selectAll();
                 dateTab++;
-                        try {
-                        //System.out.println(URL.substring(27,35));
-                 Database.add(new Article((getClipboard()),Integer.parseInt(URL.substring(27,35)), "CnnMoney"));
-                 } catch (FileNotFoundException ex) {
-                 Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
-                 }
-            } 
+                try {
+                    //System.out.println(URL.substring(27,35));
+                    Database.add(new Article((getClipboard()), Integer.parseInt(URL.substring(27, 35)), "CnnMoney"));
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
-    
-    
      public void mineFoxNews() {
         int year = 2011;
         int dateTab = 0;
@@ -212,29 +207,26 @@ public class WebRobot {
             enter();
             waitTillDone();
             String URL;
-            URL=getURL();
-            if (URL.indexOf("faqs")!=-1)
-            {
-                
+            URL = getURL();
+            if (URL.indexOf("faqs") != -1) {
+
                 year++;
                 dateTab = 0;
                 tabTo(1);
                 type(KeyEvent.VK_ESCAPE);
                 robot.delay(1000);
-            } 
-            else 
-            {
+            } else {
                 tabTo(1);
                 type(KeyEvent.VK_ESCAPE);
                 selectAll();
                 dateTab++;
-                        try {
-                        //System.out.println(URL.substring(27,35));
-                 Database.add(new Article((getClipboard()),Integer.parseInt(URL.substring(27,35)), "FoxNews"));
-                 } catch (FileNotFoundException ex) {
-                 Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
-                 }
-            } 
+                try {
+                    //System.out.println(URL.substring(27,35));
+                    Database.add(new Article((getClipboard()), Integer.parseInt(URL.substring(27, 35)), "FoxNews"));
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
         }
     }
 
@@ -579,7 +571,13 @@ public class WebRobot {
                 try {
                     data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.getTextPlainUnicodeFlavor());
                 } catch (Exception e) {
-                    System.out.println("Clipboard failed");
+                    try {
+                        DataFlavor[] df = {DataFlavor.stringFlavor, DataFlavor.plainTextFlavor, DataFlavor.getTextPlainUnicodeFlavor()};
+                        data = (String) Toolkit.getDefaultToolkit().getSystemClipboard().getData(DataFlavor.selectBestTextFlavor(df));
+                    } catch (Exception ent) {
+                        System.out.println("Clipboard failed");
+                        //Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                     //Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
                 }
             } catch (IOException ex) {
