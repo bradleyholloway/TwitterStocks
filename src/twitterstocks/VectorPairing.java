@@ -17,8 +17,8 @@ public class VectorPairing {
         System.out.println("\nBeginning Vector Analysis on " + indicator.getName() + ".");
         WordWeightTable wt = new WordWeightTable();
         //Example of How to lod in Data using the GSON loaders (REDO WHEN INDICATOR CHANGES)
-        HashMap<String, float[]> ZVectors = (percentBased) ? Database.getGSONPerMap(indicator.getName()) : Database.getGSONMap(indicator.getName());
-        float[] indicatorPerData = Database.getGSONIndicator(indicator.getName());
+        HashMap<String, ZVector> ZVectors = (percentBased) ? Database.getGSONPerMap(indicator.getName()) : Database.getGSONMap(indicator.getName());
+        ZVector indicatorPerData = Database.getGSONIndicator(indicator.getName());
         //double[][] indicatorData = Database.getIndicatorGraph(indicator);
         //float[] indicatorPerData = Database.getIndicatorVector(indicatorData);
 

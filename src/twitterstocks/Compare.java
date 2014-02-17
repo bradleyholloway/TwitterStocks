@@ -448,7 +448,7 @@ class Compare {
         return tempData;
     }
 
-    private static double mean(double[][] data) {
+    public static double mean(double[][] data) {
         double sum = 0, count = 0;
         for (double[] point : data) {
             sum += point[1];
@@ -457,7 +457,7 @@ class Compare {
         return sum / count;
     }
 
-    private static double mean(float[] data) {
+    public static double mean(float[] data) {
         double sum = 0, count = 0;
         for (int i = 0; i < data.length; i++) {
             sum += data[i];
@@ -520,7 +520,7 @@ class Compare {
         return Math.sqrt(var);
     }
 
-    private static double standardDev(float[] data) {
+    public static double standardDev(float[] data) {
         double xMean = mean(data);
         double var = 0;
         for (float point : data) {
