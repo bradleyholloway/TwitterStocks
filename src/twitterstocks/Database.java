@@ -345,12 +345,16 @@ class Database {
     }
 
     public static HashMap<String, ZVector> getGSONPerMap(String indicatorName) {
+        if (RevWords.size() == 0) {
+            loadRevWords();
+        }
+        System.out.print("Loading GSON Data...\t");
         Gson g = new Gson();
         HashMap<String, ZVector> data = new HashMap<String, ZVector>();
         File file;
         Scanner fileIn;
         try {
-            file = new File("gsonper\\" + indicatorName + "\\IDATES.txt");
+            file = new File("gson\\" + indicatorName + "\\IDATES.txt");
             fileIn = new Scanner(file);
             data.put("IDATES", g.fromJson(fileIn.nextLine(), ZVector.class));
             //System.out.println("Success "+word);
@@ -358,7 +362,7 @@ class Database {
             //System.out.println(ex.getMessage());
         }
         try {
-            file = new File("gsonper\\" + indicatorName + "\\TWORDS.txt");
+            file = new File("gson\\" + indicatorName + "\\TWORDS.txt");
             fileIn = new Scanner(file);
             data.put("TWORDS", g.fromJson(fileIn.nextLine(), ZVector.class));
             //System.out.println("Success "+word);
@@ -367,14 +371,16 @@ class Database {
         }
         for (String word : RevWords) {
             try {
-                file = new File("gsonper\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
+                file = new File("gson\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
                 fileIn = new Scanner(file);
-                data.put(word, g.fromJson(fileIn.nextLine(), ZVector.class).divideBy(data.get("TWORDS")));
+                ZVector value = g.fromJson(fileIn.nextLine(), ZVector.class).divideBy(data.get("TWORDS"));
+                data.put(word, value);
                 //System.out.println("Success "+word);
             } catch (Exception ex) {
                 //System.out.println(ex.getMessage());
             }
         }
+        System.out.println("Done.");
         return data;
     }
 

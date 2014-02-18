@@ -78,12 +78,13 @@ public class VectorPairing {
             dotProductWeightingLimitedRegression(indicator, percentBased, iterationGraphing, percent, predictionCorrelation);
         }
     }
-    public static void dotProductWeightingLimitedSequence(Indicator indicator, boolean percentBased, boolean iterationGraphing, double percentStart, double percentEnd, double increment, int predictionCorrelation, int analysis)
+    public static void dotProductWeightingLimitedSequence(Indicator indicator, boolean percentBased, boolean iterationGraphing, int iterations, int increment, int prediction, int analysis)
     {
         System.out.println("\nBeginning Vector Analysis on " + indicator.getName() + ".");
-        for(double percent = percentStart; percent <= percentEnd; percent = round(percent+increment, 4))
+        ZVector gsonIndicator = Database.getGSONIndicator(indicator.getName());
+        for(int irrelevent = 0; irrelevent + prediction + analysis < gsonIndicator.getZData().length; irrelevent+=increment)
         {
-            dotProductWeightingLimitedRegression(indicator, percentBased, iterationGraphing, percent, predictionCorrelation, analysis);
+            dotProductWeightingLimitedRegression(indicator, percentBased, iterationGraphing, iterations, irrelevent, prediction, analysis);
         }
     }
 
@@ -156,6 +157,76 @@ public class VectorPairing {
         System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations and " + (round(percentAnalyzed * 100, 2)) + "%.");
         System.out.println(wt);
     }
+    public static void dotProductWeightingLimitedRegression(Indicator indicator, boolean percentBased, boolean iterationGraphing, int iterations, int irrelevent, int prediction, int analysis) {
+        WordWeightTable wt = new WordWeightTable();
+        HashMap<String, ZVector> ZVectors = (percentBased) ? Database.getGSONPerMap(indicator.getName()) : Database.getGSONMap(indicator.getName());
+        ZVector indicatorData = Database.getGSONIndicator(indicator.getName());
+        
+        float[] tempData;
+        float[] tempGoal;
+        
+        final float[] goal = copy(indicatorData.getZData());
+        final float[] finalGoal = getLimited(copy(goal), irrelevent, analysis);
+        final float[] dates = ZVectors.get("IDATES").getScaledData();
+        
+        float[] total = new float[goal.length];
+
+        String bestWord = "";
+        double tempDistance;
+
+        for (int iteration = 0; iteration < iterations; iteration++) {
+            double maxDistance = Double.MIN_VALUE;
+            tempGoal = Compare.getDifference(finalGoal, getLimited(total,irrelevent, analysis));
+            //System.out.println("Searching for closest vector... Iteration: " + iteration);
+            for (String word : Database.RevWords) {
+                if (ZVectors.get(word) == null) {
+                } else {
+                    tempData = getLimited(copy(ZVectors.get(word).getZData()), irrelevent, analysis);
+                    if (ZVectors.get(word) != null) {
+                        tempDistance = Math.abs(Compare.dotProduct(tempGoal, tempData));
+                        if (tempDistance > maxDistance) {
+                            maxDistance = tempDistance;
+                            bestWord = word;
+                            //System.out.println(word+maxDistance);
+                            //System.out.println("New Best: " + bestWord);
+                        }
+                    }
+                }
+
+            } //System.out.println("Done.");
+            
+            tempData = getLimited(copy(ZVectors.get(bestWord).getZData()), irrelevent, analysis);
+            if (!containsNANInfinity(Compare.correctScale(tempGoal, tempData))) {
+
+                //System.out.println(bestWord + ", Weighted at: " + Compare.correctScale(tempGoal, tempData));
+                if (!containsNANInfinity(tempData)) {
+                    wt.add(bestWord, Compare.correctScale(tempGoal, tempData));
+                    if (iterationGraphing) {
+                        Grapher.createGraph(total, goal, "percents\\iterations\\total\\" + indicator.getName() + "\\iteration" + iteration,dates);
+                        Grapher.createGraph(Compare.multiply(tempData, Compare.correctScale(tempGoal, tempData)), tempGoal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iteration" + iteration,dates);
+                    }
+                    total = Compare.add(total, Compare.multiply(ZVectors.get(bestWord).getZData(), Compare.correctScale(tempGoal, tempData)));
+                    if (iterationGraphing) {
+                        Grapher.createGraph(goal, "percents\\iterations\\temporary\\" + indicator.getName() + "\\iterationR" + iteration,dates);
+                    }
+                    //Grapher.createGraph(total, finalGoal, "Vector" + bestWord + "CTG" + iteration);
+                }
+            }
+        }
+        Grapher.createGraph(total, goal, "percents\\" + indicator.getName() + "\\" + irrelevent+"_"+analysis+"_"+prediction, irrelevent,analysis,prediction,dates);
+        System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations and analyzing " + analysis + " disregarding "+irrelevent);
+        System.out.println(wt);
+    }
+    public static float[] getLimited(float[] original, int irrelevant, int analyze)
+    {
+        float[] newData = new float[analyze];
+        for(int i = irrelevant; i < irrelevant + analyze; i++)
+        {
+            newData[i - irrelevant] = original[Math.min(i, original.length-1)];
+        }
+        return newData;
+    }
+    /*
     public static void dotProductWeightingLimitedRegression(Indicator indicator, boolean percentBased, boolean iterationGraphing, double percentAnalyzed, int predictionCorrelation, int analysis) {
         int iterations = 0;
         
@@ -225,7 +296,7 @@ public class VectorPairing {
         System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations and " + (round(percentAnalyzed * 100, 2)) + "%.");
         System.out.println(wt);
     }
-
+*/
     private static boolean containsNANInfinity(float[] tempData) {
         for (float f : tempData) {
             if (("" + f).equals("" + Float.NaN) || ("" + f).equals(Float.NEGATIVE_INFINITY) || (f + "").equals(Float.POSITIVE_INFINITY)) {

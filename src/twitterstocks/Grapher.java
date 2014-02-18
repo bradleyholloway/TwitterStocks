@@ -82,9 +82,9 @@ public class Grapher {
             int numSubdivisions = 25;
             for (int i = 0; i < numSubdivisions; i++) {
                 g.setColor(Color.blue);
-                g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMaxWord - yMinWord) + yMinWord),2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+                g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMaxWord - yMinWord) + yMinWord), 2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
                 g.setColor(Color.red);
-                g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMaxIndicator - yMinIndicator) + yMinIndicator),2), BORDER / 2 + 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+                g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMaxIndicator - yMinIndicator) + yMinIndicator), 2), BORDER / 2 + 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
             }
             g.setColor(Color.black);
             DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
@@ -140,7 +140,7 @@ public class Grapher {
             int numSubdivisions = 25;
             for (int i = 0; i < numSubdivisions; i++) {
                 g.setColor(Color.black);
-                g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin),5), BORDER / 2 - 15, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+                g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin), 5), BORDER / 2 - 15, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
             }
             g.setColor(Color.black);
             DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
@@ -154,7 +154,7 @@ public class Grapher {
         g.drawString(Compare.covariance(dataIndicator, dataWord) + "", BORDER + 50, 50);
 
         try {
-            File outputfile = new File("graphs\\"+fileOut + ".png");
+            File outputfile = new File("graphs\\" + fileOut + ".png");
             ImageIO.write(render, "png", outputfile);
         } catch (IOException e) {
             System.err.print(e.getMessage());
@@ -213,7 +213,7 @@ public class Grapher {
         int numSubdivisions = 25;
         for (int i = 0; i < numSubdivisions; i++) {
             g.setColor(Color.black);
-            g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin),2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+            g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin), 2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
         }
         g.setColor(Color.black);
         DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
@@ -225,7 +225,7 @@ public class Grapher {
         g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 50, 50);
 
         try {
-            File outputfile = new File("graphs\\"+fileOut + ".png");
+            File outputfile = new File("graphs\\" + fileOut + ".png");
             outputfile.mkdirs();
             ImageIO.write(render, "png", outputfile);
         } catch (IOException e) {
@@ -233,6 +233,7 @@ public class Grapher {
         }
 
     }
+
     public static void createGraph(float[] dataWordz, float[] dataIndicatorz, String fileOut, double percentAnalyzed, int predictionCorrelation, float[] dates) {
         BufferedImage render = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics g = render.getGraphics();
@@ -245,11 +246,9 @@ public class Grapher {
         g.fillRect(BORDER + 1, 1, WIDTH - BORDER - 2, HEIGHT - BORDER - 2);
 
         //Get basic scale.
-        float[] indicatorPredicted = getPercentPlus(dataIndicatorz, percentAnalyzed, predictionCorrelation);
-        float[] wordPredicted = getPercentPlus(dataWordz, percentAnalyzed, predictionCorrelation);
         double yMinWord, yMaxWord;
         yMinWord = yMaxWord = dataWordz[0];
-        for (int a = 1; a < Math.min(wordPredicted.length, dataWordz.length); a++) {
+        for (int a = 1; a < Math.min(dataWordz.length, dataWordz.length); a++) {
             if (dataWordz[a] < yMinWord) {
                 yMinWord = Math.floor(dataWordz[a]);
             } else if (dataWordz[a] > yMaxWord) {
@@ -258,7 +257,7 @@ public class Grapher {
         }
         double yMinIndicator, yMaxIndicator;
         yMinIndicator = yMaxIndicator = dataIndicatorz[0];
-        for (int a = 1; a < Math.min(indicatorPredicted.length,dataIndicatorz.length); a++) {
+        for (int a = 1; a < Math.min(dataIndicatorz.length, dataIndicatorz.length); a++) {
             if (dataIndicatorz[a] < yMinIndicator) {
                 yMinIndicator = Math.floor(dataIndicatorz[a]);
             } else if (dataIndicatorz[a] > yMaxIndicator) {
@@ -268,11 +267,15 @@ public class Grapher {
         double yMin = Math.min(yMinWord, yMinIndicator);
         double yMax = Math.max(yMaxWord, yMaxIndicator);
         //Begin Drawing
-        System.out.println(yMin+" "+yMax);
+        System.out.println(yMin + " " + yMax);
 
 
         g.setColor(Color.red);//Draw Indicator Line
 
+        g.setColor(Color.darkGray);
+        for (int i = (int) Math.ceil(yMin); i <= (int) Math.floor(yMax); i++) {
+            g.drawLine(BORDER, (int) ((double) (yMax - i) / (yMax - yMin) * (HEIGHT - BORDER)), WIDTH, (int) ((double) (yMax - i) / (yMax - yMin) * (HEIGHT - BORDER)));
+        }
 
         for (int a = 1; a < dataIndicatorz.length; a++) {
             drawLine(g, dataIndicatorz[a - 1], dataIndicatorz[a], a - 1, dataIndicatorz.length, yMin, yMax);
@@ -287,7 +290,7 @@ public class Grapher {
         int numSubdivisions = 25;
         for (int i = 0; i < numSubdivisions; i++) {
             g.setColor(Color.black);
-            g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin),2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+            g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin), 2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
         }
         g.setColor(Color.black);
         DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
@@ -297,25 +300,25 @@ public class Grapher {
         }
         g.setColor(Color.black);
         g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 10, 50);
-        
+
         //This is where coVarience needs to be changed with a different type of comparrison.
-        g.drawString(Compare.covariance(indicatorPredicted, wordPredicted, predictionCorrelation) +"", BORDER + (WIDTH-BORDER)/2+10, 50);
-        
-        int x = (int)((double)(WIDTH - BORDER) * percentAnalyzed) + BORDER;
-        g.drawLine(x,0,x,HEIGHT - BORDER);
+        //g.drawString(Compare.covariance(indicatorPredicted, wordPredicted, predictionCorrelation) +"", BORDER + (WIDTH-BORDER)/2+10, 50);
 
-        g.setColor(new Color(0,255,0,100));
-        g.fillRect(x,0,(int)(predictionCorrelation * ((double)WIDTH-BORDER)/dataIndicatorz.length),HEIGHT - BORDER);
+        int x = (int) ((double) (WIDTH - BORDER) * percentAnalyzed) + BORDER;
+        g.drawLine(x, 0, x, HEIGHT - BORDER);
 
-        g.setColor(new Color(255,0,0,100));
-        g.fillRect(BORDER,0,x-BORDER,HEIGHT-BORDER);
-        
-        x += (int)(predictionCorrelation * ((double)WIDTH-BORDER)/dataIndicatorz.length);
-        g.setColor(new Color(0,0,0,100));
-        g.fillRect(x, 0,WIDTH-x,HEIGHT-BORDER);
+        g.setColor(new Color(0, 255, 0, 100));
+        g.fillRect(x, 0, (int) (predictionCorrelation * ((double) WIDTH - BORDER) / dataIndicatorz.length), HEIGHT - BORDER);
+
+        g.setColor(new Color(255, 0, 0, 100));
+        g.fillRect(BORDER, 0, x - BORDER, HEIGHT - BORDER);
+
+        x += (int) (predictionCorrelation * ((double) WIDTH - BORDER) / dataIndicatorz.length);
+        g.setColor(new Color(0, 0, 0, 100));
+        g.fillRect(x, 0, WIDTH - x, HEIGHT - BORDER);
 
         try {
-            File outputfile = new File("graphs\\"+fileOut + ".png");
+            File outputfile = new File("graphs\\" + fileOut + ".png");
             outputfile.mkdirs();
             ImageIO.write(render, "png", outputfile);
         } catch (IOException e) {
@@ -323,8 +326,8 @@ public class Grapher {
         }
 
     }
-    
-    public static void createGraph(float[] dataWordz, float[] dataIndicatorz, String fileOut, double percentAnalyzed, int predictionCorrelation, int pastData, float[] dates) {
+
+    public static void createGraph(float[] dataWordz, float[] dataIndicatorz, String fileOut, int irrelevant, int analyze, int predict, float[] dates) {
         BufferedImage render = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics g = render.getGraphics();
         g.setColor(Color.white);
@@ -336,8 +339,8 @@ public class Grapher {
         g.fillRect(BORDER + 1, 1, WIDTH - BORDER - 2, HEIGHT - BORDER - 2);
 
         //Get basic scale.
-        float[] indicatorPredicted = getPercentPlus(dataIndicatorz, percentAnalyzed, predictionCorrelation);
-        float[] wordPredicted = getPercentPlus(dataWordz, percentAnalyzed, predictionCorrelation);
+        float[] indicatorPredicted = getLimitedPrediction(dataIndicatorz, irrelevant, analyze, predict);
+        float[] wordPredicted = getLimitedPrediction(dataWordz, irrelevant, analyze, predict);
         double yMinWord, yMaxWord;
         yMinWord = yMaxWord = dataWordz[0];
         for (int a = 1; a < Math.min(wordPredicted.length, dataWordz.length); a++) {
@@ -349,18 +352,22 @@ public class Grapher {
         }
         double yMinIndicator, yMaxIndicator;
         yMinIndicator = yMaxIndicator = dataIndicatorz[0];
-        for (int a = 1; a < Math.min(indicatorPredicted.length,dataIndicatorz.length); a++) {
+        for (int a = 1; a < Math.min(indicatorPredicted.length, dataIndicatorz.length); a++) {
             if (dataIndicatorz[a] < yMinIndicator) {
                 yMinIndicator = Math.floor(dataIndicatorz[a]);
             } else if (dataIndicatorz[a] > yMaxIndicator) {
                 yMaxIndicator = Math.ceil(dataIndicatorz[a]);
             }
         }
-        double yMin = Math.min(yMinWord, yMinIndicator);
-        double yMax = Math.max(yMaxWord, yMaxIndicator);
+        double yMin = Math.min(yMinWord - 2, yMinIndicator - 2);
+        double yMax = Math.max(yMaxWord + 2, yMaxIndicator + 2);
         //Begin Drawing
-        System.out.println(yMin+" "+yMax);
-
+        System.out.println(yMin + " " + yMax);
+        
+        g.setColor(Color.darkGray);
+        for (int i = (int) Math.ceil(yMin); i <= (int) Math.floor(yMax); i++) {
+            g.drawLine(BORDER, (int) ((double) (yMax - i) / (yMax - yMin) * (HEIGHT - BORDER)), WIDTH, (int) ((double) (yMax - i) / (yMax - yMin) * (HEIGHT - BORDER)));
+        }
 
         g.setColor(Color.red);//Draw Indicator Line
 
@@ -378,7 +385,7 @@ public class Grapher {
         int numSubdivisions = 25;
         for (int i = 0; i < numSubdivisions; i++) {
             g.setColor(Color.black);
-            g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin),2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+            g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin), 2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
         }
         g.setColor(Color.black);
         DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
@@ -388,25 +395,22 @@ public class Grapher {
         }
         g.setColor(Color.black);
         g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 10, 50);
-        
+
         //This is where coVarience needs to be changed with a different type of comparrison.
-        g.drawString(Compare.covariance(indicatorPredicted, wordPredicted, predictionCorrelation) +"", BORDER + (WIDTH-BORDER)/2+10, 50);
-        
-        int x = (int)((double)(WIDTH - BORDER) * percentAnalyzed) + BORDER;
-        g.drawLine(x,0,x,HEIGHT - BORDER);
+        double covariencePredicted = Compare.covariance(getLimitedPrediction(dataIndicatorz, irrelevant, 0, predict + analyze), getLimitedPrediction(dataWordz, irrelevant, 0, predict + analyze), predict);
+        g.drawString(covariencePredicted + "", BORDER + (WIDTH - BORDER) / 2 + 10, 50);
 
-        g.setColor(new Color(0,255,0,100));
-        g.fillRect(x,0,(int)(predictionCorrelation * ((double)WIDTH-BORDER)/dataIndicatorz.length),HEIGHT - BORDER);
+        int x = (int) ((double) (WIDTH - BORDER) * (irrelevant + analyze) / (dataIndicatorz.length)) + BORDER;
+        g.drawLine(x, 0, x, HEIGHT - BORDER);
 
-        g.setColor(new Color(255,0,0,100));
-        g.fillRect(BORDER,0,x-BORDER,HEIGHT-BORDER);
-        
-        x += (int)(predictionCorrelation * ((double)WIDTH-BORDER)/dataIndicatorz.length);
-        g.setColor(new Color(0,0,0,100));
-        g.fillRect(x, 0,WIDTH-x,HEIGHT-BORDER);
+        g.setColor(new Color(0, 255, 0, 100));
+        g.fillRect(x, 0, (int) ((double) (predict) / (dataIndicatorz.length) * ((double) WIDTH - BORDER)), HEIGHT - BORDER);
+
+        g.setColor(new Color(255, 0, 0, 100));
+        g.fillRect(x - (int) ((double) (analyze) / (dataIndicatorz.length) * ((double) WIDTH - BORDER)), 0, (int) ((double) (analyze) / (dataIndicatorz.length) * (WIDTH - BORDER)), HEIGHT - BORDER);
 
         try {
-            File outputfile = new File("graphs\\"+fileOut + ".png");
+            File outputfile = new File("graphs\\" + fileOut + ".png");
             outputfile.mkdirs();
             ImageIO.write(render, "png", outputfile);
         } catch (IOException e) {
@@ -414,9 +418,8 @@ public class Grapher {
         }
 
     }
-    
-    
-    public static void createGraph(float[] dataWordz, String fileOut,float[] dates) {
+
+    public static void createGraph(float[] dataWordz, String fileOut, float[] dates) {
         BufferedImage render = new BufferedImage(WIDTH, HEIGHT, BufferedImage.TYPE_INT_RGB);
         Graphics g = render.getGraphics();
         g.setColor(Color.white);
@@ -468,7 +471,7 @@ public class Grapher {
         int numSubdivisions = 25;
         for (int i = 0; i < numSubdivisions; i++) {
             g.setColor(Color.black);
-            g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin),2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+            g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin), 2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
         }
         g.setColor(Color.black);
         DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
@@ -480,7 +483,7 @@ public class Grapher {
         g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 50, 50);
 
         try {
-            File outputfile = new File("graphs\\"+fileOut + ".png");
+            File outputfile = new File("graphs\\" + fileOut + ".png");
             ImageIO.write(render, "png", outputfile);
         } catch (IOException e) {
             System.err.print(e.getMessage());
@@ -493,7 +496,7 @@ public class Grapher {
         int[] tempPointB = convertPoint(pointB, xNum + 1, xMax, yMin, yMax);
         g.drawLine(tempPointA[0], tempPointA[1], tempPointB[0], tempPointB[1]);
     }
-    
+
     private static void drawLine(Graphics g, float pointA, float pointB, double xNum, double xMax, double yMin, double yMax) {
         int[] tempPointA = convertPoint(pointA, xNum, xMax, yMin, yMax);
         int[] tempPointB = convertPoint(pointB, xNum + 1, xMax, yMin, yMax);
@@ -512,7 +515,7 @@ public class Grapher {
         ret[1] = (int) ((double) (yMax - point[1]) / (yMax - yMin + 1) * (HEIGHT - BORDER));
         return ret;
     }
-    
+
     private static int[] convertPoint(float point, double xMin, double xMax, double yMin, double yMax) {
         int[] ret = new int[2];
         ret[0] = (int) ((double) (xMin / xMax) * (WIDTH - BORDER) + BORDER);
@@ -526,18 +529,16 @@ public class Grapher {
         ret[1] = (int) ((yMax - point[1]) / (yMax - yMin + 1) * (HEIGHT - BORDER));
         return ret;
     }
-    
-    private static double round(double number, int digits)
-    {
-        long temp = Math.round(number * Math.pow(10,digits));
-        return (double) temp / (Math.pow(10,digits));
+
+    private static double round(double number, int digits) {
+        long temp = Math.round(number * Math.pow(10, digits));
+        return (double) temp / (Math.pow(10, digits));
     }
-    
-    private static float[] getPercentPlus(float[] data, double percent, int adding) {
-        //percent = Math.sqrt(percent);
-        float[] newData = new float[((int) (Math.ceil((double) data.length * percent)))+adding];
-        for (int i = 0; i < newData.length; i++) {
-            newData[i] = data[(i < data.length)?i:data.length-1];
+
+    private static float[] getLimitedPrediction(float[] original, int irrelevant, int analyze, int prediction) {
+        float[] newData = new float[prediction];
+        for (int i = irrelevant + analyze; i < irrelevant + analyze + prediction; i++) {
+            newData[i - irrelevant - analyze] = original[Math.min(original.length - 1, i)];
         }
         return newData;
     }

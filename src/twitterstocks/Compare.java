@@ -100,6 +100,7 @@ class Compare {
         sumResid = 1 / (sumResid + 1);
         return sumResid * coV;
     }
+    
 
     private static float[] getLastPartial(float[] data, int num) {
         float[] returns = new float[num];

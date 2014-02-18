@@ -18,15 +18,19 @@ public class PercentDriver {
     public static void main(String[] args) {
 
         Database.loadIndicators();
-        //int iterations = 20
-        int prediction = 4;
-        int analysis = 8;
+        
+        int iterations = 5; // Number of iterations to corrilate
+        int prediction = 4; //Number of datapoints to predict correlation
+        int analysis = 16; //number of data points to coorilate to
+        int increment = 8; //Increment in irrelevant data points
+        boolean percentBased = true; //Toggles word count vs percent usage
+        
         for (Indicator i : Database.indicators) {
         //    VectorPairing.dotProductWeighting(i, iterations, false, true);
         //}
         //Indicator i = Database.indicators.get(1);
             
-            VectorPairing.dotProductWeightingLimitedSequence(i, false, false, .05, 1.0, .05, prediction, analysis);
+            VectorPairing.dotProductWeightingLimitedSequence(i, percentBased, false, iterations, increment, prediction, analysis);
             //for (double percent = 0.05; percent <= 1.03; percent += .05) {
             //    System.out.println(percent);
             //    VectorPairing.dotProductWeightingLimitedRegression(i, false, false, percent);
