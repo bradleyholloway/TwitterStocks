@@ -394,7 +394,7 @@ public class Grapher {
 //            g.drawString(""+date.format((int)((double)i/dateSubdivisions*(xMaxWord-xMinWord)+xMinWord)), (int)((double)i/dateSubdivisions*(WIDTH-BORDER)+BORDER),(HEIGHT-BORDER)+5);
         }
         g.setColor(Color.black);
-        g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 10, 50);
+        //g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 10, 50);
 
         //This is where coVarience needs to be changed with a different type of comparrison.
         double covariencePredicted = Compare.covariance(getLimitedPrediction(dataIndicatorz, irrelevant, 0, predict + analyze), getLimitedPrediction(dataWordz, irrelevant, 0, predict + analyze), predict);

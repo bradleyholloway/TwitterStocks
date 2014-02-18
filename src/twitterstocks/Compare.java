@@ -92,13 +92,13 @@ class Compare {
         float[] zIndicator = getLastPartial(convertToZ(indicator), onlyAnalyze);
         float[] zWord = getLastPartial(convertToZ(word), onlyAnalyze);
         double coV = covariance(zIndicator, zWord);
-        double sumResid = 0.0;
-        for (int a = 0; a < zIndicator.length; a++) {
-            sumResid += Math.abs(zIndicator[a] - zWord[a]);
-        }
-        sumResid = sumResid / onlyAnalyze;
-        sumResid = 1 / (sumResid + 1);
-        return sumResid * coV;
+        //double sumResid = 0.0;
+        //for (int a = 0; a < zIndicator.length; a++) {
+        //    sumResid += Math.abs(zIndicator[a] - zWord[a]);
+        //}
+        //sumResid = sumResid / onlyAnalyze;
+        //sumResid = 1 / (sumResid + 1);
+        return coV;//sumResid * coV;
     }
     
 
