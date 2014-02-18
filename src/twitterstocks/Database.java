@@ -291,6 +291,20 @@ class Database {
             System.out.println("RevWords Failed: " + ex.getMessage());
         }
     }
+    public static void loadRevWords(String dir) {
+        System.out.print("Loading RevWords...\t");
+        Gson g = new Gson();
+        try {
+            File f = new File("gson\\"+dir+"\\REVWORDS.txt");
+            Scanner fileIn = new Scanner(f);
+            Type alType = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            RevWords = g.fromJson(fileIn.nextLine(), alType);
+            System.out.println("Done.");
+        } catch (FileNotFoundException ex) {
+            System.out.println("RevWords Failed: " + ex.getMessage());
+        }
+    }
 
     public static HashMap<String, ZVector> getGSONMap(String indicatorName) {
         if (RevWords.size() == 0) {
@@ -314,6 +328,39 @@ class Database {
         for (String word : RevWords) {
             try {
                 file = new File("gson\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
+                fileIn = new Scanner(file);
+                data.put(word, g.fromJson(fileIn.nextLine(), ZVector.class));
+
+                //System.out.println("Success "+word);
+            } catch (Exception ex) {
+                //System.out.println(ex.getMessage());
+            }
+        }
+        System.out.println("Done.");
+        return data;
+    }
+    public static HashMap<String, ZVector> getGSONMap(String indicatorName, String dir) {
+        if (RevWords.size() == 0) {
+            loadRevWords(dir);
+        }
+        System.out.print("Loading GSON Data...\t");
+        Gson g = new Gson();
+        HashMap<String, ZVector> data = new HashMap<String, ZVector>();
+        File file;
+        Scanner fileIn;
+        try {
+            file = new File("gson\\"+dir+"\\" + indicatorName + "\\IDATES.txt");
+            fileIn = new Scanner(file);
+            data.put("IDATES", g.fromJson(fileIn.nextLine(), ZVector.class));
+
+            //System.out.println("Success "+word);
+        } catch (Exception ex) {
+            System.out.print("dates failed,\t");
+        }
+
+        for (String word : RevWords) {
+            try {
+                file = new File("gson\\"+dir+"\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
                 fileIn = new Scanner(file);
                 data.put(word, g.fromJson(fileIn.nextLine(), ZVector.class));
 
@@ -372,6 +419,45 @@ class Database {
         for (String word : RevWords) {
             try {
                 file = new File("gson\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
+                fileIn = new Scanner(file);
+                ZVector value = g.fromJson(fileIn.nextLine(), ZVector.class).divideBy(data.get("TWORDS"));
+                data.put(word, value);
+                //System.out.println("Success "+word);
+            } catch (Exception ex) {
+                //System.out.println(ex.getMessage());
+            }
+        }
+        System.out.println("Done.");
+        return data;
+    }
+    public static HashMap<String, ZVector> getGSONPerMap(String indicatorName, String dir) {
+        if (RevWords.size() == 0) {
+            loadRevWords(dir);
+        }
+        System.out.print("Loading GSON Data...\t");
+        Gson g = new Gson();
+        HashMap<String, ZVector> data = new HashMap<String, ZVector>();
+        File file;
+        Scanner fileIn;
+        try {
+            file = new File("gson\\"+dir+"\\" + indicatorName + "\\IDATES.txt");
+            fileIn = new Scanner(file);
+            data.put("IDATES", g.fromJson(fileIn.nextLine(), ZVector.class));
+            //System.out.println("Success "+word);
+        } catch (Exception ex) {
+            //System.out.println(ex.getMessage());
+        }
+        try {
+            file = new File("gson\\"+dir+"\\" + indicatorName + "\\TWORDS.txt");
+            fileIn = new Scanner(file);
+            data.put("TWORDS", g.fromJson(fileIn.nextLine(), ZVector.class));
+            //System.out.println("Success "+word);
+        } catch (Exception ex) {
+            //System.out.println(ex.getMessage());
+        }
+        for (String word : RevWords) {
+            try {
+                file = new File("gson\\"+dir+"\\" + indicatorName + "\\" + removeSpaces(word) + ".txt");
                 fileIn = new Scanner(file);
                 ZVector value = g.fromJson(fileIn.nextLine(), ZVector.class).divideBy(data.get("TWORDS"));
                 data.put(word, value);
@@ -666,7 +752,7 @@ class Database {
                 //System.out.println("Removed " + words.get(index) + " at index: " + index);
             }
         }//takes out all the NAN's
-        File file = new File("gson\\REVWORDS.txt");
+        File file = new File("gson\\"+dir+"\\REVWORDS.txt");
         PrintWriter out;
         try {
             out = new PrintWriter(file);
@@ -687,7 +773,7 @@ class Database {
             file.mkdir();
             double[][] indicatorData = Database.getIndicatorGraph(indicator);
             try {
-                File f = new File("gson\\" + indicator.getName() + "\\" + indicator.getName() + ".txt");
+                File f = new File("gson\\"+ dir+"\\" + indicator.getName() + "\\" + indicator.getName() + ".txt");
                 PrintWriter fout = new PrintWriter(f);
                 try {
                     fout.print(g.toJson(getIndicatorVector(indicatorData, dir)));
@@ -700,7 +786,7 @@ class Database {
                 System.out.println(ex.getMessage());
             }
             try {
-                File f = new File("gson\\" + indicator.getName() + "\\IDATES.txt");
+                File f = new File("gson\\"+dir+"\\" + indicator.getName() + "\\IDATES.txt");
                 PrintWriter fout = new PrintWriter(f);
                 try {
                     fout.print(g.toJson(getIndicatorDatesVector(indicatorData)));
@@ -713,7 +799,7 @@ class Database {
                 System.out.println(ex.getMessage());
             }
             try {
-                File f = new File("gson\\" + indicator.getName() + "\\TWORDS.txt");
+                File f = new File("gson\\"+dir+"\\" + indicator.getName() + "\\TWORDS.txt");
                 PrintWriter fout = new PrintWriter(f);
                 try {
                     fout.print(g.toJson(getTotalWordCountAlligned(indicatorData, dir)));
@@ -736,7 +822,7 @@ class Database {
             for (String word : RevWords) {
                 //System.out.print("Writing " + word + " ...\t");
                 try {
-                    File f = new File("gson\\" + indicator.getName() + "\\" + removeSpaces(word) + ".txt");
+                    File f = new File("gson\\" +dir + "\\"+ indicator.getName() + "\\" + removeSpaces(word) + ".txt");
                     PrintWriter fout = new PrintWriter(f);
                     try {
                         fout.print(g.toJson(wordVectors.get(word)));
