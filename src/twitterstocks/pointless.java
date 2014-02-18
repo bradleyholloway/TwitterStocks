@@ -20,7 +20,7 @@ public class pointless {
     public static void main(String[] args) {
         
         Database.loadIndicators();
-        Indicator i = Database.indicators.get(6);
+        Indicator i = Database.indicators.get(7);
         Database.writeGSON(i);
         //HashMap<String, float[]> vectorMap = Database.getGSON();
         /*float[] test1 = new float[100];

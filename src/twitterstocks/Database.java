@@ -753,6 +753,7 @@ class Database {
             }
         }//takes out all the NAN's
         File file = new File("gson\\"+dir+"\\REVWORDS.txt");
+        file.mkdirs();
         PrintWriter out;
         try {
             out = new PrintWriter(file);
@@ -768,7 +769,7 @@ class Database {
 
         HashMap<String, ZVector> wordVectors = new HashMap<String, ZVector>();
         for (Indicator indicator : indicators) {
-            file = new File("gson\\" + indicator.getName());
+            file = new File("gson\\"+dir+"\\" + indicator.getName());
             file.mkdirs();
             file.mkdir();
             double[][] indicatorData = Database.getIndicatorGraph(indicator);
