@@ -749,11 +749,11 @@ class Database {
             if (count > 10) {
                 RevWords.add(words.get(index));
             } else {
-                //System.out.println("Removed " + words.get(index) + " at index: " + index);
+                System.out.println("Removed " + words.get(index) + " at index: " + index);
             }
         }//takes out all the NAN's
         File file = new File("gson\\"+dir+"\\REVWORDS.txt");
-        file.mkdirs();
+        file.getParentFile().mkdirs();
         PrintWriter out;
         try {
             out = new PrintWriter(file);
@@ -790,7 +790,7 @@ class Database {
                 File f = new File("gson\\"+dir+"\\" + indicator.getName() + "\\IDATES.txt");
                 PrintWriter fout = new PrintWriter(f);
                 try {
-                    fout.print(g.toJson(getIndicatorDatesVector(indicatorData)));
+                    fout.print(g.toJson(getIndicatorDatesVector(indicatorData, dir)));
                 } finally {
                     fout.close();
                     System.out.println("Wrote IDATES");
@@ -975,11 +975,18 @@ class Database {
     }
 
     public static ZVector getIndicatorVector(double[][] indicator, String dir) {
-        double[][] indicatorT = Compare.allignIndicator(indicator, getCountOfWordGraph("allign", (int) indicator[0][0] - 1, (int) indicator[indicator.length - 1][0] + 1, dir));
+        double[][] indicatorT = Compare.allignIndicator(indicator, getCountOfWordGraph("allign", dir));
         //int[][] wordT = Compare.getWordMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
         ZVector indicatorZ = new ZVector(indicatorT);
         //float[] wordZ = Compare.convertToVectorZ(wordT);
         return indicatorZ;
+    }
+    public static ZVector getIndicatorDatesVector(double[][] indicator, String dir) {
+        double[][] indicatorT = Compare.allignIndicator(indicator, getCountOfWordGraph("allign", dir));
+        //int[][] wordT = Compare.getWordMatchIndicatorWord(indicator, getCountOfWordGraph(word, (int)indicator[0][0]-1, (int)indicator[indicator.length - 1][0]+1));
+        float[] indicatorZ = Compare.convertToDates(indicatorT);
+        //float[] wordZ = Compare.convertToVectorZ(wordT);
+        return new ZVector(indicatorZ);
     }
 
     public static void ArticleFrequency() {

@@ -385,13 +385,12 @@ public class Grapher {
         int numSubdivisions = 25;
         for (int i = 0; i < numSubdivisions; i++) {
             g.setColor(Color.black);
-            g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin), 2), 5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
+            g.drawString("" + round(((double) (numSubdivisions - i) / numSubdivisions * (yMax - yMin) + yMin), 2), (int) BORDER*2/5, (int) (((double) HEIGHT - BORDER) * i / numSubdivisions));
         }
         g.setColor(Color.black);
-        DecimalFormat date = new DecimalFormat("XXXX/XX/XX");
-        int dateSubdivisions = 25;
-        for (int i = 0; i < dateSubdivisions; i++) {
-//            g.drawString(""+date.format((int)((double)i/dateSubdivisions*(xMaxWord-xMinWord)+xMinWord)), (int)((double)i/dateSubdivisions*(WIDTH-BORDER)+BORDER),(HEIGHT-BORDER)+5);
+        int dateInterval = 8;
+        for (int i = 0; i < dates.length; i+=dateInterval) {
+            g.drawString(""+((int)dates[i]/10000), (int)((double)i/dates.length*(WIDTH-BORDER)+BORDER),(HEIGHT-BORDER)+BORDER/2);
         }
         g.setColor(Color.black);
         //g.drawString(Compare.covariance(dataIndicatorz, dataWordz) + "", BORDER + 10, 50);

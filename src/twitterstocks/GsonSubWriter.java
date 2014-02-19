@@ -16,8 +16,8 @@ public class GsonSubWriter {
     public static void main(String[] args) {
         // TODO code application logic here
         //Database.writeGSON("REDDIT");
-        //Database.writeGSON("YahooFinance");
+        Database.writeGSON("YahooFinance");
         //Database.writeGSON("FoxNews");
-        Database.writeGSON("CnnMoney");
+        //Database.writeGSON("CnnMoney");
     }
 }
