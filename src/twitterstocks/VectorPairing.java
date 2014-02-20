@@ -155,7 +155,7 @@ public class VectorPairing {
         }
         Grapher.createGraph(total, finalDisplay, "percents\\" + indicator.getName() + "\\" + round(percentAnalyzed * 100, 2) + "%", percentAnalyzed,predictionCorrelation,dates);
         System.out.println("Results for " + indicator.getName() + " for " + iterations + " iterations and " + (round(percentAnalyzed * 100, 2)) + "%.");
-        System.out.println(wt);
+        //System.out.println(wt);
     }
     public static void dotProductWeightingLimitedRegression(Indicator indicator, boolean percentBased, boolean iterationGraphing, int iterations, int irrelevent, int prediction, int analysis) {
         WordWeightTable wt = new WordWeightTable();

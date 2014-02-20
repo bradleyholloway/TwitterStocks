@@ -397,6 +397,7 @@ public class Grapher {
 
         //This is where coVarience needs to be changed with a different type of comparrison.
         double covariencePredicted = Compare.covariance(getLimitedPrediction(dataIndicatorz, irrelevant, 0, predict + analyze), getLimitedPrediction(dataWordz, irrelevant, 0, predict + analyze), predict);
+        System.out.println("r: "+covariencePredicted);
         g.drawString(covariencePredicted + "", BORDER + (WIDTH - BORDER) / 2 + 10, 50);
 
         int x = (int) ((double) (WIDTH - BORDER) * (irrelevant + analyze) / (dataIndicatorz.length)) + BORDER;
