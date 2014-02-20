@@ -620,6 +620,37 @@ class Database {
 
         System.out.println("DONE.");
     }
+    public static void recalcRevWords(int minimum)
+    {
+        Gson g = new Gson();
+        Database.load();
+        RevWords = new ArrayList<String>();
+
+        HashMap<String, Integer> wordcounts = getWordCountsMap();
+        for (int index = 0; index < words.size(); index++) {
+            double count = wordcounts.get(words.get(index));
+            //double count = Compare.sum(getCountOfWordGraph(words.get(index)));
+            //System.out.println("index: " + index + " " + words.get(index) + " wordcount: " + count);
+            if (count > minimum) {
+                RevWords.add(words.get(index));
+            } else {
+                //System.out.println("Removed " + words.get(index) + " at index: " + index);
+            }
+        }//takes out all the NAN's
+        File file = new File("gson\\REVWORDS.txt");
+        PrintWriter out;
+        try {
+            out = new PrintWriter(file);
+            Type alType = new TypeToken<ArrayList<String>>() {
+            }.getType();
+            out.println(g.toJson(RevWords, alType));
+            out.close();
+            System.out.println("Wrote RevWords");
+        } catch (FileNotFoundException ex) {
+            //Logger.getLogger(StepTwoGSON.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+    
     public static void writeGSON(Indicator indicator) {
         Gson g = new Gson();
         Database.load();
