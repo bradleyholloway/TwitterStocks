@@ -16,10 +16,29 @@ import java.util.Scanner;
  *
  * @author Roberto   <-- heckyeah
  */
-public class directory {
+public class Directory {
     
     
      public static HashMap<Integer, ArrayList<Article>> articles = new HashMap<Integer, ArrayList<Article>>();
-     public static HashMap<String, ArrayList<Integer>> directoriesDates = new HashMap<String, ArrayList<Integer>>();
+     public static ArrayList<Integer> directoriesDates = new ArrayList<Integer>();
+     
+     public Directory ()
+     {
+         
+     }
+     
+     public void addArticle(Article a)
+     {
+         
+     }
+     
+     public void addArticle()
+     {
+         
+     }
     
+     public Article getArticle()
+     {
+         return null;
+     }
 }

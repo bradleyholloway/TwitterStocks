@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Scanner;
 
 class Database {
-
+    public static HashMap<String, Directory> directories01 =  new HashMap<String, Directory>();
     public static HashMap<Integer, ArrayList<Article>> articles = new HashMap<Integer, ArrayList<Article>>();
     public static ArrayList<Integer> files = new ArrayList<Integer>();
     public static ArrayList<Integer> dates = new ArrayList<Integer>();
@@ -34,22 +34,34 @@ class Database {
 
     }
 
-    private static void add(Article a, String directory) throws FileNotFoundException {
-        if (directoriesArticles.get(directory) == null) {
-            directories.add(directory);
-            directoriesArticles.put(directory, new HashMap<Integer, ArrayList<Article>>());
+    private static void add(Article a, String directoryName) throws FileNotFoundException {
+        //old directories code//////////////////////////////
+        if (directoriesArticles.get(directoryName) == null) {
+            directories.add(directoryName);
+            directoriesArticles.put(directoryName, new HashMap<Integer, ArrayList<Article>>());
         }
-        if (directoriesArticles.get(directory).get(a.getDate()) == null) {
-            directoriesArticles.get(directory).put(a.getDate(), new ArrayList<Article>());
-            if (directoriesDates.get(directory) == null) {
-                directoriesDates.put(directory, new ArrayList<Integer>());
+        if (directoriesArticles.get(directoryName).get(a.getDate()) == null) {
+            directoriesArticles.get(directoryName).put(a.getDate(), new ArrayList<Article>());
+            if (directoriesDates.get(directoryName) == null) {
+                directoriesDates.put(directoryName, new ArrayList<Integer>());
             }
-            directoriesDates.get(directory).add(a.getDate());
+            directoriesDates.get(directoryName).add(a.getDate());
         }
-        directoriesArticles.get(directory).get(a.getDate()).add(a);
+        directoriesArticles.get(directoryName).get(a.getDate()).add(a);
 
-        Collections.sort(directoriesDates.get(directory));
-
+        Collections.sort(directoriesDates.get(directoryName));
+        //old directories code//////////////////////////////
+        
+        
+        //new directories code///////////////////////////////
+        if (directories01.get(directoryName) == null) {
+            directories01.put(directoryName, new Directory());
+        }
+        
+        directories01.get(directoryName).addArticle(a);
+        
+        //new directories code///////////////////////////////
+        
     }
 
     private static void addNoDirectory(Article a) throws FileNotFoundException {
@@ -202,6 +214,9 @@ class Database {
                 }
             });
             for (File dir : dirs) {
+                
+                //old directories code//////////////////////////////
+                
                 if (!directories.contains(dir.getName())) {
                     directories.add(dir.getName());
                 }
@@ -228,6 +243,31 @@ class Database {
                         directoriesDates.get(dir.getName()).add(a.getDate());
                     }
                 }
+                //old directories code//////////////////////////////
+                
+                
+                if (directories01.get(dir.getName()) == null) {
+                    directories01.put(dir.getName(), new Directory());
+                }
+                
+                if (Article.numFilesMap.get(dir.getName()) == null) {
+                    Article.numFilesMap.put(dir.getName(), 0);
+                }
+                for (File art : dir.listFiles()) {
+                    int articleNum = Integer.parseInt(art.getName().substring(art.getName().indexOf("e") + 1, art.getName().length() - 4));
+                    if (articleNum >= Article.numFilesMap.get(dir.getName())){
+                        Article.numFilesMap.put(dir.getName(), articleNum + 1);
+                    }
+                    //Article a = new Article(articleNum, dir.getName());// <<--- to be used in final switch to new directories
+                    
+                    if(directories01.get(dir.getName()).getArticle() == null){
+                       directories01.get(dir.getName()).addArticle();
+                    }
+                    
+                }
+                
+                
+                
 
             }
 
@@ -480,6 +520,7 @@ class Database {
                 a.addWordCounts(wordCount);
             }
         }
+        //old directories code//////////////////////////////
         for (String dir : directories) {
             for (Integer d : directoriesDates.get(dir)) {
                 for (Article a : directoriesArticles.get(dir).get(d)) {
@@ -487,6 +528,7 @@ class Database {
                 }
             }
         }
+        //old directories code//////////////////////////////
         return wordCount;
     }
 
@@ -495,11 +537,13 @@ class Database {
         for (String word : words) {
             wordCount.put(word, new Integer(0));
         }
+        //old directories code//////////////////////////////
         for (Integer d : directoriesDates.get(dir)) {
             for (Article a : directoriesArticles.get(dir).get(d)) {
                 a.addWordCounts(wordCount);
             }
         }
+        //old directories code//////////////////////////////
         return wordCount;
     }
 
@@ -910,9 +954,11 @@ class Database {
 
     private static ArrayList<Article> getByDate(int date) {
         ArrayList<Article> returns = articles.get(date);
+        //old directories code//////////////////////////////
         for (String dir : directories) {
             returns = merge(returns, directoriesArticles.get(dir).get(date));
         }
+        //old directories code//////////////////////////////
         return returns;
     }
 
@@ -944,12 +990,11 @@ class Database {
 
     public static int getCountOfWordByDate(String word, int date, String dir) {
         int count = 0;
+        //old directories code//////////////////////////////
         for (Article a : directoriesArticles.get(dir).get(date)) {
             count += a.getCount(word);
-
-            //count += a.getCount(word)*10000/(a.getWordCount()+1);
-            //returns word count adjusted for document length
         }
+        //old directories code//////////////////////////////
         return count;
     }
 
@@ -965,11 +1010,11 @@ class Database {
 
     public static int getWordCountByDate(int date, String dir) {
         int count = 0;
+        //old directories code//////////////////////////////
         for (Article a : directoriesArticles.get(dir).get(date)) {
             count += a.getWordCount();
-            //count += a.getCount(word)*10000/(a.getWordCount()+1);
-            //returns word count adjusted for document length
         }
+        //old directories code//////////////////////////////
         return count;
     }
 
@@ -1020,6 +1065,8 @@ class Database {
         return new ZVector(indicatorZ);
     }
 
+    
+    ////////////////////////////////////old//////////////////////////
     public static void ArticleFrequency() {
         ArrayList<Integer> datesInRange = new ArrayList<Integer>();
         for (int date : combinedDates()) {
@@ -1041,6 +1088,7 @@ class Database {
             }
         }
     }
+    /////////////////////////////////////old///////////////////////////
 
     public static int[][] getCountOfWordGraph(String word) {
         return getCountOfWordGraph(word, Integer.MIN_VALUE, Integer.MAX_VALUE);
@@ -1163,6 +1211,7 @@ class Database {
         for (int date : dates) {
             combined.add(date);
         }
+        //old directories code//////////////////////////////
         for (String dir : directories) {
             for (Integer dirDate : directoriesDates.get(dir)) {
                 if (!combined.contains(dirDate)) {
@@ -1170,6 +1219,7 @@ class Database {
                 }
             }
         }
+        //old directories code//////////////////////////////
         Collections.sort(combined);
         return combined;
 
