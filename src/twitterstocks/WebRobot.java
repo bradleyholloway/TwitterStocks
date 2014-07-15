@@ -91,7 +91,7 @@ public class WebRobot {
             waitTillDone();
             selectAll();
             try {
-                Database.add(new Article(findWSJArticle(getClipboard()), year * 10000 + month * 100 + day));
+                Database.add(new Article(findWSJArticle(getClipboard()), year * 10000 + month * 100 + day, "WallStreetJournal"));
             } catch (FileNotFoundException ex) {
                 Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
             }

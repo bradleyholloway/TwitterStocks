@@ -1,0 +1,2 @@
+20090609
+ LSI Shows Its Software Side   By DiColo, Jerry A, The Wall Street Journal,  Jun 10, 2009  Intel Corp. has been particularly active recently as it attempts to push its popular netbook chip, Atom, into new markets, developing a Linux-based operating system called Moblin and Thursday entering into an agreement to buy embedded software maker Wind River Systems Inc. for about $884 million.   

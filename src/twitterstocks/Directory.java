@@ -19,8 +19,8 @@ import java.util.Scanner;
 public class Directory {
     
     
-     public static HashMap<Integer, ArrayList<Article>> articles = new HashMap<Integer, ArrayList<Article>>();
-     public static ArrayList<Integer> directoriesDates = new ArrayList<Integer>();
+     static HashMap<Integer, ArrayList<Article>> articles = new HashMap<Integer, ArrayList<Article>>();
+     static ArrayList<Integer> dates = new ArrayList<Integer>();
      
      public Directory ()
      {
@@ -29,7 +29,37 @@ public class Directory {
      
      public void addArticle(Article a)
      {
+         if(articles.get(a.getDate())==null){
+             articles.put(a.getDate(), new ArrayList<Article>());
+         }
          
+         if (!dates.contains(a.getDate()))
+         {
+             dates.add(a.getDate());
+         }
+         
+         articles.get(a.getDate()).add(a);     
+     }
+     
+     public void addWordCounts(HashMap<String, Integer> map)
+     {
+         for(Integer d : dates)
+         {
+             for(Article a : articles.get(d))
+             {
+                 a.addWordCounts(map);
+             }
+         }
+     }
+     
+     public ArrayList<Article> getArticlesByDate(int date)
+     {
+         return articles.get(date);
+     }
+     
+     public ArrayList<Integer> getDates()
+     {
+         return dates;
      }
      
      public void addArticle()

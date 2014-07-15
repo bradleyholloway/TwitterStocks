@@ -1,0 +1,2 @@
+20060703
+ Judge Deals Setback To SCO's IBM Suit   The Wall Street Journal,  Jul 3, 2006  Magistrate Brooke Wells dismissed 182 of SCO's 294 claims, dealing a setback to SCO's lawsuit. The suit, filed in 2003, accused IBM of donating SCO's Unix code to the freely distributed Linux operating system.   

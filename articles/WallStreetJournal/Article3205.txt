@@ -1,0 +1,2 @@
+19990620
+ Gemplus Introduces Smart-Card Technology   The Wall Street Journal,  Jun 21, 1999  GEMENOS, France -- Gemplus SA, one of the world's largest smart-card developers, launched a way to develop smart-card applications based on Extensible Markup Language, or XML.   

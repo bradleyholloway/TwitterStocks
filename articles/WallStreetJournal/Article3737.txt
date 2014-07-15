@@ -1,0 +1,2 @@
+20031120
+ Business Brief -- AT&T Corp.: Carrier Sues eBay, PayPal Unit Over Internet Payment Patent   The Wall Street Journal,  Nov 21, 2003  AT&T Corp. said it sued eBay Inc. and its PayPal unit, alleging the companies were using a patented AT&T technology in their payment systems. The suit, filed in U.S. District Court in Wilmington, Del., alleges that PayPal and eBay infringed AT&T's U.S. patent covering payment processing over the Internet by a trusted intermediary.   
