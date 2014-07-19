@@ -75,6 +75,38 @@ public class WebRobot {
         }
 
     }
+    
+    public void mineGoogleTrends()
+    {
+        int num = 0;
+        for(String word: Database.words){
+            if(num<101){
+                typeURL("http://www.google.com/trends/explore#q=" + word + "&cmpt=q");
+                robot.delay(500);
+                typeURL("http://www.google.com/trends/explore#q=" + word + "&cmpt=q");
+                robot.delay(500);
+                tabTo(10); 
+                type(KeyEvent.VK_DOWN);
+                enter(); 
+            }//cases smaller than 100
+            
+            else// after 101 cases (starting from 0) chrome asks what you would like to save the file as, this writes the index into their name
+            {
+                typeURL("http://www.google.com/trends/explore#q=" + word + "&cmpt=q");
+                robot.delay(500);
+                typeURL("http://www.google.com/trends/explore#q=" + word + "&cmpt=q");
+                robot.delay(500);
+                tabTo(10); 
+                type(KeyEvent.VK_DOWN);
+                enter();
+                robot.delay(3000);
+                type("sheet" + num, true);
+                robot.delay(300);
+            }//cases larger than 100
+            num++;
+            
+        }//for each of the words in database.words
+    }//public void mine google trends
 
     public void mineNYTimes(int day, int month, int year) {
         mineNYTimes(day, month, year, 1);
