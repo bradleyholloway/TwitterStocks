@@ -80,27 +80,17 @@ public class WebRobot {
     {
         int num = 0;
         for(String word: Database.words){
-            if(num<101){
-                typeURL("http://www.google.com/trends/explore#q=" + word + "&cmpt=q");
+                if(num>2439&&num<3000){
+                typeURL("http://www.google.com/trends/explore#q="+ word + "&cmpt=q");
                 robot.delay(500);
-                typeURL("http://www.google.com/trends/explore#q=" + word + "&cmpt=q");
+                typeURL("http://www.google.com/trends/explore#q="+ word + "&cmpt=q");
                 robot.delay(500);
-                tabTo(10); 
-                type(KeyEvent.VK_DOWN);
-                enter(); 
-            }//cases smaller than 100
-            
-            else// after 101 cases (starting from 0) chrome asks what you would like to save the file as, this writes the index into their name
-            {
-                typeURL("http://www.google.com/trends/explore#q=" + word + "&cmpt=q");
-                robot.delay(500);
-                typeURL("http://www.google.com/trends/explore#q=" + word + "&cmpt=q");
-                robot.delay(500);
-                tabTo(10); 
+                tabTo(10);
                 type(KeyEvent.VK_DOWN);
                 enter();
-                robot.delay(3000);
-                type("sheet" + num, true);
+                robot.delay(4500);
+                type("sheet" + num, true); 
+                enter();
                 robot.delay(300);
             }//cases larger than 100
             num++;
@@ -133,6 +123,45 @@ public class WebRobot {
 
     public void mineWSJ(int day, int month, int year) {
         mineWSJ(day, month, year, 1);
+    }
+    
+    public void mineGoogleFinance()
+    {
+         int year = 2011;
+        int dateTab = 49;
+        while (year < 2015) {
+            typeURL("http://web.archive.org/web/" + year + "0615000000*/https://www.google.com/finance/");
+            tabTo(28 + dateTab);
+            enter();
+            waitTillDone(2, 1);
+            String URL;
+            URL = getURL();
+            if (URL.indexOf("faqs") != -1) {
+                year++;
+                dateTab = 0;
+                tabTo(1);
+                type(KeyEvent.VK_ESCAPE);
+                robot.delay(1000);
+            } else {
+                enter();
+                waitTillDone(2, 1);
+                selectAll();
+                tabTo(1);
+                robot.delay(500);
+                selectAll();
+                robot.delay(100);
+                tabTo(1);
+                robot.delay(2000);
+                dateTab++;
+
+                try {
+                    //System.out.println(URL.substring(27,35));
+                    Database.add(new Article((getClipboard()), Integer.parseInt(URL.substring(27, 35)), "GoogleFinance"));
+                } catch (FileNotFoundException ex) {
+                    Logger.getLogger(WebRobot.class.getName()).log(Level.SEVERE, null, ex);
+                }
+            }
+        }
     }
 
     public void mineReddit() {

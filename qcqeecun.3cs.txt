@@ -1,0 +1,12 @@
+﻿Created GoogleFinanceMiner for both mining word frequencies as well as getting a list a frequently used finance-related words
+# Please enter the commit message for your changes. Lines starting
+# with '#' will be ignored, and an empty message aborts the commit.
+# On branch RDawesomebranch
+# Changes to be committed:
+#   (use "git reset HEAD <file>..." to unstage)
+#
+#	new file:   ajfb1534.y0a.txt
+#	modified:   nbproject/project.properties
+#	new file:   src/twitterstocks/GoogleFinanceMiner.java
+#
+

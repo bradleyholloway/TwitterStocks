@@ -18,12 +18,8 @@ public class GoogleTrendsMiner {
     public static void main(String[] args) {
         // TODO code application logic here
         WebRobot robot = new WebRobot();
-        System.out.println("test");
         Database.load();
-        System.out.println("test");
         robot.launchChrome();
-System.out.println("test");
         robot.mineGoogleTrends();
-        System.out.println("test");
     }
 }

@@ -15,5 +15,11 @@ public class GoogleFinanceMiner {
      */
     public static void main(String[] args) {
         // TODO code application logic here
+        
+         WebRobot robot = new WebRobot();
+        Database.load();
+        robot.launchChrome();
+        robot.mineGoogleFinance();
     }
 }
+                                                                                                                                                                                                                            
